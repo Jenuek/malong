@@ -307,6 +307,11 @@
     .stage { padding-bottom: 12px; }
   }
 
+  /* 본문 아래 여백 = 하단 고정 영역 높이 + 16px (실제 높이는 스크립트가 --dock-h 로 넣음) */
+  .stage { padding-bottom: calc(var(--dock-h) + 16px); }
+  .dock { padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px)); }
+  @media (max-height: 460px) { .stage { padding-bottom: 12px; } }
+
 </style>
 </head>
 <body>
@@ -833,7 +838,15 @@
     if (st < 3) b += '<button type="button" class="btn pri" data-act="next"' + (st === 0 && !ready() ? ' aria-disabled="true"' : '') + '>' + esc(T('dock.n' + st, ['소재별 더 알아보기', '비교하고 가견적 보기', '견적 문의하기'][st])) + '</button>';
     else b += k ? '<a class="btn pri" data-act="kakao" href="' + esc(k) + '" target="_blank" rel="noopener noreferrer">' + esc(T('s4.kakao', '카카오톡 문의하기')) + '</a>' : '<button type="button" class="btn pri" data-act="copy">' + esc(T('s4.copy', '내용 복사하기')) + '</button>';
     el.innerHTML = '<div class="dock-sum"' + (sum ? '' : ' hidden') + '>' + sum + '</div><div class="dock-btns">' + b + '</div>';
+    fitDock();
   }
+  // 하단 고정 영역의 실제 높이에 맞춰 본문 아래 여백을 정확히 맞춘다
+  function fitDock() {
+    var d = document.querySelector('.dock'); if (!d) return;
+    var fixed = getComputedStyle(d).position === 'fixed';
+    document.documentElement.style.setProperty('--dock-h', (fixed ? d.offsetHeight : 0) + 'px');
+  }
+  window.addEventListener('resize', fitDock);
 
   /* ---------- 이동 ---------- */
   var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
