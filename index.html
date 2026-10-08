@@ -339,6 +339,24 @@
   .lb-x { position: absolute; top: 12px; right: 14px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(255,255,255,.16); color: #fff; font-size: 26px; line-height: 1; }
   .mchips { scroll-padding-inline: 20px; }
 
+  /* ---------- 비교표: 항상 보이는 스크롤바 + 화살표 + 끌기 ---------- */
+  .tw { position: relative; }
+  .scroll { cursor: grab; }
+  .scroll.grabbing { cursor: grabbing; user-select: none; scroll-behavior: auto; }
+  .scroll::-webkit-scrollbar { height: 12px; }
+  .scroll::-webkit-scrollbar-track { background: var(--surface); border-radius: 0 0 16px 16px; }
+  .scroll::-webkit-scrollbar-thumb { background: var(--soft); border-radius: 8px; border: 3px solid var(--surface); }
+  .scroll::-webkit-scrollbar-thumb:hover { background: var(--violet); }
+  @supports not selector(::-webkit-scrollbar) { .scroll { scrollbar-color: var(--soft) var(--surface); } }
+  .tnav { position: absolute; top: calc(50% - 6px); width: 38px; height: 38px; margin-top: -19px; border-radius: 50%; border: 0; background: rgba(255,255,255,.96); box-shadow: 0 2px 10px rgba(21,21,21,.25); font-size: 22px; line-height: 1; color: var(--ink); display: none; place-items: center; padding: 0 0 3px; z-index: 3; }
+  .tnav.prev { left: 112px; } .tnav.next { right: 8px; }
+  .tnav.off { opacity: 0; pointer-events: none; }
+  @media (hover: hover) and (pointer: fine) { .tnav { display: grid; } }
+  .tw { min-width: 0; max-width: 100%; }
+
+  .rec-row .no { width: auto; height: auto; padding: 3px 10px; border-radius: 999px; font-size: 12px; white-space: nowrap; align-self: center; }
+  .mchip .badge.b2 { background: var(--lav); color: var(--plum); }
+
 </style>
 </head>
 <body>
@@ -666,7 +684,7 @@
     r.slice(1, 3).forEach(function (xx, i) {
       var st = KEYS.filter(function (k) { return lvr(xx, k) >= 3; }), wk = KEYS.filter(function (k) { return lvr(xx, k) <= 1; });
       var w = st.length ? T('rec.good', '잘 맞는 점') + ' · ' + mapNames(st) : (wk.length ? T('rec.warn', '상담이 필요한 점') + ' · ' + mapNames(wk) : muse(xx.m));
-      s += '<button type="button" class="rec-row" data-go="' + xx.m.id + '"><span class="no">' + (i + 2) + '</span><span class="nm">' + esc(mname(xx.m)) + '</span><span class="go" aria-hidden="true">›</span><span class="why">' + esc(w) + '</span></button>';
+      s += '<button type="button" class="rec-row" data-go="' + xx.m.id + '"><span class="no">' + esc(T('rec.b' + (i + 2), (i + 2) + '순위')) + '</span><span class="nm">' + esc(mname(xx.m)) + '</span><span class="go" aria-hidden="true">›</span><span class="why">' + esc(w) + '</span></button>';
     });
     s += '</div><button type="button" class="rec-link" data-go="' + a.m.id + '">' + esc(T('rec.more', '1순위 소재 자세히 보기')) + ' ›</button></div>';
     return s;
@@ -688,11 +706,11 @@
   function chipsHTML() {
     var ri = rankIdx();
     return MATS.map(function (m) {
-      return '<button type="button" class="mchip" data-mat="' + m.id + '" aria-pressed="' + (S.mat === m.id ? 'true' : 'false') + '">' + esc(mname(m)) + (ri[m.id] === 1 ? '<span class="badge">' + esc(T('rec.tag', '추천')) + '</span>' : '') + '</button>';
+      return '<button type="button" class="mchip" data-mat="' + m.id + '" aria-pressed="' + (S.mat === m.id ? 'true' : 'false') + '">' + esc(mname(m)) + (ri[m.id] ? '<span class="badge' + (ri[m.id] > 1 ? ' b2' : '') + '">' + esc(T('rec.b' + ri[m.id], ri[m.id] + '순위')) + '</span>' : '') + '</button>';
     }).join('');
   }
   function matBody(m) {
-    var id = m.id, k = 'm.' + id + '.', name = mname(m), s = '<div class="mp sw"><div class="mp-head"><div class="eyebrow">' + esc(m.no) + '</div><h2>' + esc(name) + '</h2>' + x(k + 'tag', m.tag, 'p', 'tg') +
+    var id = m.id, k = 'm.' + id + '.', name = mname(m), s = '<div class="mp sw"><div class="mp-head"><div class="eyebrow">' + esc(m.no) + '</div><h2>' + esc(name) + (rankIdx()[id] ? '<span class="badge' + (rankIdx()[id] > 1 ? ' b2' : '') + '">' + esc(T('rec.b' + rankIdx()[id], rankIdx()[id] + '순위')) + '</span>' : '') + '</h2>' + x(k + 'tag', m.tag, 'p', 'tg') +
       '<div class="meta">' + m.meta.map(function (t, i) { return x(k + 'meta.' + i, t, 'span'); }).join('') + '</div></div>';
     s += galleryHTML(id, name);
     s += '<div class="card"><h3>' + x('lbl.good', '이런 점이 좋아요', 'span') + '</h3>' + ulist(k + 'good', m.good) + '</div>';
@@ -789,7 +807,8 @@
   function grp(g, label, body) { return '<div class="grp" data-g="' + g + '"><div class="grp-l">' + esc(label) + '<span class="tagauto" hidden>' + esc(T('tag.carry', '1단계 선택 반영')) + '</span></div>' + body + '</div>'; }
   function page2() {
     var s = ph('s3', 'Step 3', '한눈에 비교하고 가견적 내보기', '비교표에서 추천 소재가 강조돼요. 아래에서 조건을 바꿔 가며 가견적도 확인해 보세요.');
-    s += '<section class="sec"><h2>' + x('s3a.h', '소재 한눈에 비교', 'span') + '</h2><p class="sp" id="cmpnote"></p><div class="scroll" tabindex="0" aria-label="소재 비교표"><table class="cmp" id="cmp"></table></div>' +
+    s += '<section class="sec"><h2>' + x('s3a.h', '소재 한눈에 비교', 'span') + '</h2><p class="sp" id="cmpnote"></p><div class="tw"><div class="scroll" tabindex="0" aria-label="소재 비교표"><table class="cmp" id="cmp"></table></div>' +
+      '<button type="button" class="tnav prev off" data-tscroll="-1" aria-label="' + esc(T('tbl.left', '표 왼쪽으로')) + '">‹</button><button type="button" class="tnav next" data-tscroll="1" aria-label="' + esc(T('tbl.right', '표 오른쪽으로')) + '">›</button></div>' +
       x('legend', '5점 만점의 상대 비교이며 절대 수치가 아닙니다. ₩가 많을수록 비용 부담이 큰 경향입니다. 비용과 기간은 크기, 형태 복잡도, 수량, 마감 사양에 따라 크게 달라집니다.', 'p', 'legend') +
       '<div class="card"><h3>' + x('combo.h', '소재를 조합하기도 합니다', 'span') + '</h3>' + ulist('combo', COMBO) + '</div></section>';
     if (calcOn()) {
@@ -806,9 +825,31 @@
     }
     return s;
   }
+  /* ---------- 비교표 좌우 이동 (마우스용 화살표·끌기) ---------- */
+  function tblSync(sc) {
+    if (!sc) return; var w = sc.parentNode, pv = $('.tnav.prev', w), nx = $('.tnav.next', w), mx = sc.scrollWidth - sc.clientWidth;
+    if (pv) pv.classList.toggle('off', sc.scrollLeft <= 4);
+    if (nx) nx.classList.toggle('off', mx <= 4 || sc.scrollLeft >= mx - 4);
+  }
+  document.addEventListener('scroll', function (e) { var t = e.target; if (t && t.classList && t.classList.contains('scroll')) tblSync(t); }, true);
+  window.addEventListener('resize', function () { tblSync($('#pg2 .scroll')); });
+  var drag = null;
+  document.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse' || e.button !== 0 || !e.target.closest) return;
+    var sc = e.target.closest('.scroll'); if (!sc) return;
+    drag = { sc: sc, x: e.clientX, l: sc.scrollLeft, moved: false };
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (!drag) return; var dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) > 4) { drag.moved = true; drag.sc.classList.add('grabbing'); }
+    if (drag.moved) drag.sc.scrollLeft = drag.l - dx;
+  });
+  function endDrag() { if (drag) { drag.sc.classList.remove('grabbing'); drag = null; } }
+  document.addEventListener('pointerup', endDrag); document.addEventListener('pointercancel', endDrag);
+
   function refresh2() {
     var cm = $('#cmp'); if (!cm) return;
-    cm.innerHTML = cmpHTML();
+    cm.innerHTML = cmpHTML(); tblSync($('.scroll', cm.closest('.tw')));
     var n = $('#cmpnote'); if (n) n.textContent = ready() ? T('s3a.p', '1단계 결과에 맞는 소재 3가지를 강조해 두었어요. 표는 옆으로 밀어서 볼 수 있어요.') : T('s3a.p0', '1단계에서 조건을 고르면 잘 맞는 소재가 여기에 강조돼요. 표는 옆으로 밀어서 볼 수 있어요.');
     if (!calcOn()) return;
     var e = eff(), d = derived(), ov = S.ov, ri = rankIdx(), hasOv = Object.keys(ov).length > 0;
@@ -947,6 +988,7 @@
       setTimeout(function () { oldp.className = 'page'; newp.className = 'page on'; }, 330);
     }
     window.scrollTo(0, 0);
+    setTimeout(function () { tblSync($('#pg2 .scroll')); }, 20); setTimeout(function () { tblSync($('#pg2 .scroll')); }, 360);
     if (!noPush && started) { try { history.pushState({ step: n }, ''); } catch (e) {} }
     var h = $('h1', newp); if (h && started) { try { h.focus({ preventScroll: true }); } catch (e) {} }
     started = true;
@@ -1034,6 +1076,7 @@
   }
   document.addEventListener('click', function (e) {
     var t = e.target; if (!t.closest) return; var c;
+    if ((c = t.closest('[data-tscroll]'))) { var ts = $('.scroll', c.parentNode); if (ts) ts.scrollBy({ left: parseInt(c.getAttribute('data-tscroll'), 10) * Math.max(240, ts.clientWidth * 0.6), behavior: RM ? 'auto' : 'smooth' }); return; }
     if ((c = t.closest('[data-gal]'))) { var gt = $('.gal-track', c.parentNode), gs = galStep(gt); if (gt && gs) gt.scrollBy({ left: parseInt(c.getAttribute('data-gal'), 10) * gs, behavior: RM ? 'auto' : 'smooth' }); return; }
     if ((c = t.closest('[data-zoom]'))) { var zi = $('img', c), zf = c.closest('.gal-s'), zc = zf && $('figcaption', zf); if (zi) openZoom(zi, zc ? zc.textContent : ''); return; }
     if ((c = t.closest('[data-q]'))) {
@@ -1097,7 +1140,7 @@
     });
     Object.keys(TOAST).forEach(TS);
     T('rec.warn', '상담이 필요한 점'); T('rec.warn2', '항목은 이 소재의 약점이에요. 보완 방법을 함께 확인해 보세요.');
-    T('btn.cvd', '복사됨'); T('btn.cvf', '선택해서 복사하세요');
+    T('btn.cvd', '복사됨'); T('btn.cvf', '선택해서 복사하세요'); T('tbl.left', '표 왼쪽으로'); T('tbl.right', '표 오른쪽으로');
     S = JSON.parse(save); started = was; refresh2(); refresh3();
   }
   window.malongGuide = { order: ORDER, text: DEF, lists: LDEF, scores: NDEF, nums: FDEF, photos: PHOTOS, registerAll: registerAll };
