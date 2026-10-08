@@ -312,6 +312,33 @@
   .dock { padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px)); }
   @media (max-height: 460px) { .stage { padding-bottom: 12px; } }
 
+  /* ---------- 작업 사진 갤러리 ---------- */
+  .gal { position: relative; display: grid; gap: 10px; margin-inline: -20px; }
+  .gal-track { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; padding-inline: 20px; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  .gal-track::-webkit-scrollbar { display: none; }
+  .gal-s { flex: 0 0 84%; scroll-snap-align: start; margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+  .gal.one .gal-s { flex-basis: 100%; }
+  .gal.one .gal-track { padding-inline: 20px; }
+  .gal-img { display: block; width: 100%; border: 0; padding: 0; background: var(--surface); border-radius: 18px; overflow: hidden; cursor: zoom-in; }
+  .gal-img img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .gal-s figcaption { font-size: 13px; color: var(--sub); line-height: 1.5; padding-inline: 2px; }
+  .gal-foot { display: flex; align-items: center; justify-content: space-between; padding-inline: 22px; }
+  .gal-dots { display: inline-flex; gap: 6px; }
+  .gal-dots i { width: 6px; height: 6px; border-radius: 50%; background: #DCD6E8; transition: background .2s, width .2s; }
+  .gal-dots i.on { width: 18px; border-radius: 6px; background: var(--deep); }
+  .gal-count { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .gal-nav { position: absolute; top: calc(50% - 40px); width: 38px; height: 38px; border-radius: 50%; border: 0; background: rgba(255,255,255,.94); box-shadow: 0 2px 10px rgba(21,21,21,.22); font-size: 22px; line-height: 1; color: var(--ink); display: none; place-items: center; padding: 0 0 3px; }
+  .gal-nav.prev { left: 28px; } .gal-nav.next { right: 28px; }
+  .gal-nav.off { opacity: 0; pointer-events: none; }
+  @media (hover: hover) and (pointer: fine) { .gal-nav { display: grid; } }
+  .gal-link { display: flex; align-items: center; justify-content: center; gap: 2px; height: 48px; border-radius: 14px; background: var(--lav-soft); color: var(--plum); font-weight: 700; font-size: 14.5px; text-decoration: none; }
+  .gal-link:hover { background: var(--lav); }
+  .lb { position: fixed; inset: 0; z-index: 80; background: rgba(21,21,21,.92); display: grid; place-items: center; align-content: center; gap: 12px; padding: 56px 16px 28px; cursor: zoom-out; }
+  .lb img { max-width: 100%; max-height: calc(100% - 40px); object-fit: contain; border-radius: 10px; }
+  .lb p { color: #E6E1F0; font-size: 13.5px; text-align: center; max-width: 560px; }
+  .lb-x { position: absolute; top: 12px; right: 14px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(255,255,255,.16); color: #fff; font-size: 26px; line-height: 1; }
+  .mchips { scroll-padding-inline: 20px; }
+
 </style>
 </head>
 <body>
@@ -328,10 +355,12 @@
      KAKAO_URL     : 카카오톡 채널 채팅 주소 (예: https://pf.kakao.com/_abcDEF/chat).
                      비워 두면 '카카오톡 문의하기' 버튼 대신 '내용 복사하기' 버튼이 보입니다.
                      (시트의 ct.kakao 칸에 넣어도 됩니다. 시트 값이 우선합니다.)
+     PORTFOLIO_URL : 소재 화면의 '작업 사례 더 보기' 버튼이 열 포트폴리오 주소. 소재마다 시트에서 따로 바꿀 수 있습니다.
      ===================================================================== */
   var CONFIG = {
     SHEET_CSV_URL: '',
-    KAKAO_URL: ''
+    KAKAO_URL: '',
+    PORTFOLIO_URL: 'https://www.malongcompany.co.kr/sub/portfolio/portfolio.php'
   };
 
   var CONTENT = {};
@@ -368,8 +397,12 @@
     u = String(u || '').trim(); if (!u) return '';
     var m = /drive\.google\.com\/file\/d\/([\w-]+)/.exec(u) || /drive\.google\.com\/(?:open|uc)\?(?:[^#]*&)?id=([\w-]+)/.exec(u);
     if (m) return 'https://lh3.googleusercontent.com/d/' + m[1];
-    return (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)) ? u : '';
+    if (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)) return u;
+    // 저장소 안의 사진 (예: images/frp-1.jpg)
+    return /^(?![a-z][a-z0-9+.-]*:)(?!\/\/)[\w.\-\/%]+\.(?:jpe?g|png|webp|gif|avif)$/i.test(u) ? u : '';
   }
+  function PK(k) { reg(k); DEF[k] = ''; if (PHOTOS.indexOf(k) < 0) PHOTOS.push(k); return has(k) ? imgURL(CONTENT[k]) : ''; }
+  function linkURL(u) { u = String(u || '').trim(); return /^https:\/\//i.test(u) ? u : ''; }
   function P(id) { var k = 'm.' + id + '.photo'; reg(k); if (PHOTOS.indexOf(k) < 0) PHOTOS.push(k); return has(k) ? imgURL(CONTENT[k]) : ''; }
   function kakaoURL() {
     reg('ct.kakao'); DEF['ct.kakao'] = CONFIG.KAKAO_URL || '';
@@ -661,8 +694,7 @@
   function matBody(m) {
     var id = m.id, k = 'm.' + id + '.', name = mname(m), s = '<div class="mp sw"><div class="mp-head"><div class="eyebrow">' + esc(m.no) + '</div><h2>' + esc(name) + '</h2>' + x(k + 'tag', m.tag, 'p', 'tg') +
       '<div class="meta">' + m.meta.map(function (t, i) { return x(k + 'meta.' + i, t, 'span'); }).join('') + '</div></div>';
-    var img = P(id);
-    if (img) s += '<div class="photo"><img src="' + esc(img) + '" alt="' + esc(name) + ' 시공 사례" loading="lazy" referrerpolicy="no-referrer"></div>';
+    s += galleryHTML(id, name);
     s += '<div class="card"><h3>' + x('lbl.good', '이런 점이 좋아요', 'span') + '</h3>' + ulist(k + 'good', m.good) + '</div>';
     s += '<div class="card warn"><h3>' + x('lbl.know', '알아두세요', 'span') + '</h3>' + ulist(k + 'know', m.know, 'know') + '</div>';
     s += '<div class="card"><h3>' + x('lbl.cmp', '소재 비교 (상대 평가)', 'span') + '</h3><div class="rates">' +
@@ -678,6 +710,55 @@
       '<button type="button" class="btn ln" data-step="2">' + esc(T('s2.cta2', '다른 소재와 한눈에 비교하기')) + '</button></div></div>';
     return s;
   }
+  /* ---------- 작업 사진 갤러리 ---------- */
+  function galleryHTML(id, name) {
+    var items = [], i, k = 'm.' + id + '.';
+    for (i = 0; i < 6; i++) { var u = PK(k + 'g.' + i), c = T(k + 'gc.' + i, ''); if (u) items.push([u, c]); }
+    if (!items.length && has(k + 'photo')) { var lg = imgURL(CONTENT[k + 'photo']); if (lg) items.push([lg, '']); }
+    var lk = linkURL(T(k + 'link', CONFIG.PORTFOLIO_URL)), h = '';
+    if (items.length) {
+      var one = items.length === 1;
+      h += '<div class="gal' + (one ? ' one' : '') + '" data-n="' + items.length + '"><div class="gal-track" tabindex="0" role="group" aria-label="' + esc(name) + ' ' + esc(T('gal.label', '작업 사진')) + '">' +
+        items.map(function (it, n) {
+          return '<figure class="gal-s"><button type="button" class="gal-img" data-zoom aria-label="' + esc(T('gal.zoom', '사진 크게 보기')) + '"><img src="' + esc(it[0]) + '" alt="' + esc(name + ' 작업 사진 ' + (n + 1) + (it[1] ? ': ' + it[1] : '')) + '" loading="' + (n ? 'lazy' : 'eager') + '" referrerpolicy="no-referrer" draggable="false"></button>' +
+            (it[1] ? '<figcaption>' + escBr(it[1]) + '</figcaption>' : '') + '</figure>';
+        }).join('') + '</div>';
+      if (!one) h += '<button type="button" class="gal-nav prev off" data-gal="-1" aria-label="' + esc(T('gal.prev', '이전 사진')) + '">‹</button><button type="button" class="gal-nav next" data-gal="1" aria-label="' + esc(T('gal.next', '다음 사진')) + '">›</button>' +
+        '<div class="gal-foot"><span class="gal-dots" aria-hidden="true">' + items.map(function (_, n) { return '<i' + (n ? '' : ' class="on"') + '></i>'; }).join('') + '</span><span class="gal-count">1 / ' + items.length + '</span></div>';
+      h += '</div>';
+    }
+    if (lk) h += '<a class="gal-link" href="' + esc(lk) + '" target="_blank" rel="noopener noreferrer">' + esc(T('gal.more', '이 소재 작업 사례 더 보기')) + '<span aria-hidden="true"> ↗</span></a>';
+    return h;
+  }
+  function galStep(tr) { var s = tr.firstElementChild; return s ? s.offsetWidth + 10 : 0; }
+  function galSync(tr) {
+    var g = tr.parentNode, n = tr.children.length, st = galStep(tr); if (!st || n < 2) return;
+    var i = Math.max(0, Math.min(n - 1, Math.round(tr.scrollLeft / st)));
+    $$('.gal-dots i', g).forEach(function (d, j) { d.className = j === i ? 'on' : ''; });
+    var ct = $('.gal-count', g); if (ct) ct.textContent = (i + 1) + ' / ' + n;
+    var pv = $('.gal-nav.prev', g), nx = $('.gal-nav.next', g);
+    if (pv) pv.classList.toggle('off', i === 0);
+    if (nx) nx.classList.toggle('off', tr.scrollLeft + tr.clientWidth >= tr.scrollWidth - 4);
+  }
+  function openZoom(img, cap) {
+    var o = document.createElement('div'); o.className = 'lb'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true'); o.setAttribute('aria-label', T('gal.zoom', '사진 크게 보기'));
+    o.innerHTML = '<button type="button" class="lb-x" aria-label="' + esc(T('gal.close', '닫기')) + '">×</button><img alt="' + esc(img.alt) + '" src="' + esc(img.currentSrc || img.src) + '">' + (cap ? '<p>' + escBr(cap) + '</p>' : '');
+    var close = function () { if (o.parentNode) o.parentNode.removeChild(o); document.removeEventListener('keydown', key); };
+    var key = function (e) { if (e.key === 'Escape') close(); };
+    o.addEventListener('click', close); document.addEventListener('keydown', key);
+    document.body.appendChild(o); $('.lb-x', o).focus();
+  }
+  document.addEventListener('scroll', function (e) { var t = e.target; if (t && t.classList && t.classList.contains('gal-track')) galSync(t); }, true);
+  document.addEventListener('error', function (e) {
+    var t = e.target; if (!t || t.tagName !== 'IMG' || !t.closest) return;
+    var f = t.closest('.gal-s'); if (!f) return;
+    var tr = f.parentNode, g = tr.parentNode; tr.removeChild(f);
+    var n = tr.children.length;
+    if (!n) { g.parentNode.removeChild(g); return; }
+    var d = $('.gal-dots', g); if (d) d.innerHTML = Array(n + 1).join('<i></i>');
+    if (n < 2) { g.classList.add('one'); $$('.gal-nav,.gal-foot', g).forEach(function (x) { x.parentNode.removeChild(x); }); } else galSync(tr);
+  }, true);
+
   function refresh1(animate) {
     var c = $('#mchips'); if (!c) return;
     c.innerHTML = chipsHTML();
@@ -953,6 +1034,8 @@
   }
   document.addEventListener('click', function (e) {
     var t = e.target; if (!t.closest) return; var c;
+    if ((c = t.closest('[data-gal]'))) { var gt = $('.gal-track', c.parentNode), gs = galStep(gt); if (gt && gs) gt.scrollBy({ left: parseInt(c.getAttribute('data-gal'), 10) * gs, behavior: RM ? 'auto' : 'smooth' }); return; }
+    if ((c = t.closest('[data-zoom]'))) { var zi = $('img', c), zf = c.closest('.gal-s'), zc = zf && $('figcaption', zf); if (zi) openZoom(zi, zc ? zc.textContent : ''); return; }
     if ((c = t.closest('[data-q]'))) {
       var g = c.getAttribute('data-q'), v = c.getAttribute('data-v');
       if (g === 'comp') S.comp = v; else S[g] = v;
