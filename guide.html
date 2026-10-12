@@ -580,6 +580,13 @@
   .gnav { gap: 20px; }
   .gnav a { font-weight: 600; }
 
+/* ---------- 단계 막대: 이미 지나온 단계도 눌러서 돌아갈 수 있게 ---------- */
+.prog li { overflow: visible; }
+.prog li::after { border-radius: inherit; pointer-events: none; }
+.prog button { inset: -14px 0; cursor: pointer; z-index: 1; }
+.prog li.done { cursor: pointer; }
+@media (hover: hover) { .prog li:not(.now):hover { background: var(--deep); opacity: .55; } }
+
 </style>
 </head>
 <body>
