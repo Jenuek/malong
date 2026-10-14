@@ -1177,7 +1177,7 @@
   var STEPS = [['st.0', '소재 알아보기'], ['st.1', '소재별 더 알아보기'], ['st.2', '비교하고 가견적'], ['st.3', '견적 문의']];
   function shell() {
     return '<header class="top"><div class="top-in"><a class="brand" href="' + esc(siteURL('#/')) + '" aria-label="마롱컴퍼니 홈"><svg viewBox="54 987 57 44" aria-hidden="true"><path d="' + LOGO + '"/></svg>' + x('bar.name', 'MALONG COMPANY', 'span') + '</a>' +
-      '<nav class="gnav" aria-label="사이트 메뉴"><a href="' + esc(siteURL('#/')) + '">Home</a><a href="' + esc(workURL()) + '">Work</a><a href="' + esc(siteURL('#/about')) + '">About</a></nav></div>' +
+      '<nav class="gnav" aria-label="사이트 메뉴"><a href="' + esc(siteURL('#/')) + '">Home</a><a href="' + esc(workURL()) + '">Work</a><a href="' + esc(siteURL('#/about')) + '">About</a><a href="track.html">진행 확인</a></nav></div>' +
       '<div class="toolbar"><span class="tool">' + x('bar.tool', '소재 찾기 · 견적', 'span') + '</span><span class="stepno" id="stepno"></span></div>' +
       '<ol class="prog" id="prog">' + STEPS.map(function (s, i) { return '<li><button type="button" data-step="' + i + '" aria-label="' + (i + 1) + '단계 ' + esc(T(s[0], s[1])) + '"></button></li>'; }).join('') + '</ol><div class="mybar" id="mybar" hidden></div></header>' +
       '<main class="stage" id="stage">' + [page0, page1, page2, page3].map(function (f, i) { return '<section class="page" id="pg' + i + '" aria-label="' + (i + 1) + '단계 ' + esc(T(STEPS[i][0], STEPS[i][1])) + '">' + f() + '</section>'; }).join('') + '</main>' +
