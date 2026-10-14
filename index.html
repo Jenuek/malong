@@ -351,7 +351,7 @@ main { min-width: 0; }
 <body>
 <aside class="side" id="side" aria-label="사이트 메뉴">
   <a class="logo" href="#/" aria-label="마롱컴퍼니 홈"><svg viewBox="54 987 57 44" aria-hidden="true"><path d="M 61.8 1016.5 C 59.9 1016.5 58 1017.2 56.7 1018.6 C 55.4 1019.9 54.6 1021.7 54.6 1023.6 C 54.6 1025.5 55.4 1027.3 56.7 1028.7 C 58 1030 59.9 1030.8 61.8 1030.8 C 63.7 1030.8 65.5 1030 66.8 1028.7 C 68.2 1027.3 68.9 1025.5 68.9 1023.6 C 68.9 1021.7 68.2 1019.9 66.8 1018.6 C 65.5 1017.2 63.7 1016.5 61.8 1016.5 Z M 96.1 1027.9 L 110.4 1030.8 L 110.4 987.9 L 96.1 1002.2 Z M 84.4 1030.8 L 94.6 1020.7 L 61.8 987.9 L 61.8 1008.1 Z"/></svg><b>Malong<br>Company</b></a>
-  <nav class="nav"><a href="#/" data-nav="home">Home</a><a href="#/work" data-nav="work">Work</a><a href="#/about" data-nav="about">About</a><a href="guide.html">소재 찾기 · 견적</a><a id="pfLink" href="https://www.malongcompany.co.kr/sub/portfolio/portfolio.php" target="_blank" rel="noopener noreferrer">Portfolio ↗</a></nav>
+  <nav class="nav"><a href="#/" data-nav="home">Home</a><a href="#/work" data-nav="work">Work</a><a href="#/about" data-nav="about">About</a><a href="guide.html">소재 찾기 · 견적</a><a href="track.html">프로젝트 진행 확인</a><a id="pfLink" href="https://www.malongcompany.co.kr/sub/portfolio/portfolio.php" target="_blank" rel="noopener noreferrer">Portfolio ↗</a></nav>
   <div class="pane" id="sp-m"><div><div class="lh"><span class="cap">Layers</span><span class="cap n" id="lcount"></span></div><div class="stk" id="stkM"></div></div><div class="flt" id="fltM" role="group" aria-label="소재 분류"></div></div>
   <div class="pane" id="sp-a" hidden><div><div class="lh"><span class="cap">Layers</span><span class="cap n">06</span></div><div class="stk" id="stkA"></div></div><div class="flt" id="fltA" role="navigation" aria-label="소개 목차"></div></div>
   <div class="side-foot">※ 작품 이미지는 시안용입니다.<br>© Malong Company</div>
@@ -681,7 +681,7 @@ main { min-width: 0; }
       '<div class="hm-hb"><a href="#/work"></a>' + dots + '</div></div></section>' +
       '<div class="hm-bar" aria-hidden="true">' + MATS.map(function (m) { return '<i style="background:' + col(m) + '"></i>'; }).join('') + '</div>' +
       '<div class="hm-h"><span class="cap">Latest works</span><a href="#/work">전체 보기 ' + two(PORT.length) + ' →</a></div><div class="hm-rail" id="rail" data-n="' + items.length + '">' + rail + '</div>' +
-      '<div class="hm-end"><p>' + esc(HOME.end) + '</p><div class="acts"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적 →</a><a href="' + esc(ABOUT.inquiry) + '" target="_blank" rel="noopener noreferrer">프로젝트 문의 ↗</a></div></div>';
+      '<div class="hm-end"><p>' + esc(HOME.end) + '</p><div class="acts"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적 →</a><a href="track.html">진행 확인 →</a><a href="' + esc(ABOUT.inquiry) + '" target="_blank" rel="noopener noreferrer">프로젝트 문의 ↗</a></div></div>';
     var root = $('#v-home'); root.className = 'hm'; root.innerHTML = h;
     heroGo(0);
     var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
