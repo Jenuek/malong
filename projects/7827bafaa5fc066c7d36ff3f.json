@@ -1,0 +1,81 @@
+{
+  "eyebrow": "Design Proposal",
+  "title": "곰 마스코트 조형물",
+  "client": "○○ 테마파크 기획팀",
+  "version": "2차 시안 (v2)",
+  "date": "2026-10-20",
+  "manager": "김마롱 매니저",
+  "message": "안녕하세요. 요청하신 곰 마스코트 조형물의 2차 시안을 전달드립니다.\n아래 3D 화면에서 돌려 보시고, 렌더링 이미지와 제안서도 함께 확인 부탁드립니다.",
+  "models": [
+    {
+      "sketchfab": "064313def8854a0aba1020d830e8cb91",
+      "title": "Bear2 (샘플)"
+    }
+  ],
+  "turnaround": {
+    "title": "턴어라운드 렌더링",
+    "spin": true,
+    "images": [
+      {
+        "src": "render-01.svg",
+        "label": "정면"
+      },
+      {
+        "src": "render-02.svg",
+        "label": "우측 30°"
+      },
+      {
+        "src": "render-03.svg",
+        "label": "우측 60°"
+      },
+      {
+        "src": "render-04.svg",
+        "label": "우측면"
+      },
+      {
+        "src": "render-05.svg",
+        "label": "우측 후면 30°"
+      },
+      {
+        "src": "render-06.svg",
+        "label": "후면 우측 60°"
+      },
+      {
+        "src": "render-07.svg",
+        "label": "후면"
+      },
+      {
+        "src": "render-08.svg",
+        "label": "후면 좌측 60°"
+      },
+      {
+        "src": "render-09.svg",
+        "label": "좌측 후면 30°"
+      },
+      {
+        "src": "render-10.svg",
+        "label": "좌측면"
+      },
+      {
+        "src": "render-11.svg",
+        "label": "좌측 60°"
+      },
+      {
+        "src": "render-12.svg",
+        "label": "좌측 30°"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "file": "proposal.pdf",
+      "title": "디자인 제안서 v2",
+      "note": "3쪽 · 샘플 문서"
+    }
+  ],
+  "checks": [
+    "전체 비율과 표정",
+    "도장 색상과 마감 질감",
+    "설치 위치와 정면 방향"
+  ]
+}
