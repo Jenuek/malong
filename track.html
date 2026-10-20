@@ -89,6 +89,10 @@ a { color: inherit; }
 
 /* 3D */
 .v3d { position: relative; background: var(--surface); border-radius: 16px; overflow: hidden; }
+/* 스케치팹 */
+.v3d iframe { display: block; width: 100%; height: min(62vh, 540px); border: 0; }
+.sfc { margin: 0; padding: 8px 14px; font-size: 11.5px; color: var(--muted); text-align: right; background: var(--surface); }
+.sfc a { text-decoration: none; }
 model-viewer { display: block; width: 100%; height: min(62vh, 540px); --poster-color: transparent; }
 .v3d .tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; z-index: 2; }
 .v3d .tools button { height: 36px; padding: 0 14px; border: 1px solid var(--ink); border-radius: 999px; background: #fff; font-size: 12.5px; font-weight: 700; }
@@ -334,9 +338,15 @@ model-viewer { display: block; width: 100%; height: min(62vh, 540px); --poster-c
   }
 
   /* ---------- 3D ---------- */
+  function sfId(s) { s = String(s || '').trim(); var m = /^[0-9a-f]{32}$/i.exec(s) || (/sketchfab\.com\//i.test(s) && /([0-9a-f]{32})(?![0-9a-f])/i.exec(s)); return m ? (m[1] || m[0]).toLowerCase() : ''; }
   var viewerLoading = null;
   function loadViewer(src, name) {
     var box = $('#v3d'); if (!box) return;
+    var sf = sfId(src);
+    if (sf) {
+      box.innerHTML = '<iframe title="' + esc((name || '프로젝트') + ' 3D 시안') + '" src="https://sketchfab.com/models/' + sf + '/embed?autostart=1&preload=1&dnt=1&ui_infos=0&ui_hint=2" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="eager"></iframe><p class="sfc">3D viewer by <a href="https://sketchfab.com/models/' + sf + '" target="_blank" rel="noopener noreferrer">Sketchfab</a></p>';
+      return;
+    }
     function build() {
       if (!$('#v3d')) return;
       var mv = document.createElement('model-viewer');
