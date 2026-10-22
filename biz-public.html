@@ -172,7 +172,7 @@ h1, h2, h3, p, ol, ul, dl, dd, figure { margin: 0; padding: 0; }
 @media (hover: hover) { #stkM .slab:hover { transform: translateY(-5px); } #stkM .slab.on:hover { transform: translateY(-9px); } }
 .stk.has-f .slab.on { filter: none; transform: translateY(-9px); }
 @media (hover: hover) { .stk .slab:hover { filter: none; } }
-.stk .slab:focus-visible { outline: none; }
+.stk .slab, .stk .slab:focus, .stk .slab:focus-visible { outline: none; -webkit-tap-highlight-color: transparent; }
 .stk .slab:focus-visible path:first-child { stroke: var(--deep); stroke-width: 2; }
 
 #stkA.has-f .slab { filter: none; }
