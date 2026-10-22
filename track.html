@@ -161,7 +161,7 @@ model-viewer { display: block; width: 100%; height: min(62vh, 540px); --poster-c
 <body>
 <header class="top"><div class="top-in">
   <a class="brand" id="brand" href="index.html" aria-label="마롱컴퍼니 홈"><svg viewBox="54 987 57 44" aria-hidden="true"><path d="M 61.8 1016.5 C 59.9 1016.5 58 1017.2 56.7 1018.6 C 55.4 1019.9 54.6 1021.7 54.6 1023.6 C 54.6 1025.5 55.4 1027.3 56.7 1028.7 C 58 1030 59.9 1030.8 61.8 1030.8 C 63.7 1030.8 65.5 1030 66.8 1028.7 C 68.2 1027.3 68.9 1025.5 68.9 1023.6 C 68.9 1021.7 68.2 1019.9 66.8 1018.6 C 65.5 1017.2 63.7 1016.5 61.8 1016.5 Z M 96.1 1027.9 L 110.4 1030.8 L 110.4 987.9 L 96.1 1002.2 Z M 84.4 1030.8 L 94.6 1020.7 L 61.8 987.9 L 61.8 1008.1 Z"/></svg><span>MALONG<br>COMPANY</span></a>
-  <nav class="gnav" aria-label="사이트 메뉴"><a id="nHome" href="index.html#/">Home</a><a id="nWork" href="index.html#/work">Work</a><a id="nAbout" href="index.html#/about">About</a><a id="nGuide" href="guide.html"><span class="lg">소재 찾기 · </span>견적</a><span aria-current="page">진행 확인</span></nav>
+  <nav class="gnav" aria-label="사이트 메뉴"><a id="nHome" href="index.html#/">Home</a><a id="nWork" href="index.html#/work">Work</a><a id="nAbout" href="index.html#/about">About</a><a id="nGuide" href="guide.html"><span class="lg">소재 찾기 · </span>견적<span class="lg"> · 문의</span></a><span aria-current="page">진행 확인</span></nav>
 </div></header>
 <main id="app"></main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -180,7 +180,7 @@ model-viewer { display: block; width: 100%; height: min(62vh, 540px); --poster-c
     API: '',
     KAKAO: '',
     GUIDE: 'guide.html',
-    INQUIRY: 'https://www.malongcompany.co.kr/sub/inquiry/inquiry.php',
+    INQUIRY: 'guide.html',
     SITE: 'index.html',
     TEL: '1644-4762'
   };
@@ -306,7 +306,7 @@ model-viewer { display: block; width: 100%; height: min(62vh, 540px); --poster-c
     if (lr && si >= 3) lastPh = '<section class="sec"><div class="sec-h"><h2>' + (done ? '완성된 모습' : '가장 최근 사진') + '</h2><span class="cap">' + fmtDate(lr.r.date) + '</span></div><button type="button" class="latest" data-lb="' + esc(lr.u) + '" aria-label="사진 크게 보기"><img src="' + esc(lr.u) + '" alt="" referrerpolicy="no-referrer"><span><b>' + esc(lr.r.title || lr.r.stage) + '</b>' + (lr.r.memo ? esc(lr.r.memo) : '') + '</span></button></section>';
 
     /* 완료 안내 */
-    var fin = done ? '<section class="sec"><div class="fin"><p class="cap">Completed</p><h2>프로젝트가 완료됐어요</h2><p>함께해 주셔서 감사합니다. 설치 후 사용하시면서 궁금한 점이나 보수가 필요한 부분이 생기면 언제든 알려 주세요. 담당자가 확인 후 안내드려요.</p><div class="row"><a class="btn sm" href="' + esc(TRACK.KAKAO || TRACK.INQUIRY) + '" target="_blank" rel="noopener noreferrer">A/S · 문의하기 ↗</a><a class="btn sm ln" href="' + esc(TRACK.SITE) + '#/work">비슷한 작품 보기</a><a class="btn sm ln" href="' + esc(TRACK.GUIDE) + '">새 프로젝트 견적 내보기</a></div></div></section>' : '';
+    var fin = done ? '<section class="sec"><div class="fin"><p class="cap">Completed</p><h2>프로젝트가 완료됐어요</h2><p>함께해 주셔서 감사합니다. 설치 후 사용하시면서 궁금한 점이나 보수가 필요한 부분이 생기면 언제든 알려 주세요. 담당자가 확인 후 안내드려요.</p><div class="row"><a class="btn sm" href="' + esc(TRACK.KAKAO || TRACK.INQUIRY) + '"' + (TRACK.KAKAO ? ' target="_blank" rel="noopener noreferrer"' : '') + '>A/S · 문의하기 ' + (TRACK.KAKAO ? '↗' : '→') + '</a><a class="btn sm ln" href="' + esc(TRACK.SITE) + '#/work">비슷한 작품 보기</a><a class="btn sm ln" href="' + esc(TRACK.GUIDE) + '">새 프로젝트 견적 내보기</a></div></div></section>' : '';
 
     /* 3D */
     var model = modelURL(p.model), v3 = '';
@@ -328,7 +328,7 @@ model-viewer { display: block; width: 100%; height: min(62vh, 540px); --poster-c
       '<div><p class="now' + (done ? ' done' : '') + '"><i></i>' + (done ? '완료' : '현재 단계 · ' + esc(STEPS[si][0])) + '</p></div>' +
       '<div><ol class="steps" aria-label="진행 단계">' + steps + '</ol><p class="steps-m">' + (si + 1) + ' / ' + STEPS.length + ' · ' + esc(STEPS[si][0]) + '</p><p class="stepdesc"><b>' + esc(STEPS[si][0]) + '</b> · ' + esc(STEPS[si][1]) + '</p>' + info + '</div></section>' +
       (si >= 3 ? fin + lastPh + secLog + sec3d : sec3d + secLog) +
-      '<footer class="foot"><span><b>궁금한 점이 있으세요?</b><br>담당자 또는 대표전화 ' + esc(TRACK.TEL) + '로 편하게 문의해 주세요.</span><a class="btn ln sm" href="' + esc(TRACK.KAKAO || TRACK.INQUIRY) + '" target="_blank" rel="noopener noreferrer">' + (TRACK.KAKAO ? '카카오톡으로 문의' : '문의하기') + ' ↗</a></footer></div>';
+      '<footer class="foot"><span><b>궁금한 점이 있으세요?</b><br>담당자 또는 대표전화 ' + esc(TRACK.TEL) + '로 편하게 문의해 주세요.</span><a class="btn ln sm" href="' + esc(TRACK.KAKAO || TRACK.INQUIRY) + '"' + (TRACK.KAKAO ? ' target="_blank" rel="noopener noreferrer"' : '') + '>' + (TRACK.KAKAO ? '카카오톡으로 문의 ↗' : '문의하기 →') + '</a></footer></div>';
     if (model) loadViewer(model, p.name);
     $('#app').onclick = function (e) {
       var a = e.target.closest('[data-ask]'); if (a) { askTeam(a.getAttribute('data-ask'), p); return; }

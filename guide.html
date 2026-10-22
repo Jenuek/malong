@@ -609,7 +609,7 @@
   var CONFIG = {
     SHEET_CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSk3jrcmT16BBi-7l2BxliYp_jcute5Dct-6W07NqE9FJlhTPDvXwh0YUd3oArVHg/pub?output=csv',
     KAKAO_URL: '',
-    PORTFOLIO_URL: 'https://www.malongcompany.co.kr/sub/portfolio/portfolio.php',
+    PORTFOLIO_URL: '',
     SITE_URL: 'index.html'
   };
 
@@ -965,7 +965,7 @@
     var items = [], i, k = 'm.' + id + '.';
     for (i = 0; i < 6; i++) { var u = PK(k + 'g.' + i), c = T(k + 'gc.' + i, ''); if (u) items.push([u, c]); }
     if (!items.length && has(k + 'photo')) { var lg = imgURL(CONTENT[k + 'photo']); if (lg) items.push([lg, '']); }
-    var lk = linkURL(T(k + 'link', CONFIG.PORTFOLIO_URL)), h = '';
+    var lk = linkURL(T(k + 'link', '')), h = ''; if (!lk || /malongcompany\.co\.kr/i.test(lk)) lk = workURL(id); var ext = /^https?:/i.test(lk);
     if (items.length) {
       var one = items.length === 1;
       h += '<div class="gal' + (one ? ' one' : '') + '" data-n="' + items.length + '"><div class="gal-track" tabindex="0" role="group" aria-label="' + esc(name) + ' ' + esc(T('gal.label', '작업 사진')) + '">' +
@@ -977,7 +977,7 @@
         '<div class="gal-foot"><span class="gal-dots" aria-hidden="true">' + items.map(function (_, n) { return '<i' + (n ? '' : ' class="on"') + '></i>'; }).join('') + '</span><span class="gal-count">1 / ' + items.length + '</span></div>';
       h += '</div>';
     }
-    if (lk) h += '<a class="gal-link" href="' + esc(lk) + '" target="_blank" rel="noopener noreferrer">' + esc(T('gal.more', '이 소재 작업 사례 더 보기')) + '<span aria-hidden="true"> ↗</span></a>';
+    if (lk) h += '<a class="gal-link" href="' + esc(lk) + '"' + (ext ? ' target="_blank" rel="noopener noreferrer"' : '') + '>' + esc(T('gal.more', '이 소재 작업 사례 더 보기')) + '<span aria-hidden="true">' + (ext ? ' ↗' : ' →') + '</span></a>';
     return h;
   }
   function galStep(tr) { var s = tr.firstElementChild; return s ? s.offsetWidth + 10 : 0; }
