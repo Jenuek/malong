@@ -1,0 +1,10 @@
+---
+import WorkPage from '../../../components/WorkPage.astro';
+import { getSite } from '../../../lib/data.js';
+export async function getStaticPaths() {
+  const { MATS } = await getSite();
+  return MATS.map((m) => ({ params: { id: m.id } }));
+}
+const { id } = Astro.params;
+---
+<WorkPage matId={id} page={1} />
