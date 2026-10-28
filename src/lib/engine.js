@@ -8,7 +8,7 @@ export function createEngine(ctx) {
       HOME = ctx.HOME || {}, EXH = ctx.EXH || { areas: [], hist: [] }, BD = ctx.BD || null, STANDS_URL = ctx.STANDS_URL || '#';
   var BASE = ctx.base || '/';
   function U(p) { return BASE + p; }
-  var GUIDE_URL = U('guide.html');
+  var GUIDE_URL = U('find.html'), QUOTE_URL = U('quote.html');
   var state = { view: 'work', f: 'all' };
 
   var BG = ['#EFEBF6', '#F2EEE8', '#E8EDF1', '#EAF1EF', '#F3EBE9', '#EEEEF2'];
@@ -132,7 +132,7 @@ export function createEngine(ctx) {
       MATS.map(function (m) { return '<li><a href="' + U('materials/' + m.id + '/') + '">' + miniSlab(mc(m)) + '<em>' + m.no + '</em><span class="nm"><b>' + esc(m.en) + '</b><span>' + esc(m.kr) + '</span></span><span class="ar">작품 보기 →</span></a></li>'; }).join('') + '</ol></div></div></section>';
     h += '<section id="s5" data-i="4">' + aband(4) + '<div class="abbody"><div class="stats">' + A.record.map(function (r) { return '<div class="stat"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>'; }).join('') + '</div><p class="note">' + esc(A.recordNote) + '</p><div class="sub-h">History</div><ol class="hist">' +
       A.history.slice().reverse().map(function (y) { return '<li><span class="y">' + y[0] + '</span><ul>' + y[1].map(function (e) { return '<li><em>' + e[0] + '</em><span>' + esc(e[1]) + '</span></li>'; }).join('') + '</ul></li>'; }).join('') + '</ol></div></section>';
-    h += '<section id="s6" data-i="5">' + aband(5) + '<div class="abbody"><div class="two"><div class="stack"><p class="cbig">Let’s<br>build it.</p><div class="abgo"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적 · 문의<span>→</span></a></div></div>' +
+    h += '<section id="s6" data-i="5">' + aband(5) + '<div class="abbody"><div class="two"><div class="stack"><p class="cbig">Let’s<br>build it.</p><div class="abgo"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적<span>→</span></a><a href="' + QUOTE_URL + '">견적 문의<span>→</span></a></div></div>' +
       '<dl class="cl">' + A.contact.map(function (c) { return '<div><dt>' + esc(c[0]) + '</dt><dd>' + esc(c[1]) + '</dd><button type="button" data-copy="' + esc(c[1]) + '">Copy</button></div>'; }).join('') + '</dl></div></div></section>';
     return h;
   }
@@ -143,8 +143,8 @@ export function createEngine(ctx) {
     return '<aside class="bzst" aria-label="STANDS"><div><p class="cap">Where art STANDS?</p><h3>' + esc(head) + '</h3><p>' + esc(line) + '</p></div>' +
       '<a class="go" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><img src="' + STANDS_IMG + '" alt="STANDS"><span>아트 프로젝트 문의 ↗</span></a></aside>';
   }
-  function guideRow() {   // 공공미술: 소재 찾기 · 가견적 · 문의는 하나의 흐름(guide.html)으로 이어집니다
-    return '<div class="sub-h">문의</div><div class="abgo"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적 · 문의<span>→</span></a></div>';
+  function guideRow() {   // 소재 찾기·가견적(find.html) → 견적 문의(quote.html)로 이어집니다
+    return '<div class="sub-h">문의</div><div class="abgo"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적<span>→</span></a><a href="' + QUOTE_URL + '">견적 문의<span>→</span></a></div>';
   }
   function statsOf(list) { return '<div class="stats">' + list.map(function (r) { return '<div class="stat"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>'; }).join('') + '</div>'; }
   function flowOf(list) { return '<ol class="flow">' + list.map(function (f, k) { return '<li><em>' + two(k + 1) + '</em><b>' + esc(f[0]) + '</b><span>' + esc(f[1]) + '</span></li>'; }).join('') + '</ol>'; }
@@ -296,7 +296,7 @@ export function createEngine(ctx) {
       '<div class="hm-hb"><a href="' + (w0 ? U('work/' + esc(w0.pid) + '/') : U('work/')) + '">' + (w0 ? '<b>' + esc(w0.name) + '</b><span class="cap">' + esc(cap(w0)) + '</span>' : '') + '</a>' + dots + '</div></div></section>' +
       '<div class="hm-bar" aria-hidden="true">' + MATS.map(function (m) { return '<i style="background:' + col(m) + '"></i>'; }).join('') + '</div>' +
       biz + num + '<div class="hm-h"><span class="cap">Latest works</span><a href="' + U('work/') + '">전체 보기 ' + two(PORT.length) + ' →</a></div><div class="hm-rail" id="rail" data-n="' + items.length + '">' + rail + '</div>' +
-      cl + '<div class="hm-end"><p>' + esc(HOME.end || '') + '</p><div class="acts"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적 · 문의 →</a><a href="' + U('track.html') + '">진행 확인 →</a><i class="vb" aria-hidden="true"></i><a class="st" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><span>아트 프로젝트 문의 ↗</span><img src="' + STANDS_IMG + '" alt="STANDS"></a></div></div>';
+      cl + '<div class="hm-end"><p>' + esc(HOME.end || '') + '</p><div class="acts"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적 →</a><a href="' + QUOTE_URL + '">견적 문의 →</a><a href="' + U('track.html') + '">진행 확인 →</a><i class="vb" aria-hidden="true"></i><a class="st" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><span>아트 프로젝트 문의 ↗</span><img src="' + STANDS_IMG + '" alt="STANDS"></a></div></div>';
   }
 
   function aboutHTML() { return stackAnchors2(sections()); }
