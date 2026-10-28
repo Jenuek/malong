@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>디자인 시안 확인 | 마롱컴퍼니</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,500..800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+:root {
+  --ink: #111111; --sub: #5E5A6E; --muted: #9A97A8; --line: #D9D6DF; --surface: #F3F1F6;
+  --violet: #6458B1; --deep: #5443A3; --soft: #AB94D1; --bg: #FFFFFF; --lime: #A1D239;
+  --font: 'Pretendard Variable', 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --en: 'Archivo', 'Pretendard Variable', 'Pretendard', sans-serif;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.6; letter-spacing: -0.012em; word-break: keep-all; overflow-wrap: break-word; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p, ol, ul { margin: 0; padding: 0; } ol, ul { list-style: none; }
+button, input { font: inherit; color: inherit; letter-spacing: inherit; } button { cursor: pointer; } a { color: inherit; }
+:focus-visible { outline: 2px solid var(--deep); outline-offset: 3px; }
+[hidden] { display: none !important; }
+.cap { font-family: var(--en); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+.top { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.97); border-bottom: 1px solid var(--ink); }
+.top-in { max-width: 1040px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 14px; }
+.brand { display: flex; align-items: center; gap: 9px; text-decoration: none; font-family: var(--en); font-weight: 800; font-size: 12px; letter-spacing: .06em; line-height: 1.1; }
+.brand svg { width: 28px; height: 22px; fill: var(--ink); }
+.top .tag { margin-left: auto; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 52px; padding: 0 24px; border: 1px solid var(--ink); border-radius: 999px; background: var(--ink); color: #fff; font-weight: 700; font-size: 14.5px; text-decoration: none; }
+.btn:hover { background: var(--deep); border-color: var(--deep); }
+.btn.ln { background: #fff; color: var(--ink); } .btn.ln:hover { background: var(--surface); color: var(--ink); border-color: var(--ink); }
+.btn.sm { height: 40px; padding: 0 18px; font-size: 13.5px; }
+.tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 700; }
+.tag::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); }
+
+/* ---------- 코드 입력 화면 ---------- */
+.gate { min-height: calc(100vh - 50px); display: grid; place-items: center; padding: 40px 20px 60px; }
+.gate-in { width: 100%; max-width: 460px; }
+.lock { width: 44px; height: 44px; border: 1px solid var(--ink); border-radius: 50%; display: grid; place-items: center; margin-bottom: 26px; }
+.lock svg { width: 18px; height: 18px; stroke: var(--ink); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.gate h1 { font-size: clamp(28px, 6vw, 38px); font-weight: 800; letter-spacing: -0.045em; line-height: 1.2; margin: 10px 0 14px; }
+.gate p.d { color: var(--sub); }
+.gate form { margin-top: 30px; display: grid; gap: 10px; }
+.gate label { font-size: 12.5px; font-weight: 700; color: var(--sub); }
+.gate .row { display: flex; gap: 8px; }
+.gate input { flex: 1; min-width: 0; height: 54px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 12px; background: #fff; font-family: var(--en); font-size: 18px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.gate input::placeholder { color: var(--muted); font-weight: 500; letter-spacing: .05em; font-size: 15px; }
+.gate .err { padding: 12px 14px; border: 1px solid #C8323C; border-radius: 12px; color: #9C2430; background: #FDF3F4; font-size: 14px; }
+.gate .help { margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--sub); }
+.gate .conf { margin-top: 18px; font-size: 12px; color: var(--muted); }
+
+/* ---------- 프로젝트 화면 ---------- */
+.head { padding: 44px 0 10px; display: grid; gap: 16px; }
+.head h1 { font-size: clamp(28px, 5.4vw, 44px); font-weight: 800; letter-spacing: -0.045em; line-height: 1.2; margin-top: 8px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 28px; margin-top: 14px; color: var(--sub); font-size: 14px; }
+.meta b { color: var(--ink); font-weight: 700; margin-left: 6px; }
+.msg { padding: 16px 18px; background: var(--surface); border-radius: 12px; color: var(--sub); font-size: 14.5px; white-space: pre-line; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.toc a { height: 34px; padding: 0 16px; display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; font-size: 13px; font-weight: 700; }
+.toc a:hover { border-color: var(--ink); }
+.sec { padding: 42px 0 6px; scroll-margin-top: 56px; }
+.sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); margin-bottom: 18px; }
+.sec-h h2 { font-size: 19px; font-weight: 800; letter-spacing: -0.03em; }
+.sec-d { color: var(--sub); font-size: 14px; margin: -6px 0 16px; }
+
+/* 3D */
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.tabs button { height: 36px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; background: #fff; font-size: 13px; font-weight: 700; }
+.tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.v3d { position: relative; background: var(--surface); border-radius: 16px; overflow: hidden; }
+/* 스케치팹 */
+.v3d iframe { display: block; width: 100%; height: min(64vh, 560px); border: 0; }
+.sfc { margin: 0; padding: 8px 14px; font-size: 11.5px; color: var(--muted); text-align: right; background: var(--surface); }
+.sfc a { text-decoration: none; }
+model-viewer { display: block; width: 100%; height: min(64vh, 560px); --poster-color: transparent; }
+.v3d .tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; z-index: 2; }
+.v3d .tools button { height: 36px; padding: 0 14px; border: 1px solid var(--ink); border-radius: 999px; background: #fff; font-size: 12.5px; font-weight: 700; }
+.v3d .tools button:hover { background: var(--ink); color: #fff; }
+.v3d .hint { position: absolute; left: 14px; bottom: 12px; font-size: 12px; color: var(--sub); pointer-events: none; }
+.v3d.empty { display: grid; place-items: center; min-height: 220px; padding: 28px; text-align: center; color: var(--muted); }
+.v3d.full { position: fixed; inset: 0; z-index: 50; border-radius: 0; } .v3d.full model-viewer { height: 100%; }
+
+/* 턴어라운드 */
+.ta { display: grid; gap: 10px; }
+.ta-st { position: relative; background: var(--surface); border-radius: 16px; overflow: hidden; aspect-ratio: 4 / 3; max-height: 70vh; width: 100%; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+.ta-st.drag { cursor: grabbing; }
+.ta-st img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none; -webkit-user-drag: none; }
+.ta-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ta-bar .lbl { margin-right: auto; font-size: 14px; font-weight: 700; }
+.ta-bar .lbl small { color: var(--muted); font-weight: 500; margin-left: 8px; font-family: var(--en); letter-spacing: .06em; }
+.ta-bar button { height: 36px; padding: 0 14px; border: 1px solid var(--ink); border-radius: 999px; background: #fff; font-size: 12.5px; font-weight: 700; }
+.ta-bar button:hover { background: var(--ink); color: #fff; }
+.ta-prog { height: 3px; background: var(--line); } .ta-prog i { display: block; height: 100%; background: var(--violet); transition: width .08s linear; }
+.ta-th { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; }
+.ta-th button { padding: 0; border: 2px solid transparent; background: var(--surface); border-radius: 10px; overflow: hidden; aspect-ratio: 4 / 3; position: relative; }
+.ta-th button[aria-current="true"] { border-color: var(--violet); }
+.ta-th img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ta-th span { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 6px 4px; font-size: 11px; font-weight: 700; color: #fff; text-align: left; background: linear-gradient(transparent, rgba(17,17,17,.7)); }
+
+/* 문서 */
+.docs > li { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.docs .ic { width: 44px; height: 52px; border: 1px solid var(--ink); border-radius: 4px; display: grid; place-items: end center; padding-bottom: 6px; font-family: var(--en); font-size: 10px; font-weight: 800; letter-spacing: .08em; position: relative; }
+.docs .ic::before { content: ''; position: absolute; top: -1px; right: -1px; width: 12px; height: 12px; background: #fff; border-left: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.docs h3 { font-size: 16px; font-weight: 800; letter-spacing: -0.03em; }
+.docs p { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.docs .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+@media (max-width: 559px) { .docs > li { grid-template-columns: auto 1fr; } .docs .acts { grid-column: 1 / -1; justify-content: flex-start; } }
+
+/* 컨펌 */
+.ask { padding: 24px; border: 1.5px solid var(--deep); border-radius: 16px; display: grid; gap: 14px; }
+.ask h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; }
+.ask p { color: var(--sub); font-size: 14px; }
+.ask ul { display: grid; gap: 4px; color: var(--sub); font-size: 14px; }
+.ask li::before { content: '✓'; color: var(--deep); font-weight: 800; margin-right: 8px; }
+.ask .row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.foot { margin-top: 56px; border-top: 1px solid var(--ink); padding: 26px 0 70px; display: grid; gap: 14px; font-size: 12.5px; color: var(--sub); }
+.foot .cp { max-width: 74ch; color: var(--muted); }
+.lb { position: fixed; inset: 0; z-index: 60; background: rgba(17,17,17,.92); display: grid; place-items: center; padding: 20px; }
+.lb img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
+.lb button { position: absolute; top: 14px; right: 14px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: #fff; font-weight: 700; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; transition: .25s; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 14px; z-index: 70; pointer-events: none; max-width: calc(100% - 32px); }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.load { padding: 140px 20px; text-align: center; color: var(--muted); }
+@media (max-width: 559px) { .brand span { display: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .toast { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="./" aria-label="마롱컴퍼니"><svg viewBox="54 987 57 44" aria-hidden="true"><path d="M 61.8 1016.5 C 59.9 1016.5 58 1017.2 56.7 1018.6 C 55.4 1019.9 54.6 1021.7 54.6 1023.6 C 54.6 1025.5 55.4 1027.3 56.7 1028.7 C 58 1030 59.9 1030.8 61.8 1030.8 C 63.7 1030.8 65.5 1030 66.8 1028.7 C 68.2 1027.3 68.9 1025.5 68.9 1023.6 C 68.9 1021.7 68.2 1019.9 66.8 1018.6 C 65.5 1017.2 63.7 1016.5 61.8 1016.5 Z M 96.1 1027.9 L 110.4 1030.8 L 110.4 987.9 L 96.1 1002.2 Z M 84.4 1030.8 L 94.6 1020.7 L 61.8 987.9 L 61.8 1008.1 Z"/></svg><span>MALONG<br>COMPANY</span></a>
+  <span class="cap tag-l" id="topcap" style="margin-left:auto">Design Review</span>
+</div></header>
+<main id="app"></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  /* =====================================================================
+     설정
+     KAKAO : 카카오톡 채널 채팅 주소(예: https://pf.kakao.com/_abcDEF/chat). 비워 두면 문의 페이지가 열립니다.
+     BASE  : 프로젝트 파일이 들어 있는 폴더 이름 (기본 'projects')
+     ===================================================================== */
+  var CFG = {
+    KAKAO: '',
+    INQUIRY: 'guide.html',
+    BASE: 'projects',
+    TEL: '1644-4762',
+    SITE: './'
+  };
+  var MODEL_VIEWER = 'https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function okLink(u) { return /^https?:\/\/[^\s"'<>]+$/i.test(u) ? u : ''; }
+  function toast(m) { var t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(function () { t.classList.remove('on'); }, 3200); }
+  function norm(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+  function sha(s) {
+    var enc = new TextEncoder().encode(s);
+    return crypto.subtle.digest('SHA-256', enc).then(function (b) { return [].map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join('').slice(0, 24); });
+  }
+  /* 파일 경로: https 주소는 그대로, 그 밖에는 프로젝트 폴더 안의 파일로 */
+  var FOLDER = '';
+  function asset(u) {
+    u = String(u || '').trim(); if (!u) return '';
+    if (/^https?:\/\//i.test(u)) return okLink(u);
+    if (/^[a-z][a-z0-9+.-]*:/i.test(u) || u.slice(0, 2) === '//' || /["'<>\s\\]/.test(u) || u.indexOf('..') > -1) return '';
+    return FOLDER + u.replace(/^\/+/, '');
+  }
+  /* 스케치팹 주소(또는 모델 ID)에서 32자리 ID 뽑기 */
+  function sfId(s) { s = String(s || '').trim(); var m = /^[0-9a-f]{32}$/i.exec(s) || (/sketchfab\.com\//i.test(s) && /([0-9a-f]{32})(?![0-9a-f])/i.exec(s)); return m ? (m[1] || m[0]).toLowerCase() : ''; }
+  function fmtDate(s) { var m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(String(s || '')); return m ? m[1] + '.' + ('0' + m[2]).slice(-2) + '.' + ('0' + m[3]).slice(-2) : esc(s || ''); }
+
+  /* ---------- 코드 입력 화면 ---------- */
+  var fails = 0, lockUntil = 0;
+  function showGate(msg, prefill) {
+    document.title = '디자인 시안 확인 | 마롱컴퍼니'; $('#topcap').textContent = 'Design Review';
+    $('#app').innerHTML = '<section class="gate"><div class="gate-in"><div class="lock" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>' +
+      '<p class="cap">Design Review</p><h1>디자인 시안<br>확인 페이지</h1><p class="d">전달드린 프로젝트 코드를 입력하시면 3D 시안, 렌더링 이미지, 제안서를 확인하실 수 있어요.</p>' +
+      '<form id="gf" autocomplete="off"><label for="gc">프로젝트 코드</label><div class="row"><input id="gc" type="text" inputmode="latin" autocapitalize="characters" spellcheck="false" placeholder="예: K7M2-X9QP-4D"><button class="btn" type="submit">확인하기</button></div>' +
+      (msg ? '<div class="err" role="alert">' + esc(msg) + '</div>' : '') + '</form>' +
+      '<p class="help">코드를 모르시거나 열리지 않으면 담당자에게 문의해 주세요.<br>대표전화 ' + esc(CFG.TEL) + '</p><p class="conf">본 페이지의 자료는 의뢰 고객에게만 제공되는 비공개 자료입니다.</p></div></section>';
+    var inp = $('#gc'); if (prefill) inp.value = prefill; inp.focus();
+    $('#gf').addEventListener('submit', function (e) { e.preventDefault(); var v = inp.value.trim(); if (v) openProject(v); });
+  }
+  function showLoad() { $('#app').innerHTML = '<div class="load" role="status">확인 중이에요…</div>'; }
+
+  /* ---------- 코드 확인 ---------- */
+  function openProject(code) {
+    var n = norm(code);
+    if (Date.now() < lockUntil) { showGate('입력을 여러 번 틀리셨어요. 잠시 후 다시 시도해 주세요.', code); return; }
+    if (n.length < 4) { showGate('프로젝트 코드를 확인해 주세요.', code); return; }
+    showLoad();
+    if (!(window.crypto && crypto.subtle)) { showGate('이 브라우저에서는 열 수 없어요. 최신 브라우저로 접속해 주세요.', code); return; }
+    sha(n).then(function (h) {
+      FOLDER = CFG.BASE + '/' + h + '/';
+      return fetch(CFG.BASE + '/' + h + '.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('nf'); return r.json(); });
+    }).then(function (d) {
+      fails = 0; try { sessionStorage.setItem('malong_confirm', n); } catch (e) {}
+      if (location.hash) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+      show(d, n);
+    }, function () {
+      fails++; if (fails >= 5) { lockUntil = Date.now() + 30000; fails = 0; }
+      try { sessionStorage.removeItem('malong_confirm'); } catch (e) {}
+      showGate('프로젝트 코드를 찾을 수 없어요. 코드를 다시 확인해 주세요.', code);
+    });
+  }
+
+  /* ---------- 프로젝트 화면 ---------- */
+  function list(a) { return Array.isArray(a) ? a : []; }
+  function show(d, code) {
+    var models = list(d.models).map(function (m) { var sf = sfId(m.sketchfab || m.src); return { title: String(m.title || ''), sf: sf, src: sf ? '' : (/^https?:/i.test(m.src || '') ? okLink(m.src) : asset(m.src)) }; }).filter(function (m) { return m.sf || m.src; });
+    var ta = d.turnaround || {}, imgs = list(ta.images).map(function (x) { return { src: asset(typeof x === 'string' ? x : x.src), label: typeof x === 'string' ? '' : String(x.label || '') }; }).filter(function (x) { return x.src; });
+    var docs = list(d.documents).map(function (x) { return { file: asset(x.file), title: String(x.title || '문서'), note: String(x.note || '') }; }).filter(function (x) { return x.file; });
+    var checks = list(d.checks).map(String).filter(Boolean);
+    document.title = (d.title || '시안 확인') + ' | 마롱컴퍼니'; $('#topcap').textContent = 'Confidential';
+    var meta = '';
+    if (d.client) meta += '<span>의뢰<b>' + esc(d.client) + '</b></span>';
+    if (d.version) meta += '<span>시안<b>' + esc(d.version) + '</b></span>';
+    if (d.date) meta += '<span>전달일<b>' + fmtDate(d.date) + '</b></span>';
+    if (d.manager) meta += '<span>담당<b>' + esc(d.manager) + '</b></span>';
+    var toc = [];
+    if (models.length) toc.push(['m', '3D 시안']); if (imgs.length) toc.push(['t', '렌더링']); if (docs.length) toc.push(['d', '제안서']); toc.push(['c', '확인 · 의견']);
+    var h = '<div class="wrap"><section class="head"><div><p class="cap">' + esc(d.eyebrow || 'Design Proposal') + '</p><h1>' + esc(d.title || '디자인 시안') + '</h1><div class="meta">' + meta + '</div></div>' +
+      (d.message ? '<p class="msg">' + esc(d.message) + '</p>' : '') +
+      '<nav class="toc" aria-label="이 페이지의 구성">' + toc.map(function (t) { return '<a href="#' + t[0] + '">' + t[1] + '</a>'; }).join('') + '</nav></section>';
+    if (models.length) h += '<section class="sec" id="m"><div class="sec-h"><h2>3D 시안</h2><span class="cap">3D Model</span></div><p class="sec-d">마우스나 손가락으로 돌려 보고, 확대해서 구석구석 확인하실 수 있어요.</p>' +
+      (models.length > 1 ? '<div class="tabs" role="group" aria-label="시안 선택">' + models.map(function (m, i) { return '<button type="button" data-mi="' + i + '" aria-pressed="' + (i === 0) + '">' + esc(m.title || (i + 1) + '안') + '</button>'; }).join('') + '</div>' : '') +
+      '<div class="v3d" id="v3d"></div></section>';
+    if (imgs.length) h += '<section class="sec" id="t"><div class="sec-h"><h2>' + esc(ta.title || '턴어라운드 렌더링') + '</h2><span class="cap">' + imgs.length + ' views</span></div><p class="sec-d">' + (ta.spin ? '이미지를 좌우로 드래그하면 작품이 한 바퀴 돌아요.' : '각도별 렌더링 이미지예요. 좌우로 넘겨 보거나 아래 작은 이미지를 눌러 주세요.') + '</p><div class="ta" id="ta"></div></section>';
+    if (docs.length) h += '<section class="sec" id="d"><div class="sec-h"><h2>디자인 제안서</h2><span class="cap">Documents</span></div><ul class="docs">' + docs.map(function (x) { return '<li><div class="ic">PDF</div><div><h3>' + esc(x.title) + '</h3>' + (x.note ? '<p>' + esc(x.note) + '</p>' : '') + '</div><div class="acts"><a class="btn sm ln" href="' + esc(x.file) + '" target="_blank" rel="noopener noreferrer">바로 보기</a><a class="btn sm" href="' + esc(x.file) + '" download>다운로드</a></div></li>'; }).join('') + '</ul></section>';
+    h += '<section class="sec" id="c"><div class="sec-h"><h2>확인 · 의견</h2><span class="cap">Feedback</span></div><div class="ask"><div><h3>시안을 확인해 주세요</h3><p>확인하신 뒤 아래 버튼으로 알려 주세요. 버튼을 누르면 내용이 복사되고 담당자와 채팅할 수 있는 창이 열려요.</p></div>' +
+      (checks.length ? '<ul>' + checks.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' : '') +
+      '<div class="row"><button class="btn sm" type="button" data-ask="ok">이대로 진행해 주세요</button><button class="btn sm ln" type="button" data-ask="rev">수정을 요청할게요</button></div></div></section>' +
+      '<footer class="foot"><div><b>문의</b> · 담당자 또는 대표전화 ' + esc(CFG.TEL) + '</div><p class="cp">본 자료의 저작권은 (주)마롱컴퍼니에 있으며, 계약 체결 및 대금 지급 전에는 복제, 제3자 제공, 유사 제작에 사용할 수 없습니다. 이 페이지 주소와 프로젝트 코드는 의뢰하신 분께만 공유해 주세요.</p><div><button type="button" class="btn sm ln" id="out">다른 코드로 보기</button></div></footer></div>';
+    $('#app').innerHTML = h; window.scrollTo(0, 0);
+    if (models.length) mountModel(models, 0, d.title);
+    if (imgs.length) mountTurn(imgs, !!ta.spin);
+    $('#app').onclick = function (e) {
+      var a = e.target.closest('[data-ask]'); if (a) { askTeam(a.getAttribute('data-ask'), d, code); return; }
+      var mi = e.target.closest('[data-mi]'); if (mi) { $$('[data-mi]').forEach(function (b) { b.setAttribute('aria-pressed', b === mi ? 'true' : 'false'); }); mountModel(models, +mi.getAttribute('data-mi'), d.title); return; }
+      if (e.target.closest('#out')) { try { sessionStorage.removeItem('malong_confirm'); } catch (x) {} showGate(); }
+    };
+  }
+
+  /* ---------- 3D ---------- */
+  var vLoad = null;
+  function mountModel(models, i, name) {
+    var box = $('#v3d'); if (!box) return;
+    box.className = 'v3d'; box.innerHTML = '<div class="hint">드래그해서 돌려 보고, 두 손가락(또는 휠)으로 확대할 수 있어요</div>'; document.body.style.overflow = '';
+    if (models[i].sf) {
+      box.innerHTML = '<iframe title="' + esc((name || '프로젝트') + ' 3D 시안') + '" src="https://sketchfab.com/models/' + models[i].sf + '/embed?autostart=1&preload=1&dnt=1&ui_infos=0&ui_hint=2" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" loading="eager"></iframe><p class="sfc">3D viewer by <a href="https://sketchfab.com/models/' + models[i].sf + '" target="_blank" rel="noopener noreferrer">Sketchfab</a></p>';
+      return;
+    }
+    function build() {
+      if (!$('#v3d')) return;
+      var mv = document.createElement('model-viewer');
+      mv.setAttribute('src', models[i].src); mv.setAttribute('alt', (name || '프로젝트') + ' 3D 시안'); mv.setAttribute('camera-controls', ''); mv.setAttribute('touch-action', 'pan-y');
+      mv.setAttribute('auto-rotate', ''); mv.setAttribute('shadow-intensity', '1'); mv.setAttribute('ar', ''); mv.setAttribute('ar-modes', 'webxr scene-viewer quick-look'); mv.setAttribute('loading', 'eager');
+      box.insertBefore(mv, box.firstChild);
+      var t = document.createElement('div'); t.className = 'tools'; t.innerHTML = '<button type="button" data-t="rot">회전 멈춤</button><button type="button" data-t="full">크게 보기</button>'; box.appendChild(t);
+      t.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-t]'); if (!b) return;
+        if (b.getAttribute('data-t') === 'rot') { var on = mv.hasAttribute('auto-rotate'); if (on) mv.removeAttribute('auto-rotate'); else mv.setAttribute('auto-rotate', ''); b.textContent = on ? '자동 회전' : '회전 멈춤'; }
+        else { var f = box.classList.toggle('full'); b.textContent = f ? '닫기' : '크게 보기'; document.body.style.overflow = f ? 'hidden' : ''; }
+      });
+      mv.addEventListener('error', fail);
+    }
+    function fail() { var b = $('#v3d'); if (!b) return; b.className = 'v3d empty'; b.innerHTML = '<p>3D 화면을 불러오지 못했어요.<br>잠시 후 새로고침해 보시고, 계속 안 보이면 담당자에게 알려 주세요.</p>'; }
+    if (window.customElements && customElements.get('model-viewer')) { build(); return; }
+    if (!vLoad) vLoad = new Promise(function (ok, no) { var s = document.createElement('script'); s.type = 'module'; s.src = MODEL_VIEWER; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
+    vLoad.then(build, fail);
+  }
+
+  /* ---------- 턴어라운드 ---------- */
+  function mountTurn(imgs, spin) {
+    var box = $('#ta'); if (!box) return;
+    var n = imgs.length, cur = 0, timer = null, many = n > 1;
+    box.innerHTML = '<div class="ta-st" id="tas" role="img" aria-label="턴어라운드 이미지"><img alt="" id="tai" referrerpolicy="no-referrer"></div>' +
+      (many ? '<div class="ta-prog"><i id="tap"></i></div>' : '') +
+      '<div class="ta-bar"><span class="lbl" id="tal"></span>' + (many ? '<button type="button" data-ta="prev" aria-label="이전 이미지">←</button><button type="button" data-ta="next" aria-label="다음 이미지">→</button>' : '') + (spin && many ? '<button type="button" data-ta="play" id="tapl">자동 회전</button>' : '') + '<button type="button" data-ta="big">크게 보기</button></div>' +
+      (many ? '<div class="ta-th" id="tath">' + imgs.map(function (x, i) { return '<button type="button" data-tk="' + i + '" aria-label="' + (i + 1) + '번 이미지"><img src="' + esc(x.src) + '" alt="" loading="lazy" referrerpolicy="no-referrer">' + (x.label ? '<span>' + esc(x.label) + '</span>' : '') + '</button>'; }).join('') + '</div>' : '');
+    imgs.forEach(function (x) { var p = new Image(); p.src = x.src; });
+    function go(i) {
+      cur = ((i % n) + n) % n; $('#tai').src = imgs[cur].src;
+      $('#tal').innerHTML = esc(imgs[cur].label || ('View ' + (cur + 1))) + '<small>' + (cur + 1) + ' / ' + n + '</small>';
+      var p = $('#tap'); if (p) p.style.width = ((cur + 1) / n * 100) + '%';
+      $$('#tath button').forEach(function (b, k) { if (k === cur) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; var b = $('#tapl'); if (b) b.textContent = '자동 회전'; } }
+    function play() { if (timer) return; timer = setInterval(function () { go(cur + 1); }, 140); var b = $('#tapl'); if (b) b.textContent = '멈춤'; }
+    go(0);
+    var st = $('#tas'), drag = null;
+    st.addEventListener('pointerdown', function (e) { if (!many) return; stop(); drag = { x: e.clientX, c: cur }; st.classList.add('drag'); try { st.setPointerCapture(e.pointerId); } catch (x) {} });
+    st.addEventListener('pointermove', function (e) { if (!drag) return; var step = Math.max(14, Math.min(40, st.clientWidth / n)); go(drag.c - Math.round((e.clientX - drag.x) / step)); });
+    function up() { drag = null; st.classList.remove('drag'); }
+    st.addEventListener('pointerup', up); st.addEventListener('pointercancel', up);
+    st.addEventListener('keydown', function () {});
+    box.addEventListener('click', function (e) {
+      var a = e.target.closest('[data-ta]'), k = e.target.closest('[data-tk]');
+      if (k) { stop(); go(+k.getAttribute('data-tk')); return; }
+      if (!a) return; var t = a.getAttribute('data-ta');
+      if (t === 'prev') { stop(); go(cur - 1); } else if (t === 'next') { stop(); go(cur + 1); } else if (t === 'play') { timer ? stop() : play(); } else if (t === 'big') lightbox(imgs[cur].src);
+    });
+    box.setAttribute('tabindex', '0');
+    box.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { stop(); go(cur + 1); } else if (e.key === 'ArrowLeft') { stop(); go(cur - 1); } });
+  }
+  function lightbox(u) {
+    var d = document.createElement('div'); d.className = 'lb'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true');
+    d.innerHTML = '<img src="' + esc(u) + '" alt="" referrerpolicy="no-referrer"><button type="button">닫기</button>';
+    function close() { d.remove(); document.removeEventListener('keydown', key); } function key(e) { if (e.key === 'Escape') close(); }
+    d.addEventListener('click', close); document.addEventListener('keydown', key); document.body.appendChild(d);
+  }
+
+  /* ---------- 확인 · 수정 요청 ---------- */
+  function askTeam(kind, d, code) {
+    var head = '[' + (d.title || '프로젝트') + (d.version ? ' ' + d.version : '') + '] ';
+    var text = kind === 'ok' ? head + '시안을 확인했고, 이대로 진행해 주세요.' : head + '시안 수정을 요청드립니다.\n수정하고 싶은 부분: ';
+    var url = okLink(d.kakao) || CFG.KAKAO;
+    function after() { toast(url ? '내용을 복사했어요. 열린 채팅창에 붙여 넣어 주세요.' : '내용을 복사했어요. 담당자에게 전달해 주세요.'); if (url) window.open(url, '_blank', 'noopener'); }
+    try { navigator.clipboard.writeText(text).then(after, function () { toast('자동 복사가 안 됐어요. 담당자에게 직접 알려 주세요.'); }); } catch (e) { toast('자동 복사가 안 됐어요. 담당자에게 직접 알려 주세요.'); }
+  }
+
+  /* ---------- 시작 ---------- */
+  var hc = decodeURIComponent((location.hash || '').replace(/^#\/?/, '')).trim(), saved = '';
+  try { saved = sessionStorage.getItem('malong_confirm') || ''; } catch (e) {}
+  if (hc) openProject(hc); else if (saved) openProject(saved); else showGate();
+  window.addEventListener('hashchange', function () { var v = decodeURIComponent((location.hash || '').replace(/^#\/?/, '')).trim(); if (v) openProject(v); });
+})();
+</script>
+</body>
+</html>
