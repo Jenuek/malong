@@ -113,7 +113,8 @@ const recruitExt = /^https?:/i.test(S.recruit);
     <a href={U('work/')} aria-current={cur('work')}>Work</a>
     <a href={U('about/')} aria-current={cur('about')}>About</a>
     {hasEditorial && <a href={U('editorial/')} aria-current={cur('editorial')}>Editorial</a>}
-    <a href={U('guide.html')}>소재 찾기 · 견적 · 문의</a>
+    <a href={U('find.html')}>소재 찾기 · 가견적</a>
+    <a href={U('quote.html')}>견적 문의</a>
     <a href={U('track.html')}>프로젝트 진행 확인</a>
     <Fragment set:html={famnav} />
   </nav>
@@ -135,7 +136,8 @@ const recruitExt = /^https?:/i.test(S.recruit);
       <a class="g" href={U('work/')} aria-current={cur('work')}>Work</a>
       <a class="g" href={U('about/')} aria-current={cur('about')}>About</a>
       {hasEditorial && <a class="g" href={U('editorial/')} aria-current={cur('editorial')}>Editorial</a>}
-      <a class="g" href={U('guide.html')}>견적·문의</a>
+      <a class="g" href={U('find.html')}>소재 찾기</a>
+      <a class="g" href={U('quote.html')}>견적 문의</a>
       <a class="g" href={U('track.html')}>진행 확인</a>
     </div>
   </div>
@@ -145,11 +147,15 @@ const recruitExt = /^https?:/i.test(S.recruit);
 <main id="main">
   <slot />
   <footer class="foot">
-    <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('editorial/')}>Editorial</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('guide.html')}>견적 · 문의</a><a href={U('track.html')}>진행 확인</a></nav>
+    <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('editorial/')}>Editorial</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('find.html')}>소재 찾기</a><a href={U('quote.html')}>견적 문의</a><a href={U('track.html')}>진행 확인</a><a href={U('privacy/')}>개인정보처리방침</a></nav>
     <span set:html={foot.map((t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))).join('<br>')}></span>
     <span class="famf"><a href={site.STANDS_URL !== '#' ? site.STANDS_URL : 'https://jenuek.github.io/stands-website/'} target="_blank" rel="noopener"><img src={U('stands-logo.svg')} alt="STANDS" width="140" height="35"><i>↗</i></a><small class="fcap">아트 큐레이션 · 건축미술 · 전시</small><span class="cap">© Malongcompany Co.Ltd.</span></span>
   </footer>
 </main>
+<div class="fab" id="fab" role="navigation" aria-label="빠른 메뉴">
+  <a class="fab-b" href={U('find.html')}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><span>소재 찾기</span></a>
+  <a class="fab-b pri" href={U('quote.html')}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v11H9l-4 3.5v-3.5H4z"/><path d="M8 10h8M8 13h5"/></svg><span>견적 문의</span></a>
+</div>
 <script>import '../scripts/chrome.js';</script>
 <slot name="scripts" />
 </body>
