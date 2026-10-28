@@ -10,12 +10,13 @@
      SITE_URL      : 사이트 메인(Home/Work/About) 파일 이름. 메뉴와 '작품 보기' 링크가 이 파일로 연결됩니다.
      PORTFOLIO_URL : 소재 화면의 '작업 사례 더 보기' 버튼이 열 포트폴리오 주소.
      ===================================================================== */
+  var BASE = (document.body && document.body.getAttribute('data-base')) || '/';   // 사이트 주소의 앞부분(예: /malong/). 홈 틀(Base) 안에서 열리므로 어느 주소에서도 링크가 맞습니다.
   var CONFIG = {
     KAKAO_URL: '',
     PORTFOLIO_URL: '',
     SITE_URL: './',
     LEAD_URL: '',          // 이메일·문의를 받는 주소(Apps Script 웹앱). 사이트 설정(data/lead-config.json)에서 자동으로 채워집니다.
-    PRIVACY_URL: 'privacy/'
+    PRIVACY_URL: BASE + 'privacy/'
   };
   /* 이 파일은 두 페이지가 함께 씁니다. find.html = 소재 찾기·가견적(1~3단계), quote.html = 견적 문의 */
   var MODE = window.GUIDE_MODE === 'quote' ? 'quote' : 'find';
@@ -187,6 +188,7 @@
   var S = { step: 0, env: '', dur: '', form: '', height: 150, comp: '', mat: 'frp', ov: {}, f: { qty: '', budget: '', date: '', ref: '' }, c: { name: '', company: '', email: '', phone: '' }, sid: '' };
   var started = false;
 
+  function overlay() { var w = document.getElementById('gd-over'); if (!w) { w = document.createElement('div'); w.id = 'gd-over'; w.className = 'gd gd-over'; document.body.appendChild(w); } return w; }
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
   function matById(id) { for (var i = 0; i < MATS.length; i++) if (MATS[i].id === id) return MATS[i]; return MATS[0]; }
@@ -437,7 +439,7 @@
     var close = function () { if (o.parentNode) o.parentNode.removeChild(o); document.removeEventListener('keydown', key); };
     var key = function (e) { if (e.key === 'Escape') close(); };
     o.addEventListener('click', close); document.addEventListener('keydown', key);
-    document.body.appendChild(o); $('.lb-x', o).focus();
+    overlay().appendChild(o); $('.lb-x', o).focus();
   }
   document.addEventListener('scroll', function (e) { var t = e.target; if (t && t.classList && t.classList.contains('gal-track')) galSync(t); }, true);
   document.addEventListener('error', function (e) {
@@ -604,9 +606,9 @@
       '<label class="chk"><input type="checkbox" id="q-c2"><span>' + esc(T('gate.c2', '[선택] 마롱컴퍼니의 소식과 프로모션 이메일 수신에 동의합니다.')) + '</span></label>' +
       '<div class="gate-err" id="q-err" role="alert"></div>' +
       '<button type="submit" class="btn pri blk" id="q-go">' + esc(T('qf.go', '견적 문의 보내기')) + '</button></form></div>' +
-      '<div class="done" id="q-done" tabindex="-1" hidden><div class="done-k">' + esc(T('qf.done.k', '접수 완료')) + '</div><h2>' + esc(T('qf.done.h', '문의가 접수됐어요')) + '</h2>' +
+      '<div class="qdone" id="q-done" tabindex="-1" hidden><div class="done-k">' + esc(T('qf.done.k', '접수 완료')) + '</div><h2>' + esc(T('qf.done.h', '문의가 접수됐어요')) + '</h2>' +
       '<p>' + esc(T('qf.done.p', '담당자가 내용을 확인한 뒤 남겨 주신 이메일로 연락드려요. 급하시면 아래 연락처로 문의해 주세요.')) + '</p>' +
-      '<div class="cta-row"><a class="btn ln" href="work/">' + esc(T('qf.done.w', '작품 둘러보기')) + '</a><a class="btn gh" href="./">' + esc(T('qf.done.h2', '홈으로')) + '</a></div></div>';
+      '<div class="cta-row"><a class="btn ln" href="' + esc(siteURL('#/work')) + '">' + esc(T('qf.done.w', '작품 둘러보기')) + '</a><a class="btn gh" href="' + esc(siteURL('#/')) + '">' + esc(T('qf.done.h2', '홈으로')) + '</a></div></div>';
     s += '<div class="cta-row" id="s4cta"></div>';
     s += '<div id="s4ct"></div>' + x('disc', '이 페이지는 일반적인 소재 특성을 정리한 참고 자료입니다. 실제 사양, 내구성, 비용은 설치 환경과 프로젝트에 따라 달라지며 견적 단계에서 확정됩니다. ㈜마롱컴퍼니', 'p', 'disc');
     s += '<button type="button" class="restart" data-act="restart">' + esc(T('s4.restart', '처음부터 다시 하기')) + '</button>';
@@ -636,18 +638,16 @@
   function mcol(id) { return MC[id] || '#111111'; }
   function mtext(id) { var c = mcol(id), n = parseInt(c.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255; return (0.299 * r + 0.587 * g + 0.114 * b) > 165 ? '#111111' : '#FFFFFF'; }
   function mvars(id) { return '--mc:' + mcol(id) + ';--mt:' + mtext(id); }
-  function siteURL(h) { h = h || ''; if (!h || h === '#/') return CONFIG.SITE_URL || './'; if (h === '#/about') return 'about/'; if (h === '#/work') return 'work/'; var m = /^#\/work\/(.+)$/.exec(h); if (m) return 'materials/' + m[1] + '/'; return h; }
+  function siteURL(h) { h = h || ''; if (!h || h === '#/') return BASE; if (h === '#/about') return BASE + 'about/'; if (h === '#/work') return BASE + 'work/'; var m = /^#\/work\/(.+)$/.exec(h); if (m) return BASE + 'materials/' + m[1] + '/'; return h; }
   function workURL(id) { return siteURL('#/work' + (id ? '/' + id : '')); }
 
   /* ---------- 틀, 헤더, 하단 독 ---------- */
   var STEPS = [['st.0', '소재 알아보기'], ['st.1', '소재별 더 알아보기'], ['st.2', '비교하고 가견적'], ['st.3', '견적 문의']];
   function shell() {
     var q = MODE === 'quote', idx = q ? [3] : [0, 1, 2], fns = [page0, page1, page2, page3];
-    return '<header class="top"><div class="top-in"><a class="brand" href="' + esc(siteURL('#/')) + '" aria-label="마롱컴퍼니 홈"><svg viewBox="54 987 57 44" aria-hidden="true"><path d="' + LOGO + '"/></svg>' + x('bar.name', 'MALONG COMPANY', 'span') + '</a>' +
-      '<nav class="gnav" aria-label="사이트 메뉴"><a href="' + esc(siteURL('#/')) + '">Home</a><a href="' + esc(workURL()) + '">Work</a><a href="' + esc(siteURL('#/about')) + '">About</a><a href="' + FIND_URL + '"' + (q ? '' : ' aria-current="page"') + '>소재 찾기</a><a href="' + QUOTE_URL + '"' + (q ? ' aria-current="page"' : '') + '>견적 문의</a></nav></div>' +
-      '<div class="toolbar"><span class="tool">' + (q ? x('bar.tool.q', '견적 문의', 'span') : x('bar.tool.f', '소재 찾기 · 가견적', 'span')) + '</span><span class="stepno" id="stepno"></span></div>' +
-      (q ? '' : '<ol class="prog" id="prog">' + STEPS.slice(0, 3).map(function (s, i) { return '<li><button type="button" data-step="' + i + '" aria-label="' + (i + 1) + '단계 ' + esc(T(s[0], s[1])) + '"></button></li>'; }).join('') + '</ol><div class="mybar" id="mybar" hidden></div>') + '</header>' +
-      '<main class="stage" id="stage">' + idx.map(function (i) { return '<section class="page" id="pg' + i + '" aria-label="' + (i + 1) + '단계 ' + esc(T(STEPS[i][0], STEPS[i][1])) + '">' + fns[i]() + '</section>'; }).join('') + '</main>' +
+    return '<div class="gbar"><div class="toolbar"><span class="tool">' + (q ? x('bar.tool.q', '견적 문의', 'span') : x('bar.tool.f', '소재 찾기 · 가견적', 'span')) + '</span><span class="stepno" id="stepno"></span></div>' +
+      (q ? '' : '<ol class="prog" id="prog">' + STEPS.slice(0, 3).map(function (s, i) { return '<li><button type="button" data-step="' + i + '" aria-label="' + (i + 1) + '단계 ' + esc(T(s[0], s[1])) + '"></button></li>'; }).join('') + '</ol><div class="mybar" id="mybar" hidden></div>') + '</div>' +
+      '<div class="stage" id="stage">' + idx.map(function (i) { return '<section class="page" id="pg' + i + '" aria-label="' + (i + 1) + '단계 ' + esc(T(STEPS[i][0], STEPS[i][1])) + '">' + fns[i]() + '</section>'; }).join('') + '</div>' +
       '<div class="dock"><div class="dock-in" id="dock"></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div>';
   }
   function head() {
@@ -683,10 +683,17 @@
     document.documentElement.style.setProperty('--dock-h', (fixed ? d.offsetHeight : 0) + 'px');
   }
   window.addEventListener('resize', fitDock);
+  // 모바일에서는 사이트 상단 메뉴(고정) 바로 아래에 단계 표시줄이 붙도록 높이를 맞춘다
+  function fitTop() {
+    var t = document.getElementById('top'), h = 0;
+    if (t && getComputedStyle(t).display !== 'none') h = t.offsetHeight;
+    document.documentElement.style.setProperty('--toph', h + 'px');
+  }
+  window.addEventListener('resize', fitTop); window.addEventListener('load', fitTop);
 
   /* ---------- 리드(이메일) 수집 · 문의 전송 ---------- */
   var LKEY = 'malong-lead-v1', LEAD = null, gateNext = null, gateOpenAt = 0;
-  var FIND_URL = 'find.html', QUOTE_URL = 'quote.html';
+  var FIND_URL = BASE + 'find/', QUOTE_URL = BASE + 'quote/';
   function leadOn() { return /^https:\/\//i.test(String(CONFIG.LEAD_URL || '')); }
   function locked() { return MODE === 'find' && leadOn() && !LEAD; }
   function okMail(s) { return /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/.test(String(s || '').trim()); }
@@ -698,7 +705,7 @@
   function saveLead() { try { localStorage.setItem(LKEY, JSON.stringify(LEAD)); } catch (e) {} }
   function ext(a, b) { for (var k in b) if (Object.prototype.hasOwnProperty.call(b, k)) a[k] = b[k]; return a; }
   function base(type) {
-    var b = { type: type, v: 1, leadId: LEAD ? LEAD.id : '', page: (location.pathname.split('/').pop() || 'index'), ref: String(document.referrer || '').slice(0, 200), at: new Date().toISOString() };
+    var b = { type: type, v: 1, leadId: LEAD ? LEAD.id : '', page: (MODE === 'quote' ? 'quote' : 'find'), ref: String(document.referrer || '').slice(0, 200), at: new Date().toISOString() };
     try { var sp = new URLSearchParams(location.search); ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (k) { var v = sp.get(k); if (v) b[k] = v.slice(0, 80); }); } catch (e) {}
     return b;
   }
@@ -746,7 +753,7 @@
   function openGate(next) {
     gateNext = next == null ? null : next; gateOpenAt = Date.now();
     var g = $('#gate');
-    if (!g) { g = document.createElement('div'); g.id = 'gate'; g.className = 'gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-modal', 'true'); g.setAttribute('aria-labelledby', 'gate-h'); document.body.appendChild(g); }
+    if (!g) { g = document.createElement('div'); g.id = 'gate'; g.className = 'gate'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-modal', 'true'); g.setAttribute('aria-labelledby', 'gate-h'); overlay().appendChild(g); }
     g.innerHTML = gateHTML(); g.hidden = false; document.documentElement.classList.add('gate-on');
     var em = $('#g-email'); if (em) setTimeout(function () { try { em.focus(); } catch (e) {} }, 60);
   }
@@ -866,7 +873,7 @@
   }
   function render() {
     var sy = window.scrollY, was = started;
-    $('#app').innerHTML = shell();
+    $('#app').innerHTML = shell(); fitTop();
     var cur = S.step; started = false; S.step = -1; go(cur, true);
     if (was) window.scrollTo(0, sy);
     FL.forEach(function (f) { var el = document.getElementById('f-' + f[0]); if (el) el.value = S.f[f[0]] || ''; });
@@ -881,7 +888,7 @@
       done();
     }
     if (!window.fetch) { finish(null); return; }
-    fetch('data/guide.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); }).then(finish, function () { finish(null); });
+    fetch(BASE + 'data/guide.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); }).then(finish, function () { finish(null); });
   }
 
   /* ---------- 이벤트 ---------- */
@@ -961,7 +968,7 @@
       done();
     }
     if (!window.fetch) { finish(null); return; }
-    fetch('data/lead-config.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); }).then(finish, function () { finish(null); });
+    fetch(BASE + 'data/lead-config.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); }).then(finish, function () { finish(null); });
   }
   loadState(); loadLead();
   var pend = 2;
