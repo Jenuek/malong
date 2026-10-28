@@ -233,7 +233,9 @@
       var oh = parseInt(sp.get('oh'), 10); if (oh) { ov.height = oh; any = true; }
       if (any) { q.ov = ov; var keep = S.step; absorb(q); S.step = keep; }
     } catch (e) {}
-    S.step = MODE === 'quote' ? 3 : Math.min(S.step, 2);
+    /* 소재 찾기는 메뉴·버튼으로 들어오면 항상 1단계부터. (?s=3 은 '견적 문의 → 이전'으로 돌아올 때만 가견적 단계로) */
+    var back = false; try { back = new URLSearchParams(location.search).get('s') === '3'; } catch (e) {}
+    S.step = MODE === 'quote' ? 3 : (back ? 2 : 0);
   }
   /* 선택값을 주소로 만들어 소재 찾기 → 견적 문의로 넘깁니다 */
   function qs() {
@@ -664,7 +666,7 @@
     if (st === 0) sum = ready() ? (locked() ? '<span>' + esc(T('gate.dock', '추천 결과가 준비됐어요')) + '</span>' : '<span>' + esc(T('dock.rec', '추천 1순위')) + '</span><b>' + esc(mname(rank()[0].m)) + '</b>') : '<span>' + esc(T('dock.pick', '설치 장소·기간·조형 종류를 골라 주세요')) + '</span>';
     if (st === 2 && calcOn()) { var r = calc(eff()); sum = '<span>' + esc(T('dock.est', '가견적')) + '</span><b>' + esc(r ? range(r) : T('sm.consult', '상담 후 안내')) + '</b>'; }
     if (MODE === 'quote') {
-      b += '<a class="btn gh" href="' + FIND_URL + qs() + '">' + esc(T('dock.tofind', '소재 찾기')) + '</a>';
+      b += '<a class="btn gh" href="' + FIND_URL + (qs() ? qs() + '&s=3' : '?s=3') + '">' + esc(T('dock.tofind', '소재 찾기')) + '</a>';
       if (leadOn()) b += '<button type="button" class="btn pri" data-act="submit"' + ($('#q-wrap') && $('#q-wrap').hidden ? ' hidden' : '') + '>' + esc(T('qf.go', '견적 문의 보내기')) + '</button>';
       else b += k ? '<a class="btn pri" data-act="kakao" href="' + esc(k) + '" target="_blank" rel="noopener noreferrer">' + esc(T('s4.kakao', '카카오톡 문의하기')) + '</a>' : '<button type="button" class="btn pri" data-act="copy">' + esc(T('s4.copy', '내용 복사하기')) + '</button>';
     } else {
