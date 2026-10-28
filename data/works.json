@@ -1,0 +1,291 @@
+{
+  "items": [
+    {
+      "show": true,
+      "id": "401",
+      "name": "곡면 포토존",
+      "materials": [
+        "frp"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "402",
+      "name": "캐릭터 마스코트",
+      "materials": [
+        "frp"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "411",
+      "name": "대형 입체 글자",
+      "materials": [
+        "eps"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "421",
+      "name": "로비 상징 조형",
+      "materials": [
+        "metal"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "431",
+      "name": "LED 포토존",
+      "materials": [
+        "acrylic"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "403",
+      "name": "벤치형 조형물",
+      "materials": [
+        "frp"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "441",
+      "name": "기념 오브제",
+      "materials": [
+        "brass"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "412",
+      "name": "행사장 아치 게이트",
+      "materials": [
+        "eps"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "451",
+      "name": "정밀 캐릭터 피규어",
+      "materials": [
+        "print"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "422",
+      "name": "스테인리스 사인",
+      "materials": [
+        "metal"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "404",
+      "name": "시리즈 볼라드",
+      "materials": [
+        "frp",
+        "metal"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "432",
+      "name": "투광 네온 사인",
+      "materials": [
+        "acrylic"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "405",
+      "name": "공공 아트 오브제",
+      "materials": [
+        "frp"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "413",
+      "name": "팝업 대형 소품",
+      "materials": [
+        "eps"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "442",
+      "name": "소형 조각상",
+      "materials": [
+        "brass"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "423",
+      "name": "광장 아트 월",
+      "materials": [
+        "metal"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "406",
+      "name": "키즈 놀이 조형",
+      "materials": [
+        "frp",
+        "eps"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "433",
+      "name": "야간 경관 조형",
+      "materials": [
+        "acrylic",
+        "metal"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "452",
+      "name": "시안·원형 제작",
+      "materials": [
+        "print",
+        "frp"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "414",
+      "name": "전시 연출 오브제",
+      "materials": [
+        "eps",
+        "frp"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "443",
+      "name": "상징 동상",
+      "materials": [
+        "brass"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "424",
+      "name": "기업 로고 조형",
+      "materials": [
+        "metal",
+        "acrylic"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "453",
+      "name": "소형 디오라마",
+      "materials": [
+        "print"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "407",
+      "name": "캐릭터 시리즈",
+      "materials": [
+        "frp"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "434",
+      "name": "미디어 월 조형",
+      "materials": [
+        "acrylic"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "415",
+      "name": "대형 조형 사인",
+      "materials": [
+        "eps",
+        "metal"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "425",
+      "name": "로비 아트 월",
+      "materials": [
+        "metal"
+      ],
+      "image": "",
+      "desc": ""
+    },
+    {
+      "show": true,
+      "id": "444",
+      "name": "기념 부조",
+      "materials": [
+        "brass"
+      ],
+      "image": "",
+      "desc": ""
+    }
+  ]
+}
