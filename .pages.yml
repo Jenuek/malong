@@ -12,7 +12,7 @@ content:
   path: data/works.json
   fields:
   - name: items
-    label: 작품 목록
+    label: 작품 목록 (맨 위 작품일수록 먼저 보이고, 홈의 최신 작품은 위에서부터 보여줍니다)
     type: object
     list:
       collapsible:
@@ -50,7 +50,6 @@ content:
     - name: desc
       label: 설명 (선택)
       type: text
-    description: 맨 위 작품일수록 먼저 보입니다. 홈의 "최신 작품"은 위에서부터 몇 개를 보여줍니다.
 - name: materials
   label: 소재
   type: file
@@ -323,7 +322,7 @@ content:
     label: 숫자 주석
     type: text
   - name: history
-    label: 연혁
+    label: 연혁 (연도·월 순서는 자동 정렬)
     type: object
     list:
       collapsible:
@@ -339,7 +338,6 @@ content:
     - name: text
       label: 내용
       type: text
-    description: 연도·월 순서는 자동으로 정렬됩니다.
   - name: contact
     label: 연락처
     type: object
