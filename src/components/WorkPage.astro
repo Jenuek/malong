@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSite, compact, abs } from '../lib/data.js';
+import { createEngine } from '../lib/engine.js';
+import { PAGE, emptyState, facetsOf } from '../lib/filter.js';
+
+interface Props { matId?: string; page?: number; }
+const { matId = 'all', page = 1 } = Astro.props;
+
+const site = await getSite();
+const E = createEngine(site.ctx);
+E.setState('work', matId);
+const m = matId === 'all' ? null : E.byId(matId);
+const baseList = site.PORT.filter((w) => matId === 'all' || w.mats.includes(matId));
+const total = baseList.length;
+const pages = Math.max(1, Math.ceil(total / PAGE));
+const slice = baseList.slice((page - 1) * PAGE, page * PAGE);
+const F = facetsOf(baseList.map(compact), emptyState());
+const root = matId === 'all' ? 'work/' : 'materials/' + matId + '/';
+const hrefOf = (n) => (n <= 1 ? E.U(root) : E.U(root + 'page/' + n + '/'));
+const pathOf = (n) => (n <= 1 ? root : root + 'page/' + n + '/');
+
+const tiles = slice.map((w, i) => E.tileHTML(w, i, { eager: i < 4 })).join('') + (page >= pages ? E.ctaTile(m) : '');
+const head = E.pageHeadHTML(m, total).replace('<h1>Works</h1>', m ? `<h1>${E.esc(m.en)} Works</h1>` : '<h1>Works</h1>');
+
+const name = m ? `${m.en} 작품` : '작품 포트폴리오';
+const title = (m ? `${m.en} 작품 · ${m.kr}` : '작품 포트폴리오 · Work') + (page > 1 ? ` (${page}쪽)` : '');
+const desc = m
+  ? `${m.tag} 마롱컴퍼니가 ${m.en}(${m.kr})로 제작한 작품 ${total}점을 모았습니다.`
+  : `공공미술·건축미술·전시·상업 공간 조형물까지, 마롱컴퍼니가 제작한 작품 ${total}점. 소재·분류·연도·지역·태그로 찾아보세요.`;
+
+const first = slice[0];
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', name, description: desc, url: abs(pathOf(page)), inLanguage: 'ko-KR', isPartOf: { '@id': abs('') + '#site' } },
+  { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: slice.map((w, i) => ({ '@type': 'ListItem', position: (page - 1) * PAGE + i + 1, url: abs('work/' + w.pid + '/'), name: w.name })) },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '홈', item: abs('') },
+    { '@type': 'ListItem', position: 2, name: 'Work', item: abs('work/') },
+    ...(m ? [{ '@type': 'ListItem', position: 3, name: m.en, item: abs(root) }] : []),
+  ] },
+];
+const win = [];
+for (let n = 1; n <= pages; n++) if (n === 1 || n === pages || Math.abs(n - page) <= 2) win.push(n);
+---
+<Base
+  title={title} description={desc} path={pathOf(page)} nav="work" side="work" f={matId} count={total}
+  prevHref={page > 1 ? pathOf(page - 1) : ''} nextHref={page < pages ? pathOf(page + 1) : ''}
+  jsonLd={ld}
+>
+  <div id="v-work" data-mat={matId} data-page={page} data-home={E.U(root)}>
+    {m && <section class="band" id="band" set:html={E.bandHTML(m)}></section>}
+    <div class="page-h" id="pageh" set:html={head}></div>
+    <Fragment set:html={E.toolbarHTML(F, {})} />
+    <div class="listwrap">
+      <div class="works" id="works" set:html={tiles}></div>
+      <div id="more"></div>
+      {pages > 1 && (
+        <nav class="pager" aria-label="쪽 이동">
+          {page > 1 ? <a href={hrefOf(page - 1)} rel="prev">← 이전</a> : <span class="off">← 이전</span>}
+          <ol>
+            {win.map((n, i) => (
+              <li>{i > 0 && n - win[i - 1] > 1 && <span class="gap">…</span>}<a href={hrefOf(n)} aria-current={n === page ? 'page' : undefined}>{n}</a></li>
+            ))}
+          </ol>
+          {page < pages ? <a href={hrefOf(page + 1)} rel="next">다음 →</a> : <span class="off">다음 →</span>}
+        </nav>
+      )}
+    </div>
+  </div>
+  <script>import '../scripts/work.js';</script>
+</Base>
