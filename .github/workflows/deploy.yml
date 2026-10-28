@@ -1,0 +1,55 @@
+# 마롱컴퍼니 사이트 자동 배포
+# data/ · src/ · public/ 안의 파일이 바뀌어 저장(커밋)될 때마다 사이트를 새로 만들어 GitHub Pages 에 올립니다. (보통 1~3분)
+# 처음 한 번: 저장소 Settings → Pages → Build and deployment → Source 를 "GitHub Actions" 로 바꿔 주세요.
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: 사진 변환 캐시 (작품 사진이 많아도 빨라지게)
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.astro
+          key: astro-assets-${{ runner.os }}-${{ hashFiles('src/assets/**') }}
+          restore-keys: astro-assets-${{ runner.os }}-
+      - run: npm ci
+      - name: 사이트 만들기
+        run: npm run build
+        env:
+          # 도메인이 정해지면 저장소 Settings → Secrets and variables → Actions → Variables 에 SITE_URL, BASE_PATH 를 넣으세요.
+          # (예: SITE_URL=https://www.malong.co.kr , BASE_PATH=/ ) — 비워 두면 https://jenuek.github.io/malong 로 만들어요.
+          SITE_URL: ${{ vars.SITE_URL }}
+          BASE_PATH: ${{ vars.BASE_PATH }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
