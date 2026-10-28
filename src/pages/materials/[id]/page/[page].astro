@@ -1,0 +1,16 @@
+---
+import WorkPage from '../../../../components/WorkPage.astro';
+import { getSite } from '../../../../lib/data.js';
+import { PAGE } from '../../../../lib/filter.js';
+export async function getStaticPaths() {
+  const { MATS, PORT } = await getSite();
+  const out = [];
+  for (const m of MATS) {
+    const n = Math.ceil(PORT.filter((w) => w.mats.includes(m.id)).length / PAGE);
+    for (let p = 2; p <= n; p++) out.push({ params: { id: m.id, page: String(p) } });
+  }
+  return out;
+}
+const { id, page } = Astro.params;
+---
+<WorkPage matId={id} page={parseInt(page, 10)} />
