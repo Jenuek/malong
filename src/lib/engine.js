@@ -8,7 +8,7 @@ export function createEngine(ctx) {
       HOME = ctx.HOME || {}, EXH = ctx.EXH || { areas: [], hist: [] }, BD = ctx.BD || null, STANDS_URL = ctx.STANDS_URL || '#';
   var BASE = ctx.base || '/';
   function U(p) { return BASE + p; }
-  var GUIDE_URL = U('find.html'), QUOTE_URL = U('quote.html');
+  var GUIDE_URL = U('find/'), QUOTE_URL = U('quote/');
   var state = { view: 'work', f: 'all' };
 
   var BG = ['#EFEBF6', '#F2EEE8', '#E8EDF1', '#EAF1EF', '#F3EBE9', '#EEEEF2'];
@@ -143,7 +143,7 @@ export function createEngine(ctx) {
     return '<aside class="bzst" aria-label="STANDS"><div><p class="cap">Where art STANDS?</p><h3>' + esc(head) + '</h3><p>' + esc(line) + '</p></div>' +
       '<a class="go" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><img src="' + STANDS_IMG + '" alt="STANDS"><span>아트 프로젝트 문의 ↗</span></a></aside>';
   }
-  function guideRow() {   // 소재 찾기·가견적(find.html) → 견적 문의(quote.html)로 이어집니다
+  function guideRow() {   // 소재 찾기·가견적(find/) → 견적 문의(quote/)로 이어집니다
     return '<div class="sub-h">문의</div><div class="abgo"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적<span>→</span></a><a href="' + QUOTE_URL + '">견적 문의<span>→</span></a></div>';
   }
   function statsOf(list) { return '<div class="stats">' + list.map(function (r) { return '<div class="stat"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>'; }).join('') + '</div>'; }
