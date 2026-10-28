@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import '../../styles/guide.css';
+import { BASE } from '../../lib/data.js';
+---
+<Base title="견적 문의" description="조형물 제작·설치 견적을 문의하세요. 소재 찾기에서 고른 내용이 문의에 자동으로 담겨요." path="quote/" nav="quote" bodyClass="gd-page">
+  <div id="app" class="gd"></div>
+  <noscript><p style="padding:24px">이 페이지는 자바스크립트가 필요해요. 문의는 1644-4762 또는 admin@malong.co.kr 로 주세요.</p></noscript>
+  <Fragment slot="scripts">
+    <script is:inline>window.GUIDE_MODE = 'quote';</script>
+    <script is:inline src={BASE + 'assets/guide.js'}></script>
+  </Fragment>
+</Base>
