@@ -1,55 +1,178 @@
 # Pages CMS 설정 — https://app.pagescms.org 에서 이 저장소를 연결하면 아래 항목이 편집 화면으로 나타납니다.
 media:
-  input: images
-  output: /images
+- name: images
+  label: 사진 (자동 최적화)
+  input: src/assets/images
+  output: /src/assets/images
+  rename: safe
+  categories:
+  - image
+- name: uploads
+  label: 본문 삽입 사진
+  input: public/uploads
+  output: /uploads
   rename: safe
   categories:
   - image
 content:
-- name: works
-  label: 작품 (Work)
+- name: featured
+  label: 작품 순서 (맨 위 고정 목록)
   type: file
-  path: data/works.json
+  path: data/featured.json
   fields:
   - name: items
-    label: 작품 목록 (맨 위 작품일수록 먼저 보이고, 홈의 최신 작품은 위에서부터 보여줍니다)
+    label: 맨 위에 보여 줄 작품 — 항목을 끌어서(드래그) 순서를 바꾸세요
     type: object
     list:
       collapsible:
         collapsed: true
-        summary: '{id} · {name}'
+        summary: '{work}'
     fields:
-    - name: show
-      label: 사이트에 표시
-      type: boolean
-      default: true
-    - name: id
-      label: 작품 ID (숫자, 겹치지 않게)
-      type: string
-      description: 작품마다 다른 번호. 작품 주소(#/w/번호)에 쓰입니다. 만든 뒤에는 바꾸지 않는 게 좋아요.
-    - name: name
-      label: 작품명
-      type: string
-    - name: materials
-      label: 소재 (여러 개 선택 가능)
-      type: select
+    - name: work
+      label: 작품
+      type: reference
       options:
-        values:
-        - frp
-        - eps
-        - metal
-        - acrylic
-        - brass
-        - print
-        multiple: true
-      description: frp=FRP, eps=스티로폼, metal=금속, acrylic=아크릴·LED, brass=황동, print=3D프린팅
+        collection: works
+        search: id,name
+        value: '{id}'
+        label: '{id} · {name}'
+      required: true
+    description: 여기에 넣은 작품이 위에서부터 차례로 맨 앞에 나옵니다. 나머지 작품은 연도 최신순 → ID 큰 순서로 자동 정렬됩니다. 홈의 '최신 작품' 줄도 이 순서를 따릅니다.
+- name: works
+  label: 작품 (Work)
+  type: collection
+  path: data/works
+  format: json
+  filename:
+    template: '{fields.id}.json'
+    field: create
+  view:
+    fields:
+    - id
+    - name
+    - category
+    - year
+    - region
+    - show
+    primary: name
+    sort:
+    - id
+    - name
+    - year
+    - category
+    - region
+    default:
+      sort: id
+      order: desc
+  fields:
+  - name: show
+    label: 사이트에 표시
+    type: boolean
+    default: true
+  - name: id
+    label: 작품 ID (숫자, 겹치지 않게)
+    type: string
+    required: true
+    description: 작품마다 다른 번호. 작품 주소(…/work/번호/)와 파일 이름에 쓰입니다. 만든 뒤에는 바꾸지 않는 게 좋아요.
+  - name: name
+    label: 작품명
+    type: string
+    required: true
+  - name: materials
+    label: 소재 (여러 개 선택 가능)
+    type: select
+    required: true
+    options:
+      values:
+      - frp
+      - eps
+      - metal
+      - acrylic
+      - brass
+      - print
+      multiple: true
+    description: frp=FRP, eps=스티로폼, metal=금속, acrylic=아크릴·LED, brass=황동, print=3D프린팅
+  - name: category
+    label: 분류
+    type: select
+    options:
+      values:
+      - 공공미술
+      - 건축미술
+      - 전시·갤러리
+      - 상업·브랜드
+      - 팝업·이벤트
+      - 기타
+    description: 사이트의 '분류' 필터에 쓰입니다.
+  - name: year
+    label: '제작 연도 (예: 2024)'
+    type: number
+  - name: region
+    label: 지역
+    type: select
+    options:
+      values:
+      - 서울
+      - 경기
+      - 인천
+      - 부산
+      - 대구
+      - 광주
+      - 대전
+      - 울산
+      - 세종
+      - 강원
+      - 충북
+      - 충남
+      - 전북
+      - 전남
+      - 경북
+      - 경남
+      - 제주
+      - 해외
+    description: 사이트의 '지역' 필터에 쓰입니다.
+  - name: client
+    label: 발주처 (선택)
+    type: string
+  - name: tags
+    label: '태그 (필터·검색용, 예: 로비, 포토존, 곡면)'
+    type: string
+    list: true
+    description: 이미 쓴 태그와 똑같이 적어야 한 묶음으로 모여요. 작품당 3~5개를 권장합니다.
+  - name: image
+    label: 대표 사진
+    type: image
+    description: 올리면 사이트가 크기를 자동으로 줄여 줍니다. 원본 그대로(가로 2000px 이상) 올려도 괜찮아요. 비워 두면 임시 그림이 나옵니다.
+  - name: alt
+    label: 사진 설명 (검색·접근성용)
+    type: string
+    description: '예: 로비에 설치된 FRP 곡면 포토존'
+  - name: gallery
+    label: 추가 사진
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{alt}'
+    fields:
     - name: image
-      label: 작품 사진
+      label: 사진
       type: image
-      description: 비워 두면 임시 그림이 나옵니다.
-    - name: desc
-      label: 설명 (선택)
-      type: text
+    - name: alt
+      label: 사진 설명
+      type: string
+  - name: desc
+    label: 작품 설명 (2~3줄)
+    type: text
+    description: 검색엔진 요약에도 쓰입니다. 프로젝트 배경과 제작 포인트를 적어 주세요.
+  - name: seo_title
+    label: 검색 결과 제목 (선택)
+    type: string
+    description: 비우면 '작품명 — 소재 작품' 으로 자동 생성됩니다.
+  - name: seo_description
+    label: 검색 결과 설명 (선택)
+    type: text
+    description: 비우면 작품 설명(없으면 분류·연도·지역·소재)으로 자동 생성됩니다.
 - name: materials
   label: 소재
   type: file
@@ -141,9 +264,13 @@ content:
         summary: '{work}'
     fields:
     - name: work
-      label: 작품 ID
-      type: string
-      description: 작품 목록에 있는 ID
+      label: 작품
+      type: reference
+      options:
+        collection: works
+        search: id,name
+        value: '{id}'
+        label: '{id} · {name}'
     - name: image
       label: 대표 사진 (선택)
       type: image
@@ -473,10 +600,118 @@ content:
   - name: portfolio_link
     label: 포트폴리오 링크
     type: string
+  - name: site_name
+    label: 사이트 이름 (검색결과·공유 미리보기)
+    type: string
+  - name: site_description
+    label: 사이트 기본 설명 (검색결과 요약, 120자 안팎)
+    type: text
+  - name: og_image
+    label: 공유 미리보기 기본 이미지 (1200×630 권장)
+    type: image
+    description: 카톡·SNS에 링크를 붙였을 때 뜨는 이미지. 비우면 기본 이미지를 씁니다.
   - name: footer
     label: 하단 문구 (최대 3줄)
     type: string
     list: true
+- name: editorial
+  label: 에디토리얼 (글)
+  type: collection
+  path: data/editorial
+  format: yaml-frontmatter
+  filename:
+    template: '{fields.slug}.md'
+    field: create
+  view:
+    fields:
+    - title
+    - date
+    - category
+    - draft
+    primary: title
+    sort:
+    - date
+    - title
+    default:
+      sort: date
+      order: desc
+  fields:
+  - name: title
+    label: 제목
+    type: string
+    required: true
+  - name: slug
+    label: 주소 이름 (영문 소문자·숫자·하이픈)
+    type: string
+    required: true
+    description: '글 주소가 됩니다: …/editorial/이-이름/ . 예: frp-vs-styrofoam. 발행한 뒤에는 바꾸지 마세요(검색 순위가 사라져요).'
+  - name: description
+    label: 요약 (검색결과 설명, 120자 안팎)
+    type: text
+    required: true
+    description: 목록 카드와 검색 결과 설명에 그대로 쓰입니다.
+  - name: date
+    label: 발행일
+    type: date
+    required: true
+  - name: updated
+    label: 수정일 (선택)
+    type: date
+  - name: category
+    label: 분류
+    type: select
+    options:
+      values:
+      - 소재 노트
+      - 프로젝트 이야기
+      - 인터뷰
+      - 소식
+      - 가이드
+  - name: tags
+    label: 태그 (글 모아보기용)
+    type: string
+    list: true
+  - name: cover
+    label: 대표 이미지
+    type: image
+    description: 목록 카드·공유 미리보기에 쓰입니다. 가로 1600px 이상 권장.
+  - name: cover_alt
+    label: 대표 이미지 설명
+    type: string
+  - name: author
+    label: 작성자
+    type: string
+    default: 마롱컴퍼니
+  - name: related
+    label: 관련 작품 (글 아래에 보여줘요)
+    type: reference
+    options:
+      collection: works
+      search: id,name
+      value: '{id}'
+      label: '{id} · {name}'
+      multiple: true
+  - name: seo_title
+    label: 검색 결과 제목 (선택)
+    type: string
+    description: 비우면 글 제목을 씁니다.
+  - name: seo_description
+    label: 검색 결과 설명 (선택)
+    type: text
+    description: 비우면 위의 요약을 씁니다.
+  - name: noindex
+    label: 검색엔진에 노출하지 않기
+    type: boolean
+    default: false
+  - name: draft
+    label: 초안 (켜 두면 사이트에 공개되지 않아요)
+    type: boolean
+    default: true
+  - name: body
+    label: 본문
+    type: rich-text
+    options:
+      media: uploads
 - name: guide
   label: 견적 가이드 (소재 찾기·가견적·문의)
   type: file
