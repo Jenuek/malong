@@ -1,0 +1,12 @@
+---
+import WorkPage from '../../../components/WorkPage.astro';
+import { getSite } from '../../../lib/data.js';
+import { PAGE } from '../../../lib/filter.js';
+export async function getStaticPaths() {
+  const { PORT } = await getSite();
+  const pages = Math.ceil(PORT.length / PAGE);
+  return Array.from({ length: Math.max(0, pages - 1) }, (_, i) => ({ params: { page: String(i + 2) } }));
+}
+const { page } = Astro.params;
+---
+<WorkPage matId="all" page={parseInt(page, 10)} />
