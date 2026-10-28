@@ -3,22 +3,19 @@ title: 샘플 글 — FRP와 스티로폼, 어떤 소재를 골라야 할까
 slug: sample-frp-vs-styrofoam
 description: 곡면 조형과 대형 단기 프로젝트 사이에서 소재를 고르는 기준을 정리했어요.
 date: 2026-10-01
+updated: 2026-10-28
 category: 소재 노트
 tags:
   - 소재
   - FRP
   - 스티로폼
-cover: ""
-cover_alt: ""
+author: 마롱컴퍼니
 related:
   - "401"
   - "411"
-seo_title: ""
-seo_description: ""
 noindex: false
-draft: true
+draft: false
 ---
-
 이 글은 **초안(draft)** 샘플입니다. CMS에서 `draft`를 끄면 사이트에 공개되고, 에디토리얼 메뉴가 자동으로 나타납니다.
 
 ## 어떤 기준으로 고를까
