@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getSite, abs } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+const site = await getSite();
+const E = createEngine(site.ctx);
+const A = site.ABOUT;
+const desc = [A.who.short, (A.who.text[0] || '').slice(0, 120)].filter(Boolean).join(' ');
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'AboutPage', name: 'About 마롱컴퍼니', url: abs('about/'), inLanguage: 'ko-KR', about: { '@id': abs('') + '#org' } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: '홈', item: abs('') }, { '@type': 'ListItem', position: 2, name: 'About', item: abs('about/') }] },
+];
+---
+<Base title="About · 회사 소개" description={desc} path="about/" nav="about" side="about" jsonLd={ld}>
+  <div id="v-about" set:html={E.aboutHTML()}></div>
+  <script>import '../../scripts/about.js';</script>
+</Base>
