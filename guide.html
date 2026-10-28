@@ -597,17 +597,15 @@
   'use strict';
 
   /* =====================================================================
-     설정 (여기만 고치면 됩니다)
-     SHEET_CSV_URL : 구글 시트 > 파일 > 공유 > 웹에 게시 에서 만든 '.csv' 주소.
-                     비워 두면 이 파일에 들어 있는 기본 내용이 보입니다.
+     설정
+     문구·점수·가견적 금액·사진은 data/guide.json 에 있고, Pages CMS 의 "견적 가이드" 에서 고칩니다.
      KAKAO_URL     : 카카오톡 채널 채팅 주소 (예: https://pf.kakao.com/_abcDEF/chat).
                      비워 두면 '카카오톡 문의하기' 버튼 대신 '내용 복사하기' 버튼이 보입니다.
-                     (시트의 ct.kakao 칸에 넣어도 됩니다. 시트 값이 우선합니다.)
+                     (CMS 의 ct_kakao 칸에 넣어도 됩니다. CMS 값이 우선합니다.)
      SITE_URL      : 사이트 메인(Home/Work/About) 파일 이름. 메뉴와 '작품 보기' 링크가 이 파일로 연결됩니다.
-     PORTFOLIO_URL : 소재 화면의 '작업 사례 더 보기' 버튼이 열 포트폴리오 주소. 소재마다 시트에서 따로 바꿀 수 있습니다.
+     PORTFOLIO_URL : 소재 화면의 '작업 사례 더 보기' 버튼이 열 포트폴리오 주소.
      ===================================================================== */
   var CONFIG = {
-    SHEET_CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSk3jrcmT16BBi-7l2BxliYp_jcute5Dct-6W07NqE9FJlhTPDvXwh0YUd3oArVHg/pub?output=csv',
     KAKAO_URL: '',
     PORTFOLIO_URL: '',
     SITE_URL: 'index.html'
@@ -615,15 +613,16 @@
 
   var CONTENT = {};
   var ORDER = [], SEEN = {}, DEF = {}, LDEF = {}, NDEF = {}, FDEF = {}, PHOTOS = [];
-  var CACHE_KEY = 'malong-guide-sheet-v1:' + CONFIG.SHEET_CSV_URL;
+  /* JSON 에는 점(.)이 들어간 이름을 쓸 수 없어 '.' 대신 '_' 로 저장합니다 (예: m.frp.name → m_frp_name) */
+  function K(k) { return String(k).replace(/\./g, '_'); }
 
   function reg(k) { if (!SEEN[k]) { SEEN[k] = 1; ORDER.push(k); } }
-  function has(k) { return Object.prototype.hasOwnProperty.call(CONTENT, k); }
-  function T(k, d) { reg(k); DEF[k] = d; return has(k) ? CONTENT[k] : d; }
+  function has(k) { return Object.prototype.hasOwnProperty.call(CONTENT, K(k)); }
+  function T(k, d) { reg(k); DEF[k] = d; return has(k) ? CONTENT[K(k)] : d; }
   function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function LS(k, d) {
     reg(k); LDEF[k] = d;
-    var re = new RegExp('^' + escRe(k) + '\\.(\\d+)$'), items = [];
+    var re = new RegExp('^' + escRe(K(k)) + '_(\\d+)$'), items = [];
     Object.keys(CONTENT).forEach(function (key) { var m = re.exec(key); if (m) items.push([parseInt(m[1], 10), CONTENT[key]]); });
     if (!items.length) return d;
     items.sort(function (a, b) { return a[0] - b[0]; });
@@ -633,30 +632,29 @@
   function NV(k, d) {
     reg(k); NDEF[k] = d;
     if (!has(k)) return d;
-    var n = parseInt(CONTENT[k], 10);
+    var n = parseInt(CONTENT[K(k)], 10);
     return isNaN(n) ? d : Math.max(0, Math.min(5, n));
   }
   // 0 이상의 일반 숫자 (가견적 단가·일수 등)
   function NN(k, d) {
     reg(k); FDEF[k] = d;
     if (!has(k)) return d;
-    var n = parseFloat(String(CONTENT[k]).replace(/[,\s원]/g, ''));
+    var n = parseFloat(String(CONTENT[K(k)]).replace(/[,\s원]/g, ''));
     return (isNaN(n) || n < 0) ? d : n;
   }
   function imgURL(u) {
     u = String(u || '').trim(); if (!u) return '';
-    var m = /drive\.google\.com\/file\/d\/([\w-]+)/.exec(u) || /drive\.google\.com\/(?:open|uc)\?(?:[^#]*&)?id=([\w-]+)/.exec(u);
-    if (m) return 'https://lh3.googleusercontent.com/d/' + m[1];
-    if (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)) return u;
+    if (/^https:\/\//i.test(u)) return u;
+    u = u.replace(/^\/(?!\/)/, '');
     // 저장소 안의 사진 (예: images/frp-1.jpg)
     return /^(?![a-z][a-z0-9+.-]*:)(?!\/\/)[\w.\-\/%]+\.(?:jpe?g|png|webp|gif|avif)$/i.test(u) ? u : '';
   }
-  function PK(k) { reg(k); DEF[k] = ''; if (PHOTOS.indexOf(k) < 0) PHOTOS.push(k); return has(k) ? imgURL(CONTENT[k]) : ''; }
+  function PK(k) { reg(k); DEF[k] = ''; if (PHOTOS.indexOf(k) < 0) PHOTOS.push(k); return has(k) ? imgURL(CONTENT[K(k)]) : ''; }
   function linkURL(u) { u = String(u || '').trim(); return /^https:\/\//i.test(u) ? u : ''; }
-  function P(id) { var k = 'm.' + id + '.photo'; reg(k); if (PHOTOS.indexOf(k) < 0) PHOTOS.push(k); return has(k) ? imgURL(CONTENT[k]) : ''; }
+  function P(id) { var k = 'm.' + id + '.photo'; reg(k); if (PHOTOS.indexOf(k) < 0) PHOTOS.push(k); return has(k) ? imgURL(CONTENT[K(k)]) : ''; }
   function kakaoURL() {
     reg('ct.kakao'); DEF['ct.kakao'] = CONFIG.KAKAO_URL || '';
-    var u = (has('ct.kakao') && String(CONTENT['ct.kakao']).trim()) ? CONTENT['ct.kakao'] : CONFIG.KAKAO_URL;
+    var u = (has('ct.kakao') && String(CONTENT[K('ct.kakao')]).trim()) ? CONTENT[K('ct.kakao')] : CONFIG.KAKAO_URL;
     u = String(u || '').trim();
     return /^https:\/\//i.test(u) ? u : '';
   }
@@ -964,7 +962,7 @@
   function galleryHTML(id, name) {
     var items = [], i, k = 'm.' + id + '.';
     for (i = 0; i < 6; i++) { var u = PK(k + 'g.' + i), c = T(k + 'gc.' + i, ''); if (u) items.push([u, c]); }
-    if (!items.length && has(k + 'photo')) { var lg = imgURL(CONTENT[k + 'photo']); if (lg) items.push([lg, '']); }
+    if (!items.length && has(k + 'photo')) { var lg = imgURL(CONTENT[K(k + 'photo')]); if (lg) items.push([lg, '']); }
     var lk = linkURL(T(k + 'link', '')), h = ''; if (!lk || /malongcompany\.co\.kr/i.test(lk)) lk = workURL(id); var ext = /^https?:/i.test(lk);
     if (items.length) {
       var one = items.length === 1;
@@ -1256,32 +1254,16 @@
     else fallbackCopy(text, done);
   }
 
-  /* ---------- 시트 읽기 ---------- */
-  function parseCSV(t) {
-    var rows = [], row = [], f = '', q = false, i, c;
-    if (t.charCodeAt(0) === 0xFEFF) t = t.slice(1);
-    for (i = 0; i < t.length; i++) {
-      c = t[i];
-      if (q) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
-      else if (c === '"') q = true;
-      else if (c === ',') { row.push(f); f = ''; }
-      else if (c === '\n' || c === '\r') { if (c === '\r' && t[i + 1] === '\n') i++; row.push(f); f = ''; rows.push(row); row = []; }
-      else f += c;
-    }
-    if (f !== '' || row.length) { row.push(f); rows.push(row); }
-    return rows;
-  }
-  function rowsToContent(rows) {
+  /* ---------- data/guide.json 읽기 ---------- */
+  /* guide.json 은 { 구역: { 키: 값, … }, … } 모양 → 키: 값 한 줄짜리로 펼칩니다 */
+  function flatten(j) {
     var c = {};
-    rows.forEach(function (r) {
-      var k = (r[0] || '').trim();
-      if (!/^[A-Za-z][A-Za-z0-9_.\-]*$/.test(k)) return;
-      c[k] = String(r[3] == null ? '' : r[3]).replace(/^\s+|\s+$/g, '');
+    Object.keys(j || {}).forEach(function (sec) {
+      var o = j[sec]; if (!o || typeof o !== 'object') return;
+      Object.keys(o).forEach(function (k) { var v = o[k]; c[k] = v == null ? '' : String(v).replace(/\r/g, '').replace(/^\s+|\s+$/g, ''); });
     });
     return c;
   }
-  function saveCache(c) { try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), c: c })); } catch (e) {} }
-  function loadCache() { try { var j = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); return j && j.c ? j.c : null; } catch (e) { return null; } }
   var DEBUG = /[?&]debug\b/.test(location.search), dbgEl = null;
   function dbg(t) {
     if (!DEBUG) return;
@@ -1295,18 +1277,17 @@
     if (was) window.scrollTo(0, sy);
     FL.forEach(function (f) { var el = document.getElementById('f-' + f[0]); if (el) el.value = S.f[f[0]] || ''; });
   }
-  function loadSheet() {
-    if (!CONFIG.SHEET_CSV_URL) { dbg('시트 주소가 비어 있어요. 기본 내용을 보여주는 중이에요.'); return; }
-    dbg('시트를 불러오는 중…');
-    fetch(CONFIG.SHEET_CSV_URL, { cache: 'no-store' }).then(function (r) {
-      if (!r.ok) throw new Error('http ' + r.status);
-      return r.text();
-    }).then(function (txt) {
-      var c = rowsToContent(parseCSV(txt)), n = Object.keys(c).length;
-      if (!n) { dbg('시트에서 항목을 찾지 못했어요. 시트 첫 번째 칸(키)이 그대로인지, 게시한 시트가 \'내용\'인지 확인해 주세요.'); return; }
-      dbg('시트에서 ' + n + '개 항목을 불러왔어요.');
-      if (JSON.stringify(c) !== JSON.stringify(CONTENT)) { CONTENT = c; saveCache(c); render(); }
-    }).catch(function (e) { dbg('시트를 불러오지 못해 ' + (Object.keys(CONTENT).length ? '저장해 둔 내용' : '기본 내용') + '을 보여주는 중이에요. (' + e.message + ')'); });
+  function loadGuide(done) {
+    var fin = false, to = setTimeout(function () { finish(null); }, 5000);
+    function finish(j) {
+      if (fin) return; fin = true; clearTimeout(to);
+      var c = flatten(j), n = Object.keys(c).length;
+      if (n) CONTENT = c;
+      dbg(n ? 'data/guide.json 에서 ' + n + '개 항목을 불러왔어요.' : 'data/guide.json 을 불러오지 못해 기본 내용을 보여주는 중이에요.');
+      done();
+    }
+    if (!window.fetch) { finish(null); return; }
+    fetch('data/guide.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); }).then(finish, function () { finish(null); });
   }
 
   /* ---------- 이벤트 ---------- */
@@ -1364,13 +1345,12 @@
 
   /* ---------- 시작 ---------- */
   loadState();
-  var cached = CONFIG.SHEET_CSV_URL ? loadCache() : null;
-  if (cached) CONTENT = cached;
-  render();
-  try { history.replaceState({ step: S.step }, ''); } catch (e) {}
-  loadSheet();
+  loadGuide(function () {
+    render();
+    try { history.replaceState({ step: S.step }, ''); } catch (e) {}
+  });
 
-  // 시트 양식을 만들 때 쓰는 기본값 목록 (화면에는 영향 없음)
+  // 입력 칸(.pages.yml)을 만들 때 쓰는 기본값 목록 (화면에는 영향 없음)
   function registerAll() {
     var save = JSON.stringify(S), was = started;
     MATS.forEach(function (m) { matBody(m); });

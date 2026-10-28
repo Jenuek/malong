@@ -519,9 +519,9 @@ main { min-width: 0; }
 <script>
 (function () {
   'use strict';
-  /* ============ 설정: 나중에 구글 시트 / 실제 사진으로 교체되는 부분 ============ */
+  /* ============ 설정: 아래 값은 비상용 기본값 — 평소에는 data/*.json (Pages CMS) 이 우선합니다 ============ */
   var GUIDE_URL = 'guide.html';                       // 견적 가이드 주소
-  var RECRUIT_URL = 'mailto:admin@malong.co.kr?subject=%5B%EC%B1%84%EC%9A%A9%5D%20%EB%AC%B8%EC%9D%98';   // 채용 페이지 주소(시트 '채용 링크'로 교체)
+  var RECRUIT_URL = 'mailto:admin@malong.co.kr?subject=%5B%EC%B1%84%EC%9A%A9%5D%20%EB%AC%B8%EC%9D%98';   // 채용 페이지 주소 (data/settings.json 이 우선)
   var PORTFOLIO_URL = 'https://www.malongcompany.co.kr/sub/portfolio/portfolio.php';
 
   // 소재 데이터. img가 비어 있으면 임시 그림이 나옵니다. (예: img: 'image/mat-frp.png')
@@ -1048,25 +1048,27 @@ var TONES = {frp:['#D9C3A5','#F1E7D6'],eps:['#E3CC8F','#F6EEDA'],metal:['#B7C4D2
   }
   function statsOf(list) { return '<div class="stats">' + list.map(function (r) { return '<div class="stat"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>'; }).join('') + '</div>'; }
   function flowOf(list) { return '<ol class="flow">' + list.map(function (f, k) { return '<li><em>' + two(k + 1) + '</em><b>' + esc(f[0]) + '</b><span>' + esc(f[1]) + '</span></li>'; }).join('') + '</ol>'; }
+  function exStats() { var l = BD && BD.exhibit && L(BD.exhibit.stats).map(function (x) { return [S(x && x.value), S(x && x.label)]; }).filter(function (x) { return x[0]; }); return l && l.length ? l : [['36명', '협업작가'], ['56명', '전시작가']]; }
+  var BD = null;
   var BIZ = {
     arch: {
       title: '건축미술', en: 'Architectural Art', mat: 'metal',
-      lead: '건축물 미술작품 심의, 처음부터 끝까지.',
+      get lead() { return bz('arch', 'lead', '건축물 미술작품 심의, 처음부터 끝까지.'); },
       body: function () {
         var A = ABOUT;
-        return '<div class="two"><div class="stack"><p class="lead">건축주는 건축 개요만 전달해 주세요.</p><p class="txt">심의 서류 준비와 접수는 전담 팀이 맡습니다. 작품 제작과 설치, 준공에 필요한 미술작품 설치확인서를 받을 때까지 이어서 진행합니다.</p></div>' +
+        return '<div class="two"><div class="stack"><p class="lead">' + esc(bz('arch', 'intro_title', '건축주는 건축 개요만 전달해 주세요.')) + '</p><p class="txt">' + esc(bz('arch', 'intro_text', '심의 서류 준비와 접수는 전담 팀이 맡습니다. 작품 제작과 설치, 준공에 필요한 미술작품 설치확인서를 받을 때까지 이어서 진행합니다.')) + '</p></div>' +
           '<div>' + statsOf(A.record.slice(2)) + '<p class="note">' + esc(A.recordNote) + '</p></div></div>' +
           '<div class="sub-h">건축미술팀의 약속</div>' + svc(A.promise, 'k4') +
           '<div class="sub-h">심의 5 Steps</div>' + flowOf(A.flow) +
-          stBlock('건물에 놓을 작품이 필요하다면', '작품이 설 자리를 찾고, 세우고, 그 이후까지 돌보는 아트 컴퍼니.');
+          stBlock(bz('arch', 'stands_title', '건물에 놓을 작품이 필요하다면'), bz('arch', 'stands_text', '작품이 설 자리를 찾고, 세우고, 그 이후까지 돌보는 아트 컴퍼니.'));
       }
     },
     public: {
       title: '공공미술', en: 'Public Art', mat: 'frp',
-      lead: '디자인부터 설치까지, 한 팀이 맡습니다.',
+      get lead() { return bz('public', 'lead', '디자인부터 설치까지, 한 팀이 맡습니다.'); },
       body: function () {
         var A = ABOUT;
-        return '<div class="two"><div class="stack"><p class="lead">컨설팅, 기획, 제작, 운송, 설치.</p><p class="txt">프로젝트마다 전담 매니저가 배정되어 기한과 품질, 안전한 운송과 설치, 유지보수까지 챙깁니다.</p></div>' +
+        return '<div class="two"><div class="stack"><p class="lead">' + esc(bz('public', 'intro_title', '컨설팅, 기획, 제작, 운송, 설치.')) + '</p><p class="txt">' + esc(bz('public', 'intro_text', '프로젝트마다 전담 매니저가 배정되어 기한과 품질, 안전한 운송과 설치, 유지보수까지 챙깁니다.')) + '</p></div>' +
           '<div>' + statsOf(A.record.slice(0, 2)) + '<p class="note">' + esc(A.recordNote) + '</p></div></div>' +
           '<div class="sub-h">공공미술 콘텐츠</div>' + svc(A.contents, 'k4') +
           '<div class="sub-h">5 Steps</div>' + flowOf(A.how.map(function (w) { return [w[0], w[1]]; })) +
@@ -1076,14 +1078,14 @@ var TONES = {frp:['#D9C3A5','#F1E7D6'],eps:['#E3CC8F','#F6EEDA'],metal:['#B7C4D2
     },
     exhibit: {
       title: '전시 · 갤러리', en: 'Exhibition & Gallery', mat: 'print',
-      lead: '전시를 기획하고, 작가와 작품을 소개합니다.',
+      get lead() { return bz('exhibit', 'lead', '전시를 기획하고, 작가와 작품을 소개합니다.'); },
       body: function () {
-        return '<div class="two"><div class="stack"><p class="lead">기업·기관 전시부터 해외 전시까지.</p><p class="txt">한국을 넘어 유럽까지, 대중과 예술을 잇는 전시를 기획해 왔습니다. 복합문화공간 셀렉티드마롱에서는 작가를 소개하는 전시를 엽니다.</p></div>' +
-          '<div>' + statsOf([['36명', '협업작가'], ['56명', '전시작가']]) + '</div></div>' +
+        return '<div class="two"><div class="stack"><p class="lead">' + esc(bz('exhibit', 'intro_title', '기업·기관 전시부터 해외 전시까지.')) + '</p><p class="txt">' + esc(bz('exhibit', 'intro_text', '한국을 넘어 유럽까지, 대중과 예술을 잇는 전시를 기획해 왔습니다. 복합문화공간 셀렉티드마롱에서는 작가를 소개하는 전시를 엽니다.')) + '</p></div>' +
+          '<div>' + statsOf(exStats()) + '</div></div>' +
           '<div class="sub-h">전시기획</div><ul class="svc k4" style="padding:0;margin:0">' + EXH.areas.map(function (t, k) { return '<li><em>' + two(k + 1) + '</em><b>' + esc(t) + '</b></li>'; }).join('') + '</ul>' +
           '<div class="sub-h">전시 이력</div><ol class="bzhist">' + EXH.hist.map(function (y) { return '<li><span class="y">' + y[0] + '</span><ul>' + y[1].map(function (e) { return '<li><em>' + esc(e[0]) + '</em><span>' + esc(e[1]) + '</span></li>'; }).join('') + '</ul></li>'; }).join('') + '</ol>' +
-          '<div class="sub-h">갤러리</div><div class="two"><div class="stack"><p class="lead" style="font-size:clamp(18px,2.4vw,26px)">셀렉티드마롱 SLTD MALONG</p></div><p class="txt">' + esc(areaText('갤러리')) + '</p></div>' +
-          stBlock('새 아트 프로젝트가 필요하다면', '작품이 설 자리를 찾고, 세우고, 그 이후까지 돌보는 아트 컴퍼니.');
+          '<div class="sub-h">갤러리</div><div class="two"><div class="stack"><p class="lead" style="font-size:clamp(18px,2.4vw,26px)">' + esc(bz('exhibit', 'gallery_title', '셀렉티드마롱 SLTD MALONG')) + '</p></div><p class="txt">' + esc(areaText('갤러리')) + '</p></div>' +
+          stBlock(bz('exhibit', 'stands_title', '새 아트 프로젝트가 필요하다면'), bz('exhibit', 'stands_text', '작품이 설 자리를 찾고, 세우고, 그 이후까지 돌보는 아트 컴퍼니.'));
       }
     }
   };
@@ -1121,51 +1123,21 @@ var TONES = {frp:['#D9C3A5','#F1E7D6'],eps:['#E3CC8F','#F6EEDA'],metal:['#B7C4D2
   }
 
   /* =====================================================================
-     구글 시트 연결 — 시트를 고치면 사이트 내용이 바뀝니다
-     ID: 시트 주소 https://docs.google.com/spreadsheets/d/<이 부분>/edit 의 <이 부분>
-         (시트 공유 설정이 "링크가 있는 모든 사용자 - 뷰어" 여야 읽힙니다. ID 를 비워 두면 이 파일 안의 내용만 씁니다)
-     TABS: 시트 아래쪽 탭 이름. 탭 이름을 바꿨다면 여기도 같이 바꾸세요.
-     PUB: (선택) 탭마다 "파일 > 공유 > 웹에 게시 > CSV" 주소를 넣으면 위 방법이 막혔을 때 대신 읽습니다.
+     콘텐츠 — data/*.json 을 읽어 옵니다 (Pages CMS 에서 편집 · 저장하면 1~2분 뒤 사이트에 반영)
+     works(작품) · materials(소재) · home(홈) · about(회사소개) · settings(설정) · business(사업분야)
+     위쪽에 적힌 값들은 JSON 을 읽지 못할 때만 쓰이는 비상용 기본값입니다. 평소에는 data/*.json 이 우선합니다.
      ===================================================================== */
-  var SHEET = {
-    ID: '1UJRNWsrP6HBkF_c_8lx1VrmR9Ix8UJTrPZ_W6Gv-_wQ',
-    TABS: { works: '작품', mats: '소재', home: '홈', about: '회사소개', conf: '설정' },
-    PUB: {}
-  };
   var FOOT = [
     '(주)마롱컴퍼니 · 대표 이어진 · 사업자등록번호 472-81-00053',
     '(06015) 서울특별시 강남구 압구정로80길 14 · Tel 1644-4762 · admin@malong.co.kr',
     '※ 작품 이미지는 시안용 임시 이미지입니다.'
   ];
-  function clone(o) { return JSON.parse(JSON.stringify(o)); }
-  var SNAP = clone({ MATS: MATS, PORT: PORT, ABOUT: ABOUT, HOME: HOME, KAKAO: KAKAO, PF: PORTFOLIO_URL, FOOT: FOOT });
-  var CACHE_KEY = 'malong_site_sheet_v1';
+  var DATA_FILES = ['works', 'materials', 'home', 'about', 'settings', 'business'];
 
   /* ---- 읽기 도우미 ---- */
-  function parseCSV(t) {
-    var rows = [], row = [], f = '', q = false, i, c;
-    t = String(t || '').replace(/^﻿/, '');
-    for (i = 0; i < t.length; i++) {
-      c = t[i];
-      if (q) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
-      else if (c === '"') q = true;
-      else if (c === ',') { row.push(f); f = ''; }
-      else if (c === '\n' || c === '\r') { if (c === '\r' && t[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
-      else f += c;
-    }
-    if (f !== '' || row.length) { row.push(f); rows.push(row); }
-    return rows;
-  }
-  /* 첫 줄을 제목으로 읽어 { h: {제목: 번호}, rows: [...] } 로. need 의 제목이 하나라도 없으면 null */
-  function table(csv, need) {
-    var r = parseCSV(csv); if (r.length < 1) return null;
-    var h = {}; r[0].forEach(function (x, k) { x = String(x).trim(); if (x && !(x in h)) h[x] = k; });
-    for (var k = 0; k < need.length; k++) if (!(need[k] in h)) return null;
-    return { h: h, rows: r.slice(1).filter(function (x) { return x.some(function (v) { return String(v).trim() !== ''; }); }) };
-  }
-  function cv(T, row, name) { var k = T.h[name]; return k === undefined || row[k] === undefined ? '' : String(row[k]).trim(); }
-  function cvRaw(T, row, name) { var k = T.h[name]; return k === undefined || row[k] === undefined ? '' : String(row[k]).replace(/\r/g, ''); }
-  function pad2(v) { v = String(v).trim(); return /^\d$/.test(v) ? '0' + v : v; }
+  function S(v) { return v == null ? '' : String(v).replace(/\r/g, '').trim(); }
+  function L(v) { return Array.isArray(v) ? v : []; }
+  function pad2(v) { v = S(v); return /^\d$/.test(v) ? '0' + v : v; }
   function okLink(u) { return /^https?:\/\/[^\s"'<>]+$/i.test(u) ? u : ''; }
   function aboutLink(u) {
     u = String(u || '').trim(); if (!u) return '#';
@@ -1173,42 +1145,37 @@ var TONES = {frp:['#D9C3A5','#F1E7D6'],eps:['#E3CC8F','#F6EEDA'],metal:['#B7C4D2
     if (/^[a-z][a-z0-9+.-]*:/i.test(u) || u.slice(0, 2) === '//') return '#';
     return ABOUT.base + u;
   }
-  /* 사진 주소: 구글 드라이브 공유 링크 → 바로 보이는 주소로, 그 외 https 주소와 올린 파일 경로는 그대로 */
+  /* 사진 주소: CMS 로 올린 파일 경로(images/…)나 https 주소 */
   function imgURL(u) {
-    u = String(u || '').trim(); if (!u) return '';
-    var m = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:[^#]*&)?id=|thumbnail\?(?:[^#]*&)?id=)([\w-]{20,})/.exec(u) || /docs\.google\.com\/uc\?(?:[^#]*&)?id=([\w-]{20,})/.exec(u);
-    if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w1600';
+    u = S(u); if (!u) return '';
     if (/^https?:\/\//i.test(u)) return okLink(u);
     if (/^[a-z][a-z0-9+.-]*:/i.test(u) || u.slice(0, 2) === '//' || /["'<>\s]/.test(u)) return '';
-    return u;
+    return u.replace(/^\/+/, '');
   }
-  function isOff(v) { return /^(n|no|아니오|숨김|0|false|off|x)$/i.test(String(v).trim()); }
+  function isOn(v) { return !(v === false || /^(n|no|false|0|off|숨김|아니오)$/i.test(S(v))); }
 
-  /* ---- 탭별 적용 ---- */
-  function applyMats(T) {
-    if (!T) return;
-    var order = [], out = [];
-    T.rows.forEach(function (r) {
-      var id = cv(T, r, '소재ID').toLowerCase(), m = byId(id); if (!m || order.indexOf(id) > -1) return;
-      order.push(id);
+  /* ---- 파일별 적용 ---- */
+  function applyMats(j) {
+    var out = [];
+    L(j && j.items).forEach(function (r) {
+      var m = byId(S(r.id).toLowerCase()); if (!m || out.indexOf(m) > -1) return;
       var v;
-      if ((v = cv(T, r, '번호'))) m.no = pad2(v);
-      if ((v = cv(T, r, '영문명'))) m.en = v;
-      if ((v = cv(T, r, '한글명'))) m.kr = v;
-      if ((v = cv(T, r, '한줄 소개'))) m.tag = v;
-      ['설치', '비용', '기간'].forEach(function (k, i) { var x = cv(T, r, k); if (x && m.specs[i]) m.specs[i][1] = x; });
-      var pts = [1, 2, 3].map(function (i) { return cv(T, r, '포인트' + i); }).filter(Boolean); if (pts.length) m.pts = pts;
-      var st = [1, 2, 3, 4].map(function (i) { return cv(T, r, '제작' + i); }).filter(Boolean); if (st.length) m.steps = st;
-      for (var k = 1; k <= 4; k++) {
-        var nm = cv(T, r, '층' + k + ' 이름'); if (!nm) continue;
-        var cl = cv(T, r, '층' + k + ' 색'); cl = cl && cl[0] !== '#' ? '#' + cl : cl;
-        var old = m.layers[k - 1] || m.layers[m.layers.length - 1];
-        m.layers[k - 1] = [nm, cv(T, r, '층' + k + ' 설명') || old[1], /^#[0-9a-f]{6}$/i.test(cl) ? cl : old[2]];
-      }
-      m.layers = m.layers.filter(Boolean);
+      if ((v = S(r.no))) m.no = pad2(v);
+      if ((v = S(r.en))) m.en = v;
+      if ((v = S(r.kr))) m.kr = v;
+      if ((v = S(r.tag))) m.tag = v;
+      m.img = imgURL(r.image);
+      [['install', 0], ['cost', 1], ['period', 2]].forEach(function (p) { var x = S(r[p[0]]); if (x) m.specs[p[1]][1] = x; });
+      var pts = L(r.points).map(S).filter(Boolean).slice(0, 3); if (pts.length) m.pts = pts;
+      var st = L(r.steps).map(S).filter(Boolean).slice(0, 4); if (st.length) m.steps = st;
+      var ly = L(r.layers).filter(function (x) { return x && S(x.name); }).slice(0, 4).map(function (x, k) {
+        var old = m.layers[k] || m.layers[m.layers.length - 1], cl = S(x.color); cl = cl && cl[0] !== '#' ? '#' + cl : cl;
+        return [S(x.name), S(x.desc) || old[1], /^#[0-9a-f]{6}$/i.test(cl) ? cl : old[2]];
+      });
+      if (ly.length) m.layers = ly;
       out.push(m);
     });
-    MATS.forEach(function (m) { if (order.indexOf(m.id) < 0) out.push(m); });
+    MATS.forEach(function (m) { if (out.indexOf(m) < 0) out.push(m); });
     MATS = out;
   }
   function matAliases() {
@@ -1216,136 +1183,110 @@ var TONES = {frp:['#D9C3A5','#F1E7D6'],eps:['#E3CC8F','#F6EEDA'],metal:['#B7C4D2
     MATS.forEach(function (m) { [m.id, m.en, m.kr].forEach(function (x) { if (x) a[String(x).trim().toLowerCase()] = m.id; }); });
     return a;
   }
-  function parseMats(s) {
+  function parseMats(v) {
     var a = matAliases(), ids = [];
-    String(s || '').split(/[,;\/+\n、]/).forEach(function (x) { var id = a[x.trim().toLowerCase()]; if (id && ids.indexOf(id) < 0) ids.push(id); });
+    (Array.isArray(v) ? v : String(v || '').split(/[,;\/+\n、]/)).forEach(function (x) { var id = a[S(x).toLowerCase()]; if (id && ids.indexOf(id) < 0) ids.push(id); });
     return ids;
   }
-  function applyWorks(T) {
-    if (!T) return;
+  function applyWorks(j) {
     var list = [], seen = {};
-    T.rows.forEach(function (r) {
-      if (isOff(cv(T, r, '표시'))) return;
-      var pid = cv(T, r, '작품ID'), name = cv(T, r, '작품명'), mats = parseMats(cv(T, r, '소재'));
+    L(j && j.items).forEach(function (r) {
+      if (!isOn(r.show === undefined ? true : r.show)) return;
+      var pid = S(r.id), name = S(r.name), mats = parseMats(r.materials);
       if (!pid || !name || seen[pid]) return;
-      if (!mats.length) { try { console.warn('[sheet] 소재를 읽을 수 없어 건너뜀:', pid, name); } catch (e) {} return; }
+      if (!mats.length) { try { console.warn('[data] 소재를 읽을 수 없어 건너뜀:', pid, name); } catch (e) {} return; }
       seen[pid] = 1;
-      list.push({ name: name, pid: pid, mats: mats, img: imgURL(cv(T, r, '사진')), desc: cvRaw(T, r, '설명').trim() });
+      list.push({ name: name, pid: pid, mats: mats, img: imgURL(r.image), desc: S(r.desc) });
     });
     if (list.length) PORT = list;
   }
-  function applyHome(T) {
-    if (!T) return;
-    var d = {}; T.rows.forEach(function (r) { var k = cv(T, r, '항목'); if (k && !(k in d)) d[k] = cvRaw(T, r, '값').trim(); });
-    if (d['영문 소제목']) HOME.eyebrow = d['영문 소제목'];
-    if (d['제목']) HOME.title = esc(d['제목']).replace(/\n/g, '<br>');
-    if (d['소개문']) HOME.sub = d['소개문'];
+  function applyHome(j) {
+    if (!j) return;
+    var v;
+    if ((v = S(j.eyebrow))) HOME.eyebrow = v;
+    if ((v = S(j.title))) HOME.title = esc(v).replace(/\n/g, '<br>');
+    if ((v = S(j.sub))) HOME.sub = v;
     var hs = [];
-    for (var i = 1; i <= 6; i++) { var pid = d['대표작품' + i]; if (pid && workBy(pid)) hs.push({ pid: pid, img: imgURL(d['대표사진' + i]) }); }
+    L(j.hero).forEach(function (h) { var pid = S(h && h.work); if (pid && workBy(pid) && hs.length < 6) hs.push({ pid: pid, img: imgURL(h.image) }); });
     if (hs.length) HOME.hero = hs;
-    var n = parseInt(d['최신작품 수'], 10); if (n >= 3) HOME.n = Math.min(n, 40);
-    var s = parseFloat(d['전환 시간(초)']); if (s >= 2) HOME.heroMs = Math.min(s, 60) * 1000;
-    if (d['하단 문구']) HOME.end = d['하단 문구'];
+    var n = parseInt(j.latest_count, 10); if (n >= 3) HOME.n = Math.min(n, 40);
+    var s = parseFloat(j.interval_sec); if (s >= 2) HOME.heroMs = Math.min(s, 60) * 1000;
+    if ((v = S(j.end))) HOME.end = v;
+    var bz = L(j.biz).filter(function (b) { return b && S(b.title) && BIZ_IDS.indexOf(S(b.page)) > -1; }).map(function (b) { return [S(b.title), S(b.desc), S(b.page)]; });
+    if (bz.length) HOME.biz = bz;
+    var cl = L(j.clients).map(function (c) { return S(c && c.name != null ? c.name : c); }).filter(Boolean); if (cl.length) HOME.clients = cl;
+    if ((v = S(j.certs))) HOME.certs = v;
   }
-  function applyAbout(T) {
-    if (!T) return;
-    var g = {};
-    T.rows.forEach(function (r) {
-      var k = cv(T, r, '항목'); if (!k) return;
-      (g[k] = g[k] || []).push([cvRaw(T, r, '값1').trim(), cvRaw(T, r, '값2').trim(), cvRaw(T, r, '값3').trim()]);
-    });
-    function first(k) { return g[k] && g[k][0][0] ? g[k][0][0] : null; }
-    function rows(k, n) { return g[k] ? g[k].filter(function (x) { return x[0]; }).map(function (x) { return x.slice(0, n); }) : []; }
+  function applyAbout(j) {
+    if (!j) return;
+    function rows(arr, keys) { return L(arr).map(function (x) { return keys.map(function (k) { return S(x && x[k]); }); }).filter(function (x) { return x[0]; }); }
     var A = ABOUT, v;
-    if ((v = first('대표 문구'))) A.who.lead = v;
-    if ((v = first('한줄 소개'))) A.who.short = v;
-    if ((v = rows('소개 문단', 1).map(function (x) { return x[0]; })).length) A.who.text = v;
-    if (g['대표 사진']) A.who.img = imgURL(g['대표 사진'][0][0]);
-    if ((v = rows('가치', 2)).length) A.who.values = v;
-    if ((v = rows('사업 영역', 3)).length) A.areas = v;
-    if ((v = rows('공공미술 콘텐츠', 2)).length) A.contents = v;
-    if ((v = rows('건축미술 약속', 2)).length) A.promise = v;
-    if ((v = first('제작 안내문'))) A.howLead = v;
-    if ((v = rows('제작 단계(사진)', 3)).length) A.how = v.map(function (x) { return [x[0], x[1], imgURL(x[2])]; });
-    if ((v = rows('심의 단계', 2)).length) A.flow = v;
-    if ((v = first('소재 안내문'))) A.matText = v;
-    if ((v = rows('숫자', 2)).length) A.record = v;
-    if ((v = first('숫자 주석'))) A.recordNote = v;
-    if (g['연혁']) {
-      var ys = {}, keys = [];
-      g['연혁'].forEach(function (x) { if (!x[0] || !x[2]) return; if (!ys[x[0]]) { ys[x[0]] = []; keys.push(x[0]); } ys[x[0]].push([pad2(x[1]), x[2]]); });
-      keys.sort(function (a, b) { return (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0); });
-      if (keys.length) A.history = keys.map(function (y) { return [y, ys[y]]; });
-    }
-    if ((v = rows('연락처', 2)).length) A.contact = v;
+    if ((v = S(j.lead))) A.who.lead = v;
+    if ((v = S(j.short))) A.who.short = v;
+    if ((v = L(j.paragraphs).map(S).filter(Boolean)).length) A.who.text = v;
+    A.who.img = imgURL(j.photo);
+    if ((v = rows(j.values, ['name', 'desc'])).length) A.who.values = v;
+    if ((v = S(j.link_base))) A.base = v;
+    if ((v = rows(j.areas, ['name', 'desc', 'link'])).length) A.areas = v;
+    if ((v = rows(j.contents, ['name', 'desc'])).length) A.contents = v;
+    if ((v = rows(j.promises, ['name', 'desc'])).length) A.promise = v;
+    if ((v = S(j.how_lead))) A.howLead = v;
+    if ((v = rows(j.how_steps, ['name', 'desc', 'image'])).length) A.how = v.map(function (x) { return [x[0], x[1], imgURL(x[2])]; });
+    if ((v = rows(j.review_steps, ['name', 'desc'])).length) A.flow = v;
+    if ((v = S(j.mat_text))) A.matText = v;
+    if ((v = rows(j.record, ['value', 'label'])).length) A.record = v;
+    if ((v = S(j.record_note))) A.recordNote = v;
+    var ys = {}, keys = [];
+    L(j.history).forEach(function (x) { var y = S(x && x.year), t = S(x && x.text); if (!y || !t) return; if (!ys[y]) { ys[y] = []; keys.push(y); } ys[y].push([pad2(x.month), t]); });
+    keys.sort(function (a, b) { return (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0); });
+    if (keys.length) A.history = keys.map(function (y) { return [y, ys[y].sort(function (p, q) { return p[0] < q[0] ? -1 : p[0] > q[0] ? 1 : 0; })]; });
+    if ((v = rows(j.contact, ['label', 'value'])).length) A.contact = v;
   }
-  function applyConf(T) {
-    if (!T) return;
-    var d = {}; T.rows.forEach(function (r) { var k = cv(T, r, '항목'); if (k && !(k in d)) d[k] = cvRaw(T, r, '값').trim(); });
-    if ('카카오톡 채널 주소' in d) KAKAO = okLink(d['카카오톡 채널 주소']);
-    if (okLink(d['포트폴리오 링크'])) PORTFOLIO_URL = d['포트폴리오 링크'];
-    if (okLink(d['채용 링크'])) RECRUIT_URL = d['채용 링크'];
-    var ft = [1, 2, 3].filter(function (i) { return ('하단 문구' + i) in d; });
-    if (ft.length) FOOT = [1, 2, 3].map(function (i) { return ('하단 문구' + i) in d ? d['하단 문구' + i] : SNAP.FOOT[i - 1]; }).filter(Boolean);
+  function applySettings(j) {
+    if (!j) return;
+    if ('kakao_url' in j) KAKAO = okLink(S(j.kakao_url));
+    if (okLink(S(j.portfolio_link))) PORTFOLIO_URL = S(j.portfolio_link);
+    var rl = S(j.recruit_link); if (okLink(rl) || /^mailto:[^\s"'<>]+$/i.test(rl)) RECRUIT_URL = rl;
+    var ft = L(j.footer).map(S).filter(Boolean); if (ft.length) FOOT = ft;
   }
-  var NEED = { works: ['작품ID', '작품명', '소재'], mats: ['소재ID'], home: ['항목', '값'], about: ['항목', '값1'], conf: ['항목', '값'] };
-  function applyAll(CSV) {
-    MATS = clone(SNAP.MATS); PORT = clone(SNAP.PORT); ABOUT = clone(SNAP.ABOUT); HOME = clone(SNAP.HOME);
-    KAKAO = SNAP.KAKAO; PORTFOLIO_URL = SNAP.PF; FOOT = SNAP.FOOT.slice();
-    var T = {}; Object.keys(NEED).forEach(function (k) { try { T[k] = CSV[k] ? table(CSV[k], NEED[k]) : null; } catch (e) { T[k] = null; } });
-    function safe(fn, t) { try { fn(t); } catch (e) { try { console.warn('[sheet]', e); } catch (x) {} } }
-    safe(applyMats, T.mats); safe(applyWorks, T.works); safe(applyHome, T.home); safe(applyAbout, T.about); safe(applyConf, T.conf);
+  function applyBusiness(j) {
+    if (!j) return;
+    BD = j;
+    var u = S(j.stands_url); if (okLink(u)) STANDS_URL = u;
+    var ex = j.exhibit || {};
+    var ar = L(ex.areas).map(S).filter(Boolean); if (ar.length) EXH.areas = ar;
+    var hs = L(ex.history).map(function (y) { return [S(y && y.year), L(y && y.items).map(function (e) { return [S(e && e.kind), S(e && e.text)]; }).filter(function (e) { return e[1]; })]; }).filter(function (y) { return y[0] && y[1].length; });
+    if (hs.length) EXH.hist = hs;
   }
+  function applyAll(D) {
+    function safe(fn, k) { try { fn(D[k]); } catch (e) { try { console.warn('[data]', k, e); } catch (x) {} } }
+    safe(applyMats, 'materials'); safe(applyWorks, 'works'); safe(applyHome, 'home'); safe(applyAbout, 'about'); safe(applySettings, 'settings'); safe(applyBusiness, 'business');
+  }
+  /* 사업분야 문구: business.json 에 값이 있으면 그것을, 없으면 코드 안의 기본 문구를 씁니다 */
+  function bz(id, key, dflt) { var v = BD && BD[id] && S(BD[id][key]); return v || dflt; }
+
   /* 화면 아래 회사 정보 · Portfolio 링크 */
   function fillChrome() {
     var f = $('#ftInfo'); if (f) f.innerHTML = FOOT.map(esc).join('<br>');
     var p = $('#pfLink'); if (p) p.setAttribute('href', PORTFOLIO_URL);
     var rc = $('#rcLink'); if (rc) { rc.setAttribute('href', RECRUIT_URL); if (/^https?:/i.test(RECRUIT_URL)) { rc.setAttribute('target', '_blank'); rc.setAttribute('rel', 'noopener'); } }
   }
-  function rebuildAll() {
-    var y = window.scrollY;
-    $('#stkM').innerHTML = '';
-    fillChrome(); buildAbout(); renderHome(); if (state.view === 'biz') renderBiz(state.biz || 'arch');
-    if (state.view === 'work') { if (state.f !== 'all' && !byId(state.f)) state.f = 'all'; renderWork(); }
-    else if (state.view === 'home') { renderSideM(null); $('#lcount').textContent = two(PORT.length); }
-    else if (state.view === 'about') { setOn(((location.hash || '').match(/\/about\/(s[1-6])/) || [0, 's1'])[1]); }
-    if (state.ov) {
-      var w = workBy(state.ov), root = $('#ovl-root');
-      if (w) { root.innerHTML = workOverlay(w); var d = $('.ovl', root); if (d) d.style.animation = 'none'; } else { state.pushed = false; replaceHash(curHash()); }
-    }
-    window.scrollTo(0, y);
-  }
 
   /* ---- 가져오기 ---- */
-  function fetchText(url) {
-    return new Promise(function (ok, no) {
-      var ac = window.AbortController ? new AbortController() : null, to = setTimeout(function () { if (ac) ac.abort(); no(new Error('timeout')); }, 9000);
-      fetch(url, ac ? { signal: ac.signal } : {}).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(function (t) { clearTimeout(to); ok(t); }, function (e) { clearTimeout(to); no(e); });
+  function fetchJSON(name) {
+    return new Promise(function (ok) {
+      var ac = window.AbortController ? new AbortController() : null, to = setTimeout(function () { if (ac) ac.abort(); ok(null); }, 7000);
+      fetch('data/' + name + '.json', ac ? { signal: ac.signal, cache: 'no-cache' } : { cache: 'no-cache' })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (j) { clearTimeout(to); ok(j); }, function () { clearTimeout(to); ok(null); });
     });
   }
-  function loadTab(key) {
-    var tab = SHEET.TABS[key], urls = [];
-    if (SHEET.ID) urls.push('https://docs.google.com/spreadsheets/d/' + encodeURIComponent(SHEET.ID) + '/gviz/tq?tqx=out:csv&headers=1&sheet=' + encodeURIComponent(tab));
-    if (SHEET.PUB[key]) urls.push(SHEET.PUB[key]);
-    function next(i) {
-      if (i >= urls.length) return Promise.resolve(null);
-      return fetchText(urls[i]).then(function (t) { return table(t, NEED[key]) ? t : next(i + 1); }, function () { return next(i + 1); });
-    }
-    return next(0);
-  }
-  function readCache() { try { var c = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); return c && c.id === SHEET.ID && c.csv ? c.csv : null; } catch (e) { return null; } }
-  function writeCache(csv) { try { localStorage.setItem(CACHE_KEY, JSON.stringify({ id: SHEET.ID, csv: csv })); } catch (e) {} }
-  var sheetCSV = null;
-  function useCache() { if (!SHEET.ID) return; var c = readCache(); if (c) { sheetCSV = c; applyAll(c); } }
-  function fetchSheet() {
-    if (!SHEET.ID || !window.fetch || !window.Promise) return;
-    var keys = Object.keys(SHEET.TABS);
-    Promise.all(keys.map(loadTab)).then(function (res) {
-      var csv = {}, got = 0, same = true, old = sheetCSV || {};
-      keys.forEach(function (k, i) { csv[k] = res[i] || old[k] || null; if (res[i]) got++; if ((csv[k] || '') !== (old[k] || '')) same = false; });
-      if (!got || same) return;
-      sheetCSV = csv; writeCache(csv); applyAll(csv); rebuildAll();
-    }).catch(function () {});
+  function loadData() {
+    if (!window.fetch || !window.Promise) return { then: function (f) { f(); } };
+    return Promise.all(DATA_FILES.map(fetchJSON)).then(function (res) {
+      var D = {}; DATA_FILES.forEach(function (k, i) { D[k] = res[i]; });
+      applyAll(D);
+    });
   }
 
   /* =====================================================================
@@ -1416,10 +1357,8 @@ var TONES = {frp:['#D9C3A5','#F1E7D6'],eps:['#E3CC8F','#F6EEDA'],metal:['#B7C4D2
   window.addEventListener('hashchange', route);
   window.addEventListener('resize', fitCTA);
 
-  useCache(); fillChrome();
-  buildAbout(); renderHome();
-  route();
-  fetchSheet();
+  function boot() { fillChrome(); buildAbout(); renderHome(); route(); }
+  loadData().then(boot, boot);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCTA);
 })();
 </script>

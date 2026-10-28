@@ -1,0 +1,2706 @@
+# Pages CMS 설정 — https://app.pagescms.org 에서 이 저장소를 연결하면 아래 항목이 편집 화면으로 나타납니다.
+media:
+  input: images
+  output: /images
+  rename: safe
+  categories:
+  - image
+content:
+- name: works
+  label: 작품 (Work)
+  type: file
+  path: data/works.json
+  fields:
+  - name: items
+    label: 작품 목록
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{id} · {name}'
+    fields:
+    - name: show
+      label: 사이트에 표시
+      type: boolean
+      default: true
+    - name: id
+      label: 작품 ID (숫자, 겹치지 않게)
+      type: string
+      description: 작품마다 다른 번호. 작품 주소(#/w/번호)에 쓰입니다. 만든 뒤에는 바꾸지 않는 게 좋아요.
+    - name: name
+      label: 작품명
+      type: string
+    - name: materials
+      label: 소재 (여러 개 선택 가능)
+      type: select
+      options:
+        values:
+        - frp
+        - eps
+        - metal
+        - acrylic
+        - brass
+        - print
+        multiple: true
+      description: frp=FRP, eps=스티로폼, metal=금속, acrylic=아크릴·LED, brass=황동, print=3D프린팅
+    - name: image
+      label: 작품 사진
+      type: image
+      description: 비워 두면 임시 그림이 나옵니다.
+    - name: desc
+      label: 설명 (선택)
+      type: text
+    description: 맨 위 작품일수록 먼저 보입니다. 홈의 "최신 작품"은 위에서부터 몇 개를 보여줍니다.
+- name: materials
+  label: 소재
+  type: file
+  path: data/materials.json
+  fields:
+  - name: items
+    label: 소재 목록 (6개 · 추가/삭제하지 마세요)
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{no} {en}'
+    fields:
+    - name: id
+      label: 소재 ID (수정 금지)
+      type: string
+      readonly: true
+    - name: 'no'
+      label: 번호
+      type: string
+    - name: en
+      label: 영문명
+      type: string
+    - name: kr
+      label: 한글명
+      type: string
+    - name: image
+      label: 소재 사진
+      type: image
+    - name: tag
+      label: 한 줄 소개
+      type: text
+    - name: install
+      label: '설치 (예: 실내·실외)'
+      type: string
+    - name: cost
+      label: '비용 (예: ₩₩)'
+      type: string
+    - name: period
+      label: '기간 (예: 보통~긴 편)'
+      type: string
+    - name: points
+      label: 포인트 (3개)
+      type: string
+      list: true
+    - name: steps
+      label: 제작 단계 (4개)
+      type: string
+      list: true
+    - name: layers
+      label: 층 구조 (최대 4개 · 위에서부터)
+      type: object
+      list:
+        collapsible:
+          collapsed: true
+          summary: '{name}'
+      fields:
+      - name: name
+        label: 층 이름
+        type: string
+      - name: desc
+        label: 층 설명
+        type: text
+      - name: color
+        label: '색 (예: #B5543A)'
+        type: string
+        description: '# 와 6자리 영문·숫자'
+- name: home
+  label: 홈
+  type: file
+  path: data/home.json
+  fields:
+  - name: eyebrow
+    label: 영문 소제목
+    type: string
+  - name: title
+    label: 제목
+    type: text
+    description: 줄을 바꾸면 화면에서도 줄이 바뀝니다.
+  - name: sub
+    label: 소개문
+    type: text
+  - name: hero
+    label: 대표 작품 (최대 6개)
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{work}'
+    fields:
+    - name: work
+      label: 작품 ID
+      type: string
+      description: 작품 목록에 있는 ID
+    - name: image
+      label: 대표 사진 (선택)
+      type: image
+      description: 비워 두면 작품 사진을 씁니다.
+  - name: interval_sec
+    label: 전환 시간 (초)
+    type: number
+  - name: latest_count
+    label: 최신 작품 수
+    type: number
+  - name: end
+    label: 하단 문구
+    type: string
+  - name: biz
+    label: 사업분야 카드 (3개)
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{title}'
+    fields:
+    - name: title
+      label: 이름
+      type: string
+    - name: desc
+      label: 설명
+      type: text
+    - name: page
+      label: 이동할 페이지
+      type: select
+      options:
+        values:
+        - arch
+        - public
+        - exhibit
+      description: arch=건축미술, public=공공미술, exhibit=전시·갤러리
+  - name: clients
+    label: 주요 고객사 이름
+    type: string
+    list: true
+  - name: certs
+    label: 인증 문구
+    type: text
+- name: about
+  label: 회사소개
+  type: file
+  path: data/about.json
+  fields:
+  - name: lead
+    label: 대표 문구
+    type: text
+  - name: short
+    label: 한 줄 소개
+    type: text
+  - name: paragraphs
+    label: 소개 문단
+    type: string
+    list: true
+  - name: photo
+    label: 대표 사진
+    type: image
+  - name: values
+    label: 가치
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{name}'
+    fields:
+    - name: name
+      label: 이름
+      type: string
+    - name: desc
+      label: 설명
+      type: text
+  - name: link_base
+    label: 사업 영역 링크 앞부분
+    type: string
+  - name: areas
+    label: 사업 영역
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{name}'
+    fields:
+    - name: name
+      label: 이름
+      type: string
+    - name: desc
+      label: 설명
+      type: text
+    - name: link
+      label: 링크 (선택)
+      type: string
+  - name: contents
+    label: 공공미술 콘텐츠
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{name}'
+    fields:
+    - name: name
+      label: 이름
+      type: string
+    - name: desc
+      label: 설명
+      type: text
+  - name: promises
+    label: 건축미술 약속
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{name}'
+    fields:
+    - name: name
+      label: 이름
+      type: string
+    - name: desc
+      label: 설명
+      type: text
+  - name: how_lead
+    label: 제작 안내문
+    type: text
+  - name: how_steps
+    label: 제작 단계 (사진)
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{name}'
+    fields:
+    - name: name
+      label: 단계
+      type: string
+    - name: desc
+      label: 설명
+      type: text
+    - name: image
+      label: 사진
+      type: image
+  - name: review_steps
+    label: 심의 단계
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{name}'
+    fields:
+    - name: name
+      label: 단계
+      type: string
+    - name: desc
+      label: 설명
+      type: text
+  - name: mat_text
+    label: 소재 안내문
+    type: text
+  - name: record
+    label: 숫자
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{value} {label}'
+    fields:
+    - name: value
+      label: 숫자
+      type: string
+    - name: label
+      label: 설명
+      type: string
+  - name: record_note
+    label: 숫자 주석
+    type: text
+  - name: history
+    label: 연혁
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{year}.{month} {text}'
+    fields:
+    - name: year
+      label: '연도 (예: 2024)'
+      type: string
+    - name: month
+      label: '월 (예: 07)'
+      type: string
+    - name: text
+      label: 내용
+      type: text
+    description: 연도·월 순서는 자동으로 정렬됩니다.
+  - name: contact
+    label: 연락처
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: '{label}'
+    fields:
+    - name: label
+      label: '항목 (예: TEL)'
+      type: string
+    - name: value
+      label: 내용
+      type: string
+- name: business
+  label: 사업분야
+  type: file
+  path: data/business.json
+  fields:
+  - name: stands_url
+    label: STANDS 문의 주소
+    type: string
+  - name: arch
+    label: 건축미술
+    type: object
+    fields:
+    - name: lead
+      label: 맨 위 한 줄
+      type: string
+    - name: intro_title
+      label: 소개 제목
+      type: string
+    - name: intro_text
+      label: 소개 문단
+      type: text
+    - name: stands_title
+      label: STANDS 안내 제목
+      type: string
+    - name: stands_text
+      label: STANDS 안내 문장
+      type: text
+  - name: public
+    label: 공공미술
+    type: object
+    fields:
+    - name: lead
+      label: 맨 위 한 줄
+      type: string
+    - name: intro_title
+      label: 소개 제목
+      type: string
+    - name: intro_text
+      label: 소개 문단
+      type: text
+  - name: exhibit
+    label: 전시 · 갤러리
+    type: object
+    fields:
+    - name: lead
+      label: 맨 위 한 줄
+      type: string
+    - name: intro_title
+      label: 소개 제목
+      type: string
+    - name: intro_text
+      label: 소개 문단
+      type: text
+    - name: stats
+      label: 숫자
+      type: object
+      list:
+        collapsible:
+          collapsed: true
+          summary: '{value} {label}'
+      fields:
+      - name: value
+        label: '숫자 (예: 36명)'
+        type: string
+      - name: label
+        label: 설명
+        type: string
+    - name: areas
+      label: 전시기획 업무
+      type: string
+      list: true
+    - name: history
+      label: 전시 이력
+      type: object
+      list:
+        collapsible:
+          collapsed: true
+          summary: '{year}'
+      fields:
+      - name: year
+        label: 연도
+        type: string
+      - name: items
+        label: 내용
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: '{kind} {text}'
+        fields:
+        - name: kind
+          label: '구분 (예: 기업·기관, 해외)'
+          type: string
+        - name: text
+          label: 내용
+          type: text
+    - name: gallery_title
+      label: 갤러리 이름
+      type: string
+    - name: stands_title
+      label: STANDS 안내 제목
+      type: string
+    - name: stands_text
+      label: STANDS 안내 문장
+      type: text
+- name: settings
+  label: 설정
+  type: file
+  path: data/settings.json
+  fields:
+  - name: kakao_url
+    label: 카카오톡 채널 주소
+    type: string
+    description: https://pf.kakao.com/ 으로 시작하는 채팅 주소. 넣으면 문의 버튼이 나타납니다.
+  - name: recruit_link
+    label: 채용 링크
+    type: string
+    description: 'https:// 주소 또는 mailto: 주소'
+  - name: portfolio_link
+    label: 포트폴리오 링크
+    type: string
+  - name: footer
+    label: 하단 문구 (최대 3줄)
+    type: string
+    list: true
+- name: guide
+  label: 견적 가이드 (소재 찾기·가견적·문의)
+  type: file
+  path: data/guide.json
+  fields:
+  - name: common_top
+    label: 공통 · 상단과 단계 이름
+    type: object
+    fields:
+    - name: bar_name
+      label: 맨 위 로고 옆 글자
+      type: string
+      description: '키: bar.name'
+    - name: st_0
+      label: 1단계 이름 (접근성용)
+      type: string
+      description: '키: st.0'
+    - name: st_1
+      label: 2단계 이름
+      type: string
+      description: '키: st.1'
+    - name: st_2
+      label: 3단계 이름
+      type: string
+      description: '키: st.2'
+    - name: st_3
+      label: 4단계 이름
+      type: string
+      description: '키: st.3'
+  - name: common_buttons
+    label: 공통 · 하단 버튼
+    type: object
+    fields:
+    - name: dock_pick
+      label: '1단계 하단: 아직 덜 골랐을 때 안내'
+      type: string
+      description: '키: dock.pick'
+    - name: dock_n0
+      label: 1단계 다음 버튼
+      type: string
+      description: '키: dock.n0'
+    - name: dock_rec
+      label: '1단계 하단: 추천 1순위 앞 글자'
+      type: string
+      description: '키: dock.rec'
+    - name: dock_prev
+      label: 이전 버튼
+      type: string
+      description: '키: dock.prev'
+    - name: dock_n1
+      label: 2단계 다음 버튼
+      type: string
+      description: '키: dock.n1'
+    - name: dock_est
+      label: '3단계 하단: 가견적 앞 글자'
+      type: string
+      description: '키: dock.est'
+    - name: dock_n2
+      label: 3단계 다음 버튼
+      type: string
+      description: '키: dock.n2'
+  - name: step1_intro
+    label: Step 1 · 나에게 맞는 소재 알아보기
+    type: object
+    fields:
+    - name: s1_eb
+      label: 작은 영문 제목
+      type: string
+      description: '키: s1.eb'
+    - name: s1_h
+      label: 제목
+      type: string
+      description: '키: s1.h'
+    - name: s1_p
+      label: 설명 문장
+      type: string
+      description: '키: s1.p'
+    - name: tag_auto
+      label: 자동 선택된 난이도에 붙는 작은 표시
+      type: string
+      description: '키: tag.auto'
+  - name: step1_questions
+    label: Step 1 · 질문과 선택지 (가견적 계산기와 같은 항목)
+    type: object
+    fields:
+    - name: q_env_l
+      label: 질문 · 설치 장소
+      type: string
+      description: '키: q.env.l'
+    - name: o_env_in_n
+      label: 설치 장소 선택지 · 실내 · 이름
+      type: string
+      description: '키: o.env.in.n'
+    - name: o_env_in_s
+      label: 설치 장소 선택지 · 실내 · 설명
+      type: string
+      description: '키: o.env.in.s'
+    - name: o_env_out_n
+      label: 설치 장소 선택지 · 실외 · 이름
+      type: string
+      description: '키: o.env.out.n'
+    - name: o_env_out_s
+      label: 설치 장소 선택지 · 실외 · 설명
+      type: string
+      description: '키: o.env.out.s'
+    - name: q_dur_l
+      label: 질문 · 설치 기간
+      type: string
+      description: '키: q.dur.l'
+    - name: o_dur_s_n
+      label: 설치 기간 선택지 · 단기 · 이름
+      type: string
+      description: '키: o.dur.s.n'
+    - name: o_dur_s_s
+      label: 설치 기간 선택지 · 단기 · 설명
+      type: string
+      description: '키: o.dur.s.s'
+    - name: o_dur_m_n
+      label: 설치 기간 선택지 · 1~3년 · 이름
+      type: string
+      description: '키: o.dur.m.n'
+    - name: o_dur_m_s
+      label: 설치 기간 선택지 · 1~3년 · 설명
+      type: string
+      description: '키: o.dur.m.s'
+    - name: o_dur_l_n
+      label: 설치 기간 선택지 · 장기·영구 · 이름
+      type: string
+      description: '키: o.dur.l.n'
+    - name: o_dur_l_s
+      label: 설치 기간 선택지 · 장기·영구 · 설명
+      type: string
+      description: '키: o.dur.l.s'
+    - name: q_form_l
+      label: 질문 · 조형 종류
+      type: string
+      description: '키: q.form.l'
+    - name: o_form_c_n
+      label: 조형 종류 선택지 · 곡면·캐릭터 · 이름
+      type: string
+      description: '키: o.form.c.n'
+    - name: o_form_c_s
+      label: 조형 종류 선택지 · 곡면·캐릭터 · 설명
+      type: string
+      description: '키: o.form.c.s'
+    - name: o_form_g_n
+      label: 조형 종류 선택지 · 각진 형태·글자·사인 · 이름
+      type: string
+      description: '키: o.form.g.n'
+    - name: o_form_g_s
+      label: 조형 종류 선택지 · 각진 형태·글자·사인 · 설명
+      type: string
+      description: '키: o.form.g.s'
+    - name: o_form_l_n
+      label: 조형 종류 선택지 · 빛으로 연출 · 이름
+      type: string
+      description: '키: o.form.l.n'
+    - name: o_form_l_s
+      label: 조형 종류 선택지 · 빛으로 연출 · 설명
+      type: string
+      description: '키: o.form.l.s'
+    - name: o_form_f_n
+      label: 조형 종류 선택지 · 정밀 소형·상징물 · 이름
+      type: string
+      description: '키: o.form.f.n'
+    - name: o_form_f_s
+      label: 조형 종류 선택지 · 정밀 소형·상징물 · 설명
+      type: string
+      description: '키: o.form.f.s'
+    - name: q_size_l
+      label: 질문 · 높이
+      type: string
+      description: '키: q.size.l'
+    - name: q_size_h
+      label: 높이 질문 보조 설명
+      type: string
+      description: '키: q.size.h'
+    - name: q_comp_l
+      label: 질문 · 형태 난이도
+      type: string
+      description: '키: q.comp.l'
+    - name: q_comp_h
+      label: 형태 난이도 보조 설명
+      type: string
+      description: '키: q.comp.h'
+    - name: o_comp_simple_n
+      label: 형태 난이도 선택지 · 단순 형태 · 이름
+      type: string
+      description: '키: o.comp.simple.n'
+    - name: o_comp_simple_s
+      label: 형태 난이도 선택지 · 단순 형태 · 설명
+      type: string
+      description: '키: o.comp.simple.s'
+    - name: o_comp_character_n
+      label: 형태 난이도 선택지 · 캐릭터·입체 · 이름
+      type: string
+      description: '키: o.comp.character.n'
+    - name: o_comp_character_s
+      label: 형태 난이도 선택지 · 캐릭터·입체 · 설명
+      type: string
+      description: '키: o.comp.character.s'
+    - name: o_comp_realistic_n
+      label: 형태 난이도 선택지 · 극사실·인체 · 이름
+      type: string
+      description: '키: o.comp.realistic.n'
+    - name: o_comp_realistic_s
+      label: 형태 난이도 선택지 · 극사실·인체 · 설명
+      type: string
+      description: '키: o.comp.realistic.s'
+    - name: qn_env
+      label: 추천 이유에 쓰이는 이름 · 설치 장소
+      type: string
+      description: '키: qn.env'
+    - name: qn_form
+      label: 추천 이유에 쓰이는 이름 · 조형 종류
+      type: string
+      description: '키: qn.form'
+    - name: qn_size
+      label: 추천 이유에 쓰이는 이름 · 크기
+      type: string
+      description: '키: qn.size'
+    - name: qn_dur
+      label: 추천 이유에 쓰이는 이름 · 설치 기간
+      type: string
+      description: '키: qn.dur'
+  - name: step1_result
+    label: Step 1 · 추천 결과 문구
+    type: object
+    fields:
+    - name: rec_empty
+      label: 아직 안 골랐을 때 안내 문장
+      type: string
+      description: '키: rec.empty'
+    - name: rec_skip
+      label: 소재부터 둘러보기 링크
+      type: string
+      description: '키: rec.skip'
+    - name: rec_lead
+      label: 추천 카드 맨 위 문장
+      type: string
+      description: '키: rec.lead'
+    - name: rec_b1
+      label: 1순위 표시
+      type: string
+      description: '키: rec.b1'
+    - name: rec_good
+      label: ‘잘 맞는 점’ 라벨
+      type: string
+      description: '키: rec.good'
+    - name: rec_more
+      label: 1순위 자세히 보기 링크
+      type: string
+      description: '키: rec.more'
+    - name: rec_b2
+      label: 2순위 표시
+      type: string
+      description: '키: rec.b2'
+    - name: rec_b3
+      label: 3순위 표시
+      type: string
+      description: '키: rec.b3'
+    - name: rec_tag
+      label: 소재 칩 · 추천 표시
+      type: string
+      description: '키: rec.tag'
+    - name: rec_warn
+      label: ‘상담이 필요한 점’ 라벨
+      type: string
+      description: '키: rec.warn'
+    - name: rec_warn2
+      label: 약점 안내 문장 (앞에 항목 이름이 붙어요)
+      type: string
+      description: '키: rec.warn2'
+  - name: step2_common
+    label: Step 2 · 소재별 더 알아보기 (공통 문구)
+    type: object
+    fields:
+    - name: s2_eb
+      label: 작은 영문 제목
+      type: string
+      description: '키: s2.eb'
+    - name: s2_h
+      label: 제목
+      type: string
+      description: '키: s2.h'
+    - name: s2_p
+      label: 설명 문장
+      type: string
+      description: '키: s2.p'
+    - name: gal_more
+      label: 포트폴리오 버튼 글자
+      type: string
+      description: '키: gal.more'
+    - name: lbl_good
+      label: '소제목: 이런 점이 좋아요'
+      type: string
+      description: '키: lbl.good'
+    - name: lbl_know
+      label: '소제목: 알아두세요'
+      type: string
+      description: '키: lbl.know'
+    - name: lbl_cmp
+      label: '소제목: 소재 비교'
+      type: string
+      description: '키: lbl.cmp'
+    - name: lbl_r0
+      label: 항목 이름 (소재 카드와 비교표에 같이 쓰임) · 표현 자유도
+      type: string
+      description: '키: lbl.r0'
+    - name: lbl_r1
+      label: 항목 이름 (소재 카드와 비교표에 같이 쓰임) · 실외 내구성
+      type: string
+      description: '키: lbl.r1'
+    - name: lbl_r2
+      label: 항목 이름 (소재 카드와 비교표에 같이 쓰임) · 가벼움
+      type: string
+      description: '키: lbl.r2'
+    - name: lbl_r3
+      label: 항목 이름 (소재 카드와 비교표에 같이 쓰임) · 대형화
+      type: string
+      description: '키: lbl.r3'
+    - name: lbl_r4
+      label: 항목 이름 (소재 카드와 비교표에 같이 쓰임) · 조명(투광)
+      type: string
+      description: '키: lbl.r4'
+    - name: lbl_proc
+      label: '소제목: 제작 과정'
+      type: string
+      description: '키: lbl.proc'
+    - name: lbl_ask
+      label: '소제목: 의뢰 전에 확인해 주세요'
+      type: string
+      description: '키: lbl.ask'
+    - name: lbl_use
+      label: '라벨: 잘 맞는 작품'
+      type: string
+      description: '키: lbl.use'
+    - name: s2_cta
+      label: 소재 카드 아래 버튼 1
+      type: string
+      description: '키: s2.cta'
+    - name: s2_cta2
+      label: 소재 카드 아래 버튼 2
+      type: string
+      description: '키: s2.cta2'
+    - name: lbl_var
+      label: '소제목: 세부 소재'
+      type: string
+      description: '키: lbl.var'
+  - name: mat_frp
+    label: 소재 카드 · 01 FRP
+    type: object
+    fields:
+    - name: m_frp_name
+      label: 소재 이름
+      type: string
+      description: '키: m.frp.name'
+    - name: m_frp_tag
+      label: 한 줄 소개
+      type: string
+      description: '키: m.frp.tag'
+    - name: m_frp_meta_0
+      label: 요약 칩 1 (설치 환경)
+      type: string
+      description: '키: m.frp.meta.0'
+    - name: m_frp_meta_1
+      label: 요약 칩 2 (비용)
+      type: string
+      description: '키: m.frp.meta.1'
+    - name: m_frp_meta_2
+      label: 요약 칩 3 (제작 기간)
+      type: string
+      description: '키: m.frp.meta.2'
+    - name: m_frp_g_0
+      label: 작업 사진 1 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.frp.g.0'
+    - name: m_frp_gc_0
+      label: 작업 사진 1 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.frp.gc.0'
+    - name: m_frp_g_1
+      label: 작업 사진 2 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.frp.g.1'
+    - name: m_frp_gc_1
+      label: 작업 사진 2 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.frp.gc.1'
+    - name: m_frp_g_2
+      label: 작업 사진 3 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.frp.g.2'
+    - name: m_frp_gc_2
+      label: 작업 사진 3 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.frp.gc.2'
+    - name: m_frp_g_3
+      label: 작업 사진 4 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.frp.g.3'
+    - name: m_frp_gc_3
+      label: 작업 사진 4 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.frp.gc.3'
+    - name: m_frp_g_4
+      label: 작업 사진 5 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.frp.g.4'
+    - name: m_frp_gc_4
+      label: 작업 사진 5 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.frp.gc.4'
+    - name: m_frp_g_5
+      label: 작업 사진 6 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.frp.g.5'
+    - name: m_frp_gc_5
+      label: 작업 사진 6 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.frp.gc.5'
+    - name: m_frp_link
+      label: ‘작업 사례 더 보기’ 버튼 주소 (비워 두면 버튼이 사라져요)
+      type: string
+      description: '키: m.frp.link'
+    - name: m_frp_good_0
+      label: 이런 점이 좋아요 · 1번
+      type: string
+      description: '키: m.frp.good.0'
+    - name: m_frp_good_1
+      label: 이런 점이 좋아요 · 2번
+      type: string
+      description: '키: m.frp.good.1'
+    - name: m_frp_good_2
+      label: 이런 점이 좋아요 · 3번
+      type: string
+      description: '키: m.frp.good.2'
+    - name: m_frp_good_3
+      label: '이런 점이 좋아요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.frp.good.3'
+    - name: m_frp_good_4
+      label: '이런 점이 좋아요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.frp.good.4'
+    - name: m_frp_know_0
+      label: 알아두세요 · 1번
+      type: string
+      description: '키: m.frp.know.0'
+    - name: m_frp_know_1
+      label: 알아두세요 · 2번
+      type: string
+      description: '키: m.frp.know.1'
+    - name: m_frp_know_2
+      label: 알아두세요 · 3번
+      type: string
+      description: '키: m.frp.know.2'
+    - name: m_frp_know_3
+      label: '알아두세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.frp.know.3'
+    - name: m_frp_know_4
+      label: '알아두세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.frp.know.4'
+    - name: m_frp_r0
+      label: 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: m.frp.r0'
+    - name: m_frp_r1
+      label: 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: m.frp.r1'
+    - name: m_frp_r2
+      label: 점수 0~5 · 가벼움
+      type: string
+      description: '키: m.frp.r2'
+    - name: m_frp_r3
+      label: 점수 0~5 · 대형화
+      type: string
+      description: '키: m.frp.r3'
+    - name: m_frp_r4
+      label: 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: m.frp.r4'
+    - name: m_frp_steps
+      label: 제작 과정 (→ 로 단계를 나눠 쓰세요)
+      type: string
+      description: '키: m.frp.steps'
+    - name: m_frp_ask_0
+      label: 의뢰 전에 확인해 주세요 · 1번
+      type: string
+      description: '키: m.frp.ask.0'
+    - name: m_frp_ask_1
+      label: 의뢰 전에 확인해 주세요 · 2번
+      type: string
+      description: '키: m.frp.ask.1'
+    - name: m_frp_ask_2
+      label: 의뢰 전에 확인해 주세요 · 3번
+      type: string
+      description: '키: m.frp.ask.2'
+    - name: m_frp_ask_3
+      label: '의뢰 전에 확인해 주세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.frp.ask.3'
+    - name: m_frp_ask_4
+      label: '의뢰 전에 확인해 주세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.frp.ask.4'
+    - name: m_frp_use
+      label: 잘 맞는 작품
+      type: string
+      description: '키: m.frp.use'
+  - name: mat_eps
+    label: 소재 카드 · 02 스티로폼 + 우레아 코팅
+    type: object
+    fields:
+    - name: m_eps_name
+      label: 소재 이름
+      type: string
+      description: '키: m.eps.name'
+    - name: m_eps_tag
+      label: 한 줄 소개
+      type: string
+      description: '키: m.eps.tag'
+    - name: m_eps_meta_0
+      label: 요약 칩 1 (설치 환경)
+      type: string
+      description: '키: m.eps.meta.0'
+    - name: m_eps_meta_1
+      label: 요약 칩 2 (비용)
+      type: string
+      description: '키: m.eps.meta.1'
+    - name: m_eps_meta_2
+      label: 요약 칩 3 (제작 기간)
+      type: string
+      description: '키: m.eps.meta.2'
+    - name: m_eps_g_0
+      label: 작업 사진 1 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.eps.g.0'
+    - name: m_eps_gc_0
+      label: 작업 사진 1 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.eps.gc.0'
+    - name: m_eps_g_1
+      label: 작업 사진 2 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.eps.g.1'
+    - name: m_eps_gc_1
+      label: 작업 사진 2 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.eps.gc.1'
+    - name: m_eps_g_2
+      label: 작업 사진 3 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.eps.g.2'
+    - name: m_eps_gc_2
+      label: 작업 사진 3 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.eps.gc.2'
+    - name: m_eps_g_3
+      label: 작업 사진 4 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.eps.g.3'
+    - name: m_eps_gc_3
+      label: 작업 사진 4 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.eps.gc.3'
+    - name: m_eps_g_4
+      label: 작업 사진 5 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.eps.g.4'
+    - name: m_eps_gc_4
+      label: 작업 사진 5 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.eps.gc.4'
+    - name: m_eps_g_5
+      label: 작업 사진 6 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.eps.g.5'
+    - name: m_eps_gc_5
+      label: 작업 사진 6 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.eps.gc.5'
+    - name: m_eps_link
+      label: ‘작업 사례 더 보기’ 버튼 주소 (비워 두면 버튼이 사라져요)
+      type: string
+      description: '키: m.eps.link'
+    - name: m_eps_good_0
+      label: 이런 점이 좋아요 · 1번
+      type: string
+      description: '키: m.eps.good.0'
+    - name: m_eps_good_1
+      label: 이런 점이 좋아요 · 2번
+      type: string
+      description: '키: m.eps.good.1'
+    - name: m_eps_good_2
+      label: 이런 점이 좋아요 · 3번
+      type: string
+      description: '키: m.eps.good.2'
+    - name: m_eps_good_3
+      label: '이런 점이 좋아요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.eps.good.3'
+    - name: m_eps_good_4
+      label: '이런 점이 좋아요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.eps.good.4'
+    - name: m_eps_know_0
+      label: 알아두세요 · 1번
+      type: string
+      description: '키: m.eps.know.0'
+    - name: m_eps_know_1
+      label: 알아두세요 · 2번
+      type: string
+      description: '키: m.eps.know.1'
+    - name: m_eps_know_2
+      label: 알아두세요 · 3번
+      type: string
+      description: '키: m.eps.know.2'
+    - name: m_eps_know_3
+      label: '알아두세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.eps.know.3'
+    - name: m_eps_know_4
+      label: '알아두세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.eps.know.4'
+    - name: m_eps_r0
+      label: 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: m.eps.r0'
+    - name: m_eps_r1
+      label: 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: m.eps.r1'
+    - name: m_eps_r2
+      label: 점수 0~5 · 가벼움
+      type: string
+      description: '키: m.eps.r2'
+    - name: m_eps_r3
+      label: 점수 0~5 · 대형화
+      type: string
+      description: '키: m.eps.r3'
+    - name: m_eps_r4
+      label: 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: m.eps.r4'
+    - name: m_eps_steps
+      label: 제작 과정 (→ 로 단계를 나눠 쓰세요)
+      type: string
+      description: '키: m.eps.steps'
+    - name: m_eps_ask_0
+      label: 의뢰 전에 확인해 주세요 · 1번
+      type: string
+      description: '키: m.eps.ask.0'
+    - name: m_eps_ask_1
+      label: 의뢰 전에 확인해 주세요 · 2번
+      type: string
+      description: '키: m.eps.ask.1'
+    - name: m_eps_ask_2
+      label: 의뢰 전에 확인해 주세요 · 3번
+      type: string
+      description: '키: m.eps.ask.2'
+    - name: m_eps_ask_3
+      label: '의뢰 전에 확인해 주세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.eps.ask.3'
+    - name: m_eps_ask_4
+      label: '의뢰 전에 확인해 주세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.eps.ask.4'
+    - name: m_eps_use
+      label: 잘 맞는 작품
+      type: string
+      description: '키: m.eps.use'
+  - name: mat_metal
+    label: 소재 카드 · 03 금속
+    type: object
+    fields:
+    - name: m_metal_name
+      label: 소재 이름
+      type: string
+      description: '키: m.metal.name'
+    - name: m_metal_tag
+      label: 한 줄 소개
+      type: string
+      description: '키: m.metal.tag'
+    - name: m_metal_meta_0
+      label: 요약 칩 1 (설치 환경)
+      type: string
+      description: '키: m.metal.meta.0'
+    - name: m_metal_meta_1
+      label: 요약 칩 2 (비용)
+      type: string
+      description: '키: m.metal.meta.1'
+    - name: m_metal_meta_2
+      label: 요약 칩 3 (제작 기간)
+      type: string
+      description: '키: m.metal.meta.2'
+    - name: m_metal_g_0
+      label: 작업 사진 1 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.metal.g.0'
+    - name: m_metal_gc_0
+      label: 작업 사진 1 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.metal.gc.0'
+    - name: m_metal_g_1
+      label: 작업 사진 2 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.metal.g.1'
+    - name: m_metal_gc_1
+      label: 작업 사진 2 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.metal.gc.1'
+    - name: m_metal_g_2
+      label: 작업 사진 3 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.metal.g.2'
+    - name: m_metal_gc_2
+      label: 작업 사진 3 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.metal.gc.2'
+    - name: m_metal_g_3
+      label: 작업 사진 4 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.metal.g.3'
+    - name: m_metal_gc_3
+      label: 작업 사진 4 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.metal.gc.3'
+    - name: m_metal_g_4
+      label: 작업 사진 5 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.metal.g.4'
+    - name: m_metal_gc_4
+      label: 작업 사진 5 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.metal.gc.4'
+    - name: m_metal_g_5
+      label: 작업 사진 6 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.metal.g.5'
+    - name: m_metal_gc_5
+      label: 작업 사진 6 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.metal.gc.5'
+    - name: m_metal_link
+      label: ‘작업 사례 더 보기’ 버튼 주소 (비워 두면 버튼이 사라져요)
+      type: string
+      description: '키: m.metal.link'
+    - name: m_metal_good_0
+      label: 이런 점이 좋아요 · 1번
+      type: string
+      description: '키: m.metal.good.0'
+    - name: m_metal_good_1
+      label: 이런 점이 좋아요 · 2번
+      type: string
+      description: '키: m.metal.good.1'
+    - name: m_metal_good_2
+      label: 이런 점이 좋아요 · 3번
+      type: string
+      description: '키: m.metal.good.2'
+    - name: m_metal_good_3
+      label: '이런 점이 좋아요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.metal.good.3'
+    - name: m_metal_good_4
+      label: '이런 점이 좋아요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.metal.good.4'
+    - name: m_metal_know_0
+      label: 알아두세요 · 1번
+      type: string
+      description: '키: m.metal.know.0'
+    - name: m_metal_know_1
+      label: 알아두세요 · 2번
+      type: string
+      description: '키: m.metal.know.1'
+    - name: m_metal_know_2
+      label: 알아두세요 · 3번
+      type: string
+      description: '키: m.metal.know.2'
+    - name: m_metal_know_3
+      label: '알아두세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.metal.know.3'
+    - name: m_metal_know_4
+      label: '알아두세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.metal.know.4'
+    - name: m_metal_r0
+      label: 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: m.metal.r0'
+    - name: m_metal_r1
+      label: 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: m.metal.r1'
+    - name: m_metal_r2
+      label: 점수 0~5 · 가벼움
+      type: string
+      description: '키: m.metal.r2'
+    - name: m_metal_r3
+      label: 점수 0~5 · 대형화
+      type: string
+      description: '키: m.metal.r3'
+    - name: m_metal_r4
+      label: 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: m.metal.r4'
+    - name: m_metal_v0n
+      label: 세부 소재 1 이름
+      type: string
+      description: '키: m.metal.v0n'
+    - name: m_metal_v0d
+      label: 세부 소재 1 설명
+      type: string
+      description: '키: m.metal.v0d'
+    - name: m_metal_v1n
+      label: 세부 소재 2 이름
+      type: string
+      description: '키: m.metal.v1n'
+    - name: m_metal_v1d
+      label: 세부 소재 2 설명
+      type: string
+      description: '키: m.metal.v1d'
+    - name: m_metal_v2n
+      label: 세부 소재 3 이름
+      type: string
+      description: '키: m.metal.v2n'
+    - name: m_metal_v2d
+      label: 세부 소재 3 설명
+      type: string
+      description: '키: m.metal.v2d'
+    - name: m_metal_steps
+      label: 제작 과정 (→ 로 단계를 나눠 쓰세요)
+      type: string
+      description: '키: m.metal.steps'
+    - name: m_metal_ask_0
+      label: 의뢰 전에 확인해 주세요 · 1번
+      type: string
+      description: '키: m.metal.ask.0'
+    - name: m_metal_ask_1
+      label: 의뢰 전에 확인해 주세요 · 2번
+      type: string
+      description: '키: m.metal.ask.1'
+    - name: m_metal_ask_2
+      label: 의뢰 전에 확인해 주세요 · 3번
+      type: string
+      description: '키: m.metal.ask.2'
+    - name: m_metal_ask_3
+      label: '의뢰 전에 확인해 주세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.metal.ask.3'
+    - name: m_metal_ask_4
+      label: '의뢰 전에 확인해 주세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.metal.ask.4'
+    - name: m_metal_use
+      label: 잘 맞는 작품
+      type: string
+      description: '키: m.metal.use'
+  - name: mat_acrylic
+    label: 소재 카드 · 04 아크릴 · PC · 광확산시트
+    type: object
+    fields:
+    - name: m_acrylic_name
+      label: 소재 이름
+      type: string
+      description: '키: m.acrylic.name'
+    - name: m_acrylic_tag
+      label: 한 줄 소개
+      type: string
+      description: '키: m.acrylic.tag'
+    - name: m_acrylic_meta_0
+      label: 요약 칩 1 (설치 환경)
+      type: string
+      description: '키: m.acrylic.meta.0'
+    - name: m_acrylic_meta_1
+      label: 요약 칩 2 (비용)
+      type: string
+      description: '키: m.acrylic.meta.1'
+    - name: m_acrylic_meta_2
+      label: 요약 칩 3 (제작 기간)
+      type: string
+      description: '키: m.acrylic.meta.2'
+    - name: m_acrylic_g_0
+      label: 작업 사진 1 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.acrylic.g.0'
+    - name: m_acrylic_gc_0
+      label: 작업 사진 1 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.acrylic.gc.0'
+    - name: m_acrylic_g_1
+      label: 작업 사진 2 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.acrylic.g.1'
+    - name: m_acrylic_gc_1
+      label: 작업 사진 2 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.acrylic.gc.1'
+    - name: m_acrylic_g_2
+      label: 작업 사진 3 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.acrylic.g.2'
+    - name: m_acrylic_gc_2
+      label: 작업 사진 3 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.acrylic.gc.2'
+    - name: m_acrylic_g_3
+      label: 작업 사진 4 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.acrylic.g.3'
+    - name: m_acrylic_gc_3
+      label: 작업 사진 4 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.acrylic.gc.3'
+    - name: m_acrylic_g_4
+      label: 작업 사진 5 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.acrylic.g.4'
+    - name: m_acrylic_gc_4
+      label: 작업 사진 5 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.acrylic.gc.4'
+    - name: m_acrylic_g_5
+      label: 작업 사진 6 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.acrylic.g.5'
+    - name: m_acrylic_gc_5
+      label: 작업 사진 6 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.acrylic.gc.5'
+    - name: m_acrylic_link
+      label: ‘작업 사례 더 보기’ 버튼 주소 (비워 두면 버튼이 사라져요)
+      type: string
+      description: '키: m.acrylic.link'
+    - name: m_acrylic_good_0
+      label: 이런 점이 좋아요 · 1번
+      type: string
+      description: '키: m.acrylic.good.0'
+    - name: m_acrylic_good_1
+      label: 이런 점이 좋아요 · 2번
+      type: string
+      description: '키: m.acrylic.good.1'
+    - name: m_acrylic_good_2
+      label: 이런 점이 좋아요 · 3번
+      type: string
+      description: '키: m.acrylic.good.2'
+    - name: m_acrylic_good_3
+      label: '이런 점이 좋아요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.acrylic.good.3'
+    - name: m_acrylic_good_4
+      label: '이런 점이 좋아요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.acrylic.good.4'
+    - name: m_acrylic_know_0
+      label: 알아두세요 · 1번
+      type: string
+      description: '키: m.acrylic.know.0'
+    - name: m_acrylic_know_1
+      label: 알아두세요 · 2번
+      type: string
+      description: '키: m.acrylic.know.1'
+    - name: m_acrylic_know_2
+      label: 알아두세요 · 3번
+      type: string
+      description: '키: m.acrylic.know.2'
+    - name: m_acrylic_know_3
+      label: '알아두세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.acrylic.know.3'
+    - name: m_acrylic_know_4
+      label: '알아두세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.acrylic.know.4'
+    - name: m_acrylic_r0
+      label: 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: m.acrylic.r0'
+    - name: m_acrylic_r1
+      label: 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: m.acrylic.r1'
+    - name: m_acrylic_r2
+      label: 점수 0~5 · 가벼움
+      type: string
+      description: '키: m.acrylic.r2'
+    - name: m_acrylic_r3
+      label: 점수 0~5 · 대형화
+      type: string
+      description: '키: m.acrylic.r3'
+    - name: m_acrylic_r4
+      label: 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: m.acrylic.r4'
+    - name: m_acrylic_v0n
+      label: 세부 소재 1 이름
+      type: string
+      description: '키: m.acrylic.v0n'
+    - name: m_acrylic_v0d
+      label: 세부 소재 1 설명
+      type: string
+      description: '키: m.acrylic.v0d'
+    - name: m_acrylic_v1n
+      label: 세부 소재 2 이름
+      type: string
+      description: '키: m.acrylic.v1n'
+    - name: m_acrylic_v1d
+      label: 세부 소재 2 설명
+      type: string
+      description: '키: m.acrylic.v1d'
+    - name: m_acrylic_v2n
+      label: 세부 소재 3 이름
+      type: string
+      description: '키: m.acrylic.v2n'
+    - name: m_acrylic_v2d
+      label: 세부 소재 3 설명
+      type: string
+      description: '키: m.acrylic.v2d'
+    - name: m_acrylic_steps
+      label: 제작 과정 (→ 로 단계를 나눠 쓰세요)
+      type: string
+      description: '키: m.acrylic.steps'
+    - name: m_acrylic_ask_0
+      label: 의뢰 전에 확인해 주세요 · 1번
+      type: string
+      description: '키: m.acrylic.ask.0'
+    - name: m_acrylic_ask_1
+      label: 의뢰 전에 확인해 주세요 · 2번
+      type: string
+      description: '키: m.acrylic.ask.1'
+    - name: m_acrylic_ask_2
+      label: 의뢰 전에 확인해 주세요 · 3번
+      type: string
+      description: '키: m.acrylic.ask.2'
+    - name: m_acrylic_ask_3
+      label: '의뢰 전에 확인해 주세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.acrylic.ask.3'
+    - name: m_acrylic_ask_4
+      label: '의뢰 전에 확인해 주세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.acrylic.ask.4'
+    - name: m_acrylic_use
+      label: 잘 맞는 작품
+      type: string
+      description: '키: m.acrylic.use'
+  - name: mat_brass
+    label: 소재 카드 · 05 황동 주물
+    type: object
+    fields:
+    - name: m_brass_name
+      label: 소재 이름
+      type: string
+      description: '키: m.brass.name'
+    - name: m_brass_tag
+      label: 한 줄 소개
+      type: string
+      description: '키: m.brass.tag'
+    - name: m_brass_meta_0
+      label: 요약 칩 1 (설치 환경)
+      type: string
+      description: '키: m.brass.meta.0'
+    - name: m_brass_meta_1
+      label: 요약 칩 2 (비용)
+      type: string
+      description: '키: m.brass.meta.1'
+    - name: m_brass_meta_2
+      label: 요약 칩 3 (제작 기간)
+      type: string
+      description: '키: m.brass.meta.2'
+    - name: m_brass_g_0
+      label: 작업 사진 1 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.brass.g.0'
+    - name: m_brass_gc_0
+      label: 작업 사진 1 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.brass.gc.0'
+    - name: m_brass_g_1
+      label: 작업 사진 2 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.brass.g.1'
+    - name: m_brass_gc_1
+      label: 작업 사진 2 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.brass.gc.1'
+    - name: m_brass_g_2
+      label: 작업 사진 3 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.brass.g.2'
+    - name: m_brass_gc_2
+      label: 작업 사진 3 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.brass.gc.2'
+    - name: m_brass_g_3
+      label: 작업 사진 4 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.brass.g.3'
+    - name: m_brass_gc_3
+      label: 작업 사진 4 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.brass.gc.3'
+    - name: m_brass_g_4
+      label: 작업 사진 5 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.brass.g.4'
+    - name: m_brass_gc_4
+      label: 작업 사진 5 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.brass.gc.4'
+    - name: m_brass_g_5
+      label: 작업 사진 6 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.brass.g.5'
+    - name: m_brass_gc_5
+      label: 작업 사진 6 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.brass.gc.5'
+    - name: m_brass_link
+      label: ‘작업 사례 더 보기’ 버튼 주소 (비워 두면 버튼이 사라져요)
+      type: string
+      description: '키: m.brass.link'
+    - name: m_brass_good_0
+      label: 이런 점이 좋아요 · 1번
+      type: string
+      description: '키: m.brass.good.0'
+    - name: m_brass_good_1
+      label: 이런 점이 좋아요 · 2번
+      type: string
+      description: '키: m.brass.good.1'
+    - name: m_brass_good_2
+      label: 이런 점이 좋아요 · 3번
+      type: string
+      description: '키: m.brass.good.2'
+    - name: m_brass_good_3
+      label: '이런 점이 좋아요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.brass.good.3'
+    - name: m_brass_good_4
+      label: '이런 점이 좋아요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.brass.good.4'
+    - name: m_brass_know_0
+      label: 알아두세요 · 1번
+      type: string
+      description: '키: m.brass.know.0'
+    - name: m_brass_know_1
+      label: 알아두세요 · 2번
+      type: string
+      description: '키: m.brass.know.1'
+    - name: m_brass_know_2
+      label: 알아두세요 · 3번
+      type: text
+      description: '키: m.brass.know.2'
+    - name: m_brass_know_3
+      label: '알아두세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.brass.know.3'
+    - name: m_brass_know_4
+      label: '알아두세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.brass.know.4'
+    - name: m_brass_r0
+      label: 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: m.brass.r0'
+    - name: m_brass_r1
+      label: 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: m.brass.r1'
+    - name: m_brass_r2
+      label: 점수 0~5 · 가벼움
+      type: string
+      description: '키: m.brass.r2'
+    - name: m_brass_r3
+      label: 점수 0~5 · 대형화
+      type: string
+      description: '키: m.brass.r3'
+    - name: m_brass_r4
+      label: 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: m.brass.r4'
+    - name: m_brass_steps
+      label: 제작 과정 (→ 로 단계를 나눠 쓰세요)
+      type: string
+      description: '키: m.brass.steps'
+    - name: m_brass_ask_0
+      label: 의뢰 전에 확인해 주세요 · 1번
+      type: string
+      description: '키: m.brass.ask.0'
+    - name: m_brass_ask_1
+      label: 의뢰 전에 확인해 주세요 · 2번
+      type: string
+      description: '키: m.brass.ask.1'
+    - name: m_brass_ask_2
+      label: 의뢰 전에 확인해 주세요 · 3번
+      type: string
+      description: '키: m.brass.ask.2'
+    - name: m_brass_ask_3
+      label: '의뢰 전에 확인해 주세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.brass.ask.3'
+    - name: m_brass_ask_4
+      label: '의뢰 전에 확인해 주세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.brass.ask.4'
+    - name: m_brass_use
+      label: 잘 맞는 작품
+      type: string
+      description: '키: m.brass.use'
+  - name: mat_print
+    label: 소재 카드 · 06 3D 프린팅
+    type: object
+    fields:
+    - name: m_print_name
+      label: 소재 이름
+      type: string
+      description: '키: m.print.name'
+    - name: m_print_tag
+      label: 한 줄 소개
+      type: string
+      description: '키: m.print.tag'
+    - name: m_print_meta_0
+      label: 요약 칩 1 (설치 환경)
+      type: string
+      description: '키: m.print.meta.0'
+    - name: m_print_meta_1
+      label: 요약 칩 2 (비용)
+      type: string
+      description: '키: m.print.meta.1'
+    - name: m_print_meta_2
+      label: 요약 칩 3 (제작 기간)
+      type: string
+      description: '키: m.print.meta.2'
+    - name: m_print_g_0
+      label: 작업 사진 1 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.print.g.0'
+    - name: m_print_gc_0
+      label: 작업 사진 1 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.print.gc.0'
+    - name: m_print_g_1
+      label: 작업 사진 2 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.print.g.1'
+    - name: m_print_gc_1
+      label: 작업 사진 2 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.print.gc.1'
+    - name: m_print_g_2
+      label: 작업 사진 3 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.print.g.2'
+    - name: m_print_gc_2
+      label: 작업 사진 3 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.print.gc.2'
+    - name: m_print_g_3
+      label: 작업 사진 4 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.print.g.3'
+    - name: m_print_gc_3
+      label: 작업 사진 4 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.print.gc.3'
+    - name: m_print_g_4
+      label: 작업 사진 5 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.print.g.4'
+    - name: m_print_gc_4
+      label: 작업 사진 5 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.print.gc.4'
+    - name: m_print_g_5
+      label: 작업 사진 6 주소 (비워 두면 그 칸은 안 보여요)
+      type: image
+      description: '키: m.print.g.5'
+    - name: m_print_gc_5
+      label: 작업 사진 6 설명 (사진 아래 한 줄)
+      type: string
+      description: '키: m.print.gc.5'
+    - name: m_print_link
+      label: ‘작업 사례 더 보기’ 버튼 주소 (비워 두면 버튼이 사라져요)
+      type: string
+      description: '키: m.print.link'
+    - name: m_print_good_0
+      label: 이런 점이 좋아요 · 1번
+      type: string
+      description: '키: m.print.good.0'
+    - name: m_print_good_1
+      label: 이런 점이 좋아요 · 2번
+      type: string
+      description: '키: m.print.good.1'
+    - name: m_print_good_2
+      label: 이런 점이 좋아요 · 3번
+      type: string
+      description: '키: m.print.good.2'
+    - name: m_print_good_3
+      label: '이런 점이 좋아요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.print.good.3'
+    - name: m_print_good_4
+      label: '이런 점이 좋아요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.print.good.4'
+    - name: m_print_know_0
+      label: 알아두세요 · 1번
+      type: string
+      description: '키: m.print.know.0'
+    - name: m_print_know_1
+      label: 알아두세요 · 2번
+      type: string
+      description: '키: m.print.know.1'
+    - name: m_print_know_2
+      label: 알아두세요 · 3번
+      type: text
+      description: '키: m.print.know.2'
+    - name: m_print_know_3
+      label: '알아두세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.print.know.3'
+    - name: m_print_know_4
+      label: '알아두세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.print.know.4'
+    - name: m_print_r0
+      label: 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: m.print.r0'
+    - name: m_print_r1
+      label: 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: m.print.r1'
+    - name: m_print_r2
+      label: 점수 0~5 · 가벼움
+      type: string
+      description: '키: m.print.r2'
+    - name: m_print_r3
+      label: 점수 0~5 · 대형화
+      type: string
+      description: '키: m.print.r3'
+    - name: m_print_r4
+      label: 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: m.print.r4'
+    - name: m_print_steps
+      label: 제작 과정 (→ 로 단계를 나눠 쓰세요)
+      type: string
+      description: '키: m.print.steps'
+    - name: m_print_ask_0
+      label: 의뢰 전에 확인해 주세요 · 1번
+      type: string
+      description: '키: m.print.ask.0'
+    - name: m_print_ask_1
+      label: 의뢰 전에 확인해 주세요 · 2번
+      type: string
+      description: '키: m.print.ask.1'
+    - name: m_print_ask_2
+      label: 의뢰 전에 확인해 주세요 · 3번
+      type: string
+      description: '키: m.print.ask.2'
+    - name: m_print_ask_3
+      label: '의뢰 전에 확인해 주세요 · 4번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.print.ask.3'
+    - name: m_print_ask_4
+      label: '의뢰 전에 확인해 주세요 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: m.print.ask.4'
+    - name: m_print_use
+      label: 잘 맞는 작품
+      type: string
+      description: '키: m.print.use'
+  - name: step3_compare
+    label: Step 3 · 한눈에 비교
+    type: object
+    fields:
+    - name: s3_eb
+      label: 작은 영문 제목
+      type: string
+      description: '키: s3.eb'
+    - name: s3_h
+      label: 제목
+      type: string
+      description: '키: s3.h'
+    - name: s3_p
+      label: 설명 문장
+      type: string
+      description: '키: s3.p'
+    - name: s3a_h
+      label: 비교표 소제목
+      type: string
+      description: '키: s3a.h'
+    - name: legend
+      label: 표 아래 안내 문장
+      type: text
+      description: '키: legend'
+    - name: combo_h
+      label: 조합 예시 소제목
+      type: string
+      description: '키: combo.h'
+    - name: combo_0
+      label: 조합 예시 · 1번
+      type: string
+      description: '키: combo.0'
+    - name: combo_1
+      label: 조합 예시 · 2번
+      type: string
+      description: '키: combo.1'
+    - name: combo_2
+      label: 조합 예시 · 3번
+      type: string
+      description: '키: combo.2'
+    - name: combo_3
+      label: 조합 예시 · 4번
+      type: string
+      description: '키: combo.3'
+    - name: combo_4
+      label: '조합 예시 · 5번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: combo.4'
+    - name: combo_5
+      label: '조합 예시 · 6번 (빈 칸: 항목을 늘리려면 여기에 쓰세요)'
+      type: string
+      description: '키: combo.5'
+    - name: ch_0
+      label: '표 머리글: 소재'
+      type: string
+      description: '키: ch.0'
+    - name: ch_6
+      label: '표 머리글: 비용'
+      type: string
+      description: '키: ch.6'
+    - name: ch_7
+      label: '표 머리글: 제작 기간'
+      type: string
+      description: '키: ch.7'
+    - name: ch_8
+      label: '표 머리글: 이럴 때 추천'
+      type: string
+      description: '키: ch.8'
+    - name: c_0_n
+      label: 표 1행 · 소재 이름
+      type: string
+      description: '키: c.0.n'
+    - name: c_0_r0
+      label: 표 1행 · 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: c.0.r0'
+    - name: c_0_r1
+      label: 표 1행 · 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: c.0.r1'
+    - name: c_0_r2
+      label: 표 1행 · 점수 0~5 · 가벼움
+      type: string
+      description: '키: c.0.r2'
+    - name: c_0_r3
+      label: 표 1행 · 점수 0~5 · 대형화
+      type: string
+      description: '키: c.0.r3'
+    - name: c_0_r4
+      label: 표 1행 · 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: c.0.r4'
+    - name: c_0_c
+      label: 표 1행 · 비용
+      type: string
+      description: '키: c.0.c'
+    - name: c_0_t
+      label: 표 1행 · 제작 기간
+      type: string
+      description: '키: c.0.t'
+    - name: c_0_d
+      label: 표 1행 · 이럴 때 추천
+      type: string
+      description: '키: c.0.d'
+    - name: c_1_n
+      label: 표 2행 · 소재 이름
+      type: string
+      description: '키: c.1.n'
+    - name: c_1_r0
+      label: 표 2행 · 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: c.1.r0'
+    - name: c_1_r1
+      label: 표 2행 · 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: c.1.r1'
+    - name: c_1_r2
+      label: 표 2행 · 점수 0~5 · 가벼움
+      type: string
+      description: '키: c.1.r2'
+    - name: c_1_r3
+      label: 표 2행 · 점수 0~5 · 대형화
+      type: string
+      description: '키: c.1.r3'
+    - name: c_1_r4
+      label: 표 2행 · 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: c.1.r4'
+    - name: c_1_c
+      label: 표 2행 · 비용
+      type: string
+      description: '키: c.1.c'
+    - name: c_1_t
+      label: 표 2행 · 제작 기간
+      type: string
+      description: '키: c.1.t'
+    - name: c_1_d
+      label: 표 2행 · 이럴 때 추천
+      type: string
+      description: '키: c.1.d'
+    - name: c_2_n
+      label: 표 3행 · 소재 이름
+      type: string
+      description: '키: c.2.n'
+    - name: c_2_r0
+      label: 표 3행 · 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: c.2.r0'
+    - name: c_2_r1
+      label: 표 3행 · 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: c.2.r1'
+    - name: c_2_r2
+      label: 표 3행 · 점수 0~5 · 가벼움
+      type: string
+      description: '키: c.2.r2'
+    - name: c_2_r3
+      label: 표 3행 · 점수 0~5 · 대형화
+      type: string
+      description: '키: c.2.r3'
+    - name: c_2_r4
+      label: 표 3행 · 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: c.2.r4'
+    - name: c_2_c
+      label: 표 3행 · 비용
+      type: string
+      description: '키: c.2.c'
+    - name: c_2_t
+      label: 표 3행 · 제작 기간
+      type: string
+      description: '키: c.2.t'
+    - name: c_2_d
+      label: 표 3행 · 이럴 때 추천
+      type: string
+      description: '키: c.2.d'
+    - name: c_3_n
+      label: 표 4행 · 소재 이름
+      type: string
+      description: '키: c.3.n'
+    - name: c_3_r0
+      label: 표 4행 · 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: c.3.r0'
+    - name: c_3_r1
+      label: 표 4행 · 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: c.3.r1'
+    - name: c_3_r2
+      label: 표 4행 · 점수 0~5 · 가벼움
+      type: string
+      description: '키: c.3.r2'
+    - name: c_3_r3
+      label: 표 4행 · 점수 0~5 · 대형화
+      type: string
+      description: '키: c.3.r3'
+    - name: c_3_r4
+      label: 표 4행 · 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: c.3.r4'
+    - name: c_3_c
+      label: 표 4행 · 비용
+      type: string
+      description: '키: c.3.c'
+    - name: c_3_t
+      label: 표 4행 · 제작 기간
+      type: string
+      description: '키: c.3.t'
+    - name: c_3_d
+      label: 표 4행 · 이럴 때 추천
+      type: string
+      description: '키: c.3.d'
+    - name: c_4_n
+      label: 표 5행 · 소재 이름
+      type: string
+      description: '키: c.4.n'
+    - name: c_4_r0
+      label: 표 5행 · 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: c.4.r0'
+    - name: c_4_r1
+      label: 표 5행 · 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: c.4.r1'
+    - name: c_4_r2
+      label: 표 5행 · 점수 0~5 · 가벼움
+      type: string
+      description: '키: c.4.r2'
+    - name: c_4_r3
+      label: 표 5행 · 점수 0~5 · 대형화
+      type: string
+      description: '키: c.4.r3'
+    - name: c_4_r4
+      label: 표 5행 · 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: c.4.r4'
+    - name: c_4_c
+      label: 표 5행 · 비용
+      type: string
+      description: '키: c.4.c'
+    - name: c_4_t
+      label: 표 5행 · 제작 기간
+      type: string
+      description: '키: c.4.t'
+    - name: c_4_d
+      label: 표 5행 · 이럴 때 추천
+      type: string
+      description: '키: c.4.d'
+    - name: c_5_n
+      label: 표 6행 · 소재 이름
+      type: string
+      description: '키: c.5.n'
+    - name: c_5_r0
+      label: 표 6행 · 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: c.5.r0'
+    - name: c_5_r1
+      label: 표 6행 · 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: c.5.r1'
+    - name: c_5_r2
+      label: 표 6행 · 점수 0~5 · 가벼움
+      type: string
+      description: '키: c.5.r2'
+    - name: c_5_r3
+      label: 표 6행 · 점수 0~5 · 대형화
+      type: string
+      description: '키: c.5.r3'
+    - name: c_5_r4
+      label: 표 6행 · 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: c.5.r4'
+    - name: c_5_c
+      label: 표 6행 · 비용
+      type: string
+      description: '키: c.5.c'
+    - name: c_5_t
+      label: 표 6행 · 제작 기간
+      type: string
+      description: '키: c.5.t'
+    - name: c_5_d
+      label: 표 6행 · 이럴 때 추천
+      type: string
+      description: '키: c.5.d'
+    - name: c_6_n
+      label: 표 7행 · 소재 이름
+      type: string
+      description: '키: c.6.n'
+    - name: c_6_r0
+      label: 표 7행 · 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: c.6.r0'
+    - name: c_6_r1
+      label: 표 7행 · 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: c.6.r1'
+    - name: c_6_r2
+      label: 표 7행 · 점수 0~5 · 가벼움
+      type: string
+      description: '키: c.6.r2'
+    - name: c_6_r3
+      label: 표 7행 · 점수 0~5 · 대형화
+      type: string
+      description: '키: c.6.r3'
+    - name: c_6_r4
+      label: 표 7행 · 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: c.6.r4'
+    - name: c_6_c
+      label: 표 7행 · 비용
+      type: string
+      description: '키: c.6.c'
+    - name: c_6_t
+      label: 표 7행 · 제작 기간
+      type: string
+      description: '키: c.6.t'
+    - name: c_6_d
+      label: 표 7행 · 이럴 때 추천
+      type: string
+      description: '키: c.6.d'
+    - name: c_7_n
+      label: 표 8행 · 소재 이름
+      type: string
+      description: '키: c.7.n'
+    - name: c_7_r0
+      label: 표 8행 · 점수 0~5 · 표현 자유도
+      type: string
+      description: '키: c.7.r0'
+    - name: c_7_r1
+      label: 표 8행 · 점수 0~5 · 실외 내구성
+      type: string
+      description: '키: c.7.r1'
+    - name: c_7_r2
+      label: 표 8행 · 점수 0~5 · 가벼움
+      type: string
+      description: '키: c.7.r2'
+    - name: c_7_r3
+      label: 표 8행 · 점수 0~5 · 대형화
+      type: string
+      description: '키: c.7.r3'
+    - name: c_7_r4
+      label: 표 8행 · 점수 0~5 · 조명(투광)
+      type: string
+      description: '키: c.7.r4'
+    - name: c_7_c
+      label: 표 8행 · 비용
+      type: string
+      description: '키: c.7.c'
+    - name: c_7_t
+      label: 표 8행 · 제작 기간
+      type: string
+      description: '키: c.7.t'
+    - name: c_7_d
+      label: 표 8행 · 이럴 때 추천
+      type: string
+      description: '키: c.7.d'
+    - name: s3a_p
+      label: 비교표 설명 (1단계를 마쳤을 때)
+      type: string
+      description: '키: s3a.p'
+    - name: s3a_p0
+      label: 비교표 설명 (1단계를 건너뛰었을 때)
+      type: string
+      description: '키: s3a.p0'
+  - name: step3_calc_text
+    label: Step 3 · 가견적 계산기 문구
+    type: object
+    fields:
+    - name: s3b_h
+      label: 계산기 소제목
+      type: string
+      description: '키: s3b.h'
+    - name: s3b_p
+      label: 계산기 설명 문장
+      type: string
+      description: '키: s3b.p'
+    - name: g_mat
+      label: 항목 이름 · 소재
+      type: string
+      description: '키: g.mat'
+    - name: calc_m_frp_s
+      label: 계산기 소재 설명 · FRP
+      type: string
+      description: '키: calc.m.frp.s'
+    - name: calc_m_eps_s
+      label: 계산기 소재 설명 · 스티로폼 + 우레아
+      type: string
+      description: '키: calc.m.eps.s'
+    - name: calc_m_metal_s
+      label: 계산기 소재 설명 · 금속
+      type: string
+      description: '키: calc.m.metal.s'
+    - name: calc_m_acrylic_s
+      label: 계산기 소재 설명 · 아크릴·PC
+      type: string
+      description: '키: calc.m.acrylic.s'
+    - name: calc_m_brass_s
+      label: 계산기 소재 설명 · 황동 주물(견적서의 브론즈/주물)
+      type: string
+      description: '키: calc.m.brass.s'
+    - name: calc_m_print_s
+      label: 계산기 소재 설명 · 3D 프린팅
+      type: string
+      description: '키: calc.m.print.s'
+    - name: tag_carry
+      label: 1단계 선택이 반영된 항목에 붙는 표시
+      type: string
+      description: '키: tag.carry'
+    - name: g_height
+      label: 항목 이름 · 높이
+      type: string
+      description: '키: g.height'
+    - name: g_comp
+      label: 항목 이름 · 형태 난이도
+      type: string
+      description: '키: g.comp'
+    - name: g_finish
+      label: 항목 이름 · 표면 마감
+      type: string
+      description: '키: g.finish'
+    - name: calc_f_primer_n
+      label: 표면 마감 기본 프라이머 · 이름
+      type: string
+      description: '키: calc.f.primer.n'
+    - name: calc_f_primer_s
+      label: 표면 마감 기본 프라이머 · 설명
+      type: string
+      description: '키: calc.f.primer.s'
+    - name: calc_f_urethane_n
+      label: 표면 마감 우레탄 도색 · 이름
+      type: string
+      description: '키: calc.f.urethane.n'
+    - name: calc_f_urethane_s
+      label: 표면 마감 우레탄 도색 · 설명
+      type: string
+      description: '키: calc.f.urethane.s'
+    - name: calc_f_uv_n
+      label: 표면 마감 야외용 UV 코팅 · 이름
+      type: string
+      description: '키: calc.f.uv.n'
+    - name: calc_f_uv_s
+      label: 표면 마감 야외용 UV 코팅 · 설명
+      type: string
+      description: '키: calc.f.uv.s'
+    - name: calc_f_chrome_n
+      label: 표면 마감 특수 크롬/도금 · 이름
+      type: string
+      description: '키: calc.f.chrome.n'
+    - name: calc_f_chrome_s
+      label: 표면 마감 특수 크롬/도금 · 설명
+      type: string
+      description: '키: calc.f.chrome.s'
+    - name: g_install
+      label: 항목 이름 · 배송 및 설치
+      type: string
+      description: '키: g.install'
+    - name: calc_i_self_n
+      label: 배송·설치 자체 수거 · 이름
+      type: string
+      description: '키: calc.i.self.n'
+    - name: calc_i_self_s
+      label: 배송·설치 자체 수거 · 설명
+      type: string
+      description: '키: calc.i.self.s'
+    - name: calc_i_indoor_n
+      label: 배송·설치 실내 거치 · 이름
+      type: string
+      description: '키: calc.i.indoor.n'
+    - name: calc_i_indoor_s
+      label: 배송·설치 실내 거치 · 설명
+      type: string
+      description: '키: calc.i.indoor.s'
+    - name: calc_i_outdoor_n
+      label: 배송·설치 야외 앙카 · 이름
+      type: string
+      description: '키: calc.i.outdoor.n'
+    - name: calc_i_outdoor_s
+      label: 배송·설치 야외 앙카 · 설명
+      type: string
+      description: '키: calc.i.outdoor.s'
+    - name: calc_auto
+      label: 안내 문장 (1단계를 마쳤을 때)
+      type: string
+      description: '키: calc.auto'
+    - name: calc_note
+      label: 결과 아래 안내 문장
+      type: string
+      description: '키: calc.note'
+    - name: calc_t
+      label: 결과 상자 제목
+      type: string
+      description: '키: calc.t'
+    - name: calc_fmt
+      label: 금액 표기 ({a}=최소, {b}=최대. 바꾸지 않는 것을 권장)
+      type: string
+      description: '키: calc.fmt'
+    - name: calc_b0
+      label: 내역 1
+      type: string
+      description: '키: calc.b0'
+    - name: calc_b1
+      label: 내역 2
+      type: string
+      description: '키: calc.b1'
+    - name: calc_b2
+      label: 내역 3
+      type: string
+      description: '키: calc.b2'
+    - name: calc_b3
+      label: 내역 4
+      type: string
+      description: '키: calc.b3'
+    - name: calc_noauto
+      label: 안내 문장 (1단계를 건너뛰었을 때)
+      type: string
+      description: '키: calc.noauto'
+    - name: calc_go1
+      label: 1단계로 가기 버튼
+      type: string
+      description: '키: calc.go1'
+    - name: calc_warn1
+      label: 1순위가 계산 불가 소재일 때 안내 ({a}=1순위, {b}=대신 보여주는 소재)
+      type: string
+      description: '키: calc.warn1'
+    - name: calc_led
+      label: 조명 선택 시 추가 안내
+      type: string
+      description: '키: calc.led'
+    - name: calc_reset
+      label: 처음 선택으로 되돌리기 버튼
+      type: string
+      description: '키: calc.reset'
+    - name: calc_na
+      label: 계산 불가 소재를 골랐을 때 안내 ({m}=소재 이름)
+      type: text
+      description: '키: calc.na'
+  - name: step3_calc_numbers
+    label: Step 3 · 가견적 금액·일수 (숫자만 입력)
+    type: object
+    fields:
+    - name: calc_on
+      label: 가견적 계산기 표시 (1=보임, 0=숨김)
+      type: string
+      description: '키: calc.on'
+    - name: calc_m_frp_base
+      label: 소재 FRP · 기본 단가 (원, 높이 1m 기준)
+      type: string
+      description: '키: calc.m.frp.base'
+    - name: calc_m_frp_days
+      label: 소재 FRP · 기본 제작일수
+      type: string
+      description: '키: calc.m.frp.days'
+    - name: calc_m_eps_base
+      label: 소재 스티로폼 + 우레아 · 기본 단가 (원, 높이 1m 기준)
+      type: string
+      description: '키: calc.m.eps.base'
+    - name: calc_m_eps_days
+      label: 소재 스티로폼 + 우레아 · 기본 제작일수
+      type: string
+      description: '키: calc.m.eps.days'
+    - name: calc_m_metal_base
+      label: 소재 금속 · 기본 단가 (원, 높이 1m 기준)
+      type: string
+      description: '키: calc.m.metal.base'
+    - name: calc_m_metal_days
+      label: 소재 금속 · 기본 제작일수
+      type: string
+      description: '키: calc.m.metal.days'
+    - name: calc_m_brass_base
+      label: 소재 황동 주물(견적서의 브론즈/주물) · 기본 단가 (원, 높이 1m 기준)
+      type: string
+      description: '키: calc.m.brass.base'
+    - name: calc_m_brass_days
+      label: 소재 황동 주물(견적서의 브론즈/주물) · 기본 제작일수
+      type: string
+      description: '키: calc.m.brass.days'
+    - name: calc_c_simple_rate
+      label: 형태 난이도 단순 형태 · 단가 배율
+      type: string
+      description: '키: calc.c.simple.rate'
+    - name: calc_c_simple_days
+      label: 형태 난이도 단순 형태 · 추가 제작일수
+      type: string
+      description: '키: calc.c.simple.days'
+    - name: calc_c_character_rate
+      label: 형태 난이도 캐릭터·입체 · 단가 배율
+      type: string
+      description: '키: calc.c.character.rate'
+    - name: calc_c_character_days
+      label: 형태 난이도 캐릭터·입체 · 추가 제작일수
+      type: string
+      description: '키: calc.c.character.days'
+    - name: calc_c_realistic_rate
+      label: 형태 난이도 극사실·인체 · 단가 배율
+      type: string
+      description: '키: calc.c.realistic.rate'
+    - name: calc_c_realistic_days
+      label: 형태 난이도 극사실·인체 · 추가 제작일수
+      type: string
+      description: '키: calc.c.realistic.days'
+    - name: calc_f_primer_base
+      label: 표면 마감 기본 프라이머 · 단가 (원, 높이 1m당)
+      type: string
+      description: '키: calc.f.primer.base'
+    - name: calc_f_primer_days
+      label: 표면 마감 기본 프라이머 · 추가 제작일수
+      type: string
+      description: '키: calc.f.primer.days'
+    - name: calc_f_urethane_base
+      label: 표면 마감 우레탄 도색 · 단가 (원, 높이 1m당)
+      type: string
+      description: '키: calc.f.urethane.base'
+    - name: calc_f_urethane_days
+      label: 표면 마감 우레탄 도색 · 추가 제작일수
+      type: string
+      description: '키: calc.f.urethane.days'
+    - name: calc_f_uv_base
+      label: 표면 마감 야외용 UV 코팅 · 단가 (원, 높이 1m당)
+      type: string
+      description: '키: calc.f.uv.base'
+    - name: calc_f_uv_days
+      label: 표면 마감 야외용 UV 코팅 · 추가 제작일수
+      type: string
+      description: '키: calc.f.uv.days'
+    - name: calc_f_chrome_base
+      label: 표면 마감 특수 크롬/도금 · 단가 (원, 높이 1m당)
+      type: string
+      description: '키: calc.f.chrome.base'
+    - name: calc_f_chrome_days
+      label: 표면 마감 특수 크롬/도금 · 추가 제작일수
+      type: string
+      description: '키: calc.f.chrome.days'
+    - name: calc_i_self_cost
+      label: 배송·설치 자체 수거 · 비용 (원)
+      type: string
+      description: '키: calc.i.self.cost'
+    - name: calc_i_self_days
+      label: 배송·설치 자체 수거 · 추가 제작일수
+      type: string
+      description: '키: calc.i.self.days'
+    - name: calc_i_indoor_cost
+      label: 배송·설치 실내 거치 · 비용 (원)
+      type: string
+      description: '키: calc.i.indoor.cost'
+    - name: calc_i_indoor_days
+      label: 배송·설치 실내 거치 · 추가 제작일수
+      type: string
+      description: '키: calc.i.indoor.days'
+    - name: calc_i_outdoor_cost
+      label: 배송·설치 야외 앙카 · 비용 (원)
+      type: string
+      description: '키: calc.i.outdoor.cost'
+    - name: calc_i_outdoor_days
+      label: 배송·설치 야외 앙카 · 추가 제작일수
+      type: string
+      description: '키: calc.i.outdoor.days'
+    - name: calc_exp
+      label: 크기 계수 지수 (높이/100 의 몇 제곱, 기본 1.85)
+      type: string
+      description: '키: calc.exp'
+    - name: calc_lo
+      label: 범위 최소 배율 (기본 0.9)
+      type: string
+      description: '키: calc.lo'
+    - name: calc_hi
+      label: 범위 최대 배율 (기본 1.15)
+      type: string
+      description: '키: calc.hi'
+  - name: step4_inquiry
+    label: Step 4 · 최종 견적 문의
+    type: object
+    fields:
+    - name: s4_eb
+      label: 작은 영문 제목
+      type: string
+      description: '키: s4.eb'
+    - name: s4_h
+      label: 제목
+      type: string
+      description: '키: s4.h'
+    - name: s4_p
+      label: 설명 문장
+      type: string
+      description: '키: s4.p'
+    - name: s4a_h
+      label: 추가 입력 소제목
+      type: string
+      description: '키: s4a.h'
+    - name: fl_qty
+      label: 입력란 이름 · 수량
+      type: string
+      description: '키: fl.qty'
+    - name: fl_budget
+      label: 입력란 이름 · 예산
+      type: string
+      description: '키: fl.budget'
+    - name: fl_date
+      label: 입력란 이름 · 희망일
+      type: string
+      description: '키: fl.date'
+    - name: fl_ref
+      label: 입력란 이름 · 참고 자료
+      type: string
+      description: '키: fl.ref'
+    - name: ready_t
+      label: 안내 상자 제목
+      type: string
+      description: '키: ready.t'
+    - name: ready_note
+      label: 안내 상자 내용
+      type: text
+      description: '키: ready.note'
+    - name: disc
+      label: 맨 아래 안내 문구
+      type: text
+      description: '키: disc'
+    - name: s4_restart
+      label: 처음부터 다시 하기 링크
+      type: string
+      description: '키: s4.restart'
+    - name: ct_kakao
+      label: 카카오톡 채널 채팅 주소 (https://pf.kakao.com/_○○○/chat). 비워 두면 카카오톡 버튼 대신 복사 버튼이 나와요
+      type: string
+      description: '키: ct.kakao'
+    - name: s4_copy
+      label: 내용 복사하기 버튼
+      type: string
+      description: '키: s4.copy'
+    - name: ct_0_k
+      label: 연락처 1 · 이름
+      type: string
+      description: '키: ct.0.k'
+    - name: ct_0_v
+      label: 연락처 1 · 내용
+      type: string
+      description: '키: ct.0.v'
+    - name: ct_1_k
+      label: 연락처 2 · 이름
+      type: string
+      description: '키: ct.1.k'
+    - name: ct_1_v
+      label: 연락처 2 · 내용
+      type: string
+      description: '키: ct.1.v'
+  - name: step4_copy_text
+    label: Step 4 · 복사되는 문의 내용 문구
+    type: object
+    fields:
+    - name: sm_title
+      label: 복사되는 글 맨 위 제목
+      type: string
+      description: '키: sm.title'
+    - name: sm_none
+      label: 선택 안 한 항목 표시
+      type: string
+      description: '키: sm.none'
+    - name: sm_env
+      label: 항목 이름 · 설치 장소
+      type: string
+      description: '키: sm.env'
+    - name: sm_dur
+      label: 항목 이름 · 설치 기간
+      type: string
+      description: '키: sm.dur'
+    - name: sm_form
+      label: 항목 이름 · 조형 종류
+      type: string
+      description: '키: sm.form'
+    - name: sm_rec
+      label: 항목 이름 · 추천 소재
+      type: string
+      description: '키: sm.rec'
+    - name: sm_mat
+      label: 항목 이름 · 견적 기준 소재
+      type: string
+      description: '키: sm.mat'
+    - name: sm_h
+      label: 항목 이름 · 높이
+      type: string
+      description: '키: sm.h'
+    - name: sm_comp
+      label: 항목 이름 · 형태 난이도
+      type: string
+      description: '키: sm.comp'
+    - name: sm_fin
+      label: 항목 이름 · 표면 마감
+      type: string
+      description: '키: sm.fin'
+    - name: sm_ins
+      label: 항목 이름 · 배송 및 설치
+      type: string
+      description: '키: sm.ins'
+    - name: sm_price
+      label: 항목 이름 · 가견적
+      type: string
+      description: '키: sm.price'
+    - name: sm_days
+      label: 항목 이름 · 제작 기간
+      type: string
+      description: '키: sm.days'
+    - name: sm_foot
+      label: 복사되는 글 맨 아래 문장
+      type: string
+      description: '키: sm.foot'
+    - name: sm_consult
+      label: 가견적을 낼 수 없을 때 표시
+      type: string
+      description: '키: sm.consult'
+  - name: toasts
+    label: 알림 문구
+    type: object
+    fields:
+    - name: toast_pick
+      label: 1단계 미완료 알림
+      type: string
+      description: '키: toast.pick'
+    - name: toast_kakao
+      label: 카카오톡 이동 시 알림
+      type: string
+      description: '키: toast.kakao'
+    - name: toast_kakao2
+      label: 카카오톡 이동 시 복사 실패 알림
+      type: string
+      description: '키: toast.kakao2'
+    - name: toast_copy
+      label: 복사 성공 알림
+      type: string
+      description: '키: toast.copy'
+    - name: toast_copy2
+      label: 복사 실패 알림
+      type: string
+      description: '키: toast.copy2'
+    - name: btn_cvd
+      label: 복사 완료 표시
+      type: string
+      description: '키: btn.cvd'
+    - name: btn_cvf
+      label: 복사 실패 표시
+      type: string
+      description: '키: btn.cvf'
+    - name: btn_cv
+      label: 연락처 복사 버튼
+      type: string
+      description: '키: btn.cv'
