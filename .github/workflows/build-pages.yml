@@ -1,0 +1,38 @@
+# CMS 에서 내용(data/*.json)을 저장하면 사업분야 3개 페이지(biz-*.html)와 sitemap.xml 을 자동으로 다시 만듭니다.
+# (이 단계가 실패해도 사이트는 data/*.json 을 직접 읽기 때문에 내용은 정상 반영됩니다. 검색 노출용 정적 페이지만 갱신이 늦어집니다.)
+name: build-pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'index.html'
+      - 'tools/build_biz.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: build-pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Rebuild business pages
+        run: python tools/build_biz.py
+        env:
+          SITE_URL: https://jenuek.github.io/malong/
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add biz-arch.html biz-public.html biz-exhibit.html sitemap.xml
+          if git diff --cached --quiet; then echo "no changes"; else git commit -m "Rebuild business pages from data"; git push; fi
