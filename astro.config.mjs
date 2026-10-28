@@ -30,7 +30,6 @@ export default defineConfig({
   image: { service: { entrypoint: 'astro/assets/services/sharp' } },
   integrations: [
     sitemap({
-      customPages: [origin + '/find.html', origin + '/quote.html'],
       serialize(item) {
         if (/\/editorial\/tag\//.test(item.url)) item.priority = 0.4;
         else if (/\/work\/page\//.test(item.url)) item.priority = 0.5;
