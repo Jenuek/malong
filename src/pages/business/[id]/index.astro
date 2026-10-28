@@ -1,0 +1,20 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getSite, abs } from '../../../lib/data.js';
+import { createEngine } from '../../../lib/engine.js';
+export function getStaticPaths() { return ['arch', 'public', 'exhibit'].map((id) => ({ params: { id } })); }
+const { id } = Astro.params;
+const site = await getSite();
+const E = createEngine(site.ctx);
+const B = E.BIZ[id];
+const intro = site.BD && site.BD[id] && site.BD[id].intro_text ? String(site.BD[id].intro_text) : '';
+const desc = [B.lead, intro].filter(Boolean).join(' ').slice(0, 170);
+const path = 'business/' + id + '/';
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'Service', name: B.title, serviceType: B.en, provider: { '@id': abs('') + '#org' }, areaServed: 'KR', description: desc, url: abs(path) },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: '홈', item: abs('') }, { '@type': 'ListItem', position: 2, name: '사업분야', item: abs('business/arch/') }, { '@type': 'ListItem', position: 3, name: B.title, item: abs(path) }] },
+];
+---
+<Base title={`${B.title} · ${B.en}`} description={desc} path={path} nav="biz" side="none" jsonLd={ld}>
+  <div id="v-biz" set:html={E.bizPageHTML(id)}></div>
+</Base>
