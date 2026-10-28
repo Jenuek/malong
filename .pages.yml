@@ -614,6 +614,15 @@ content:
     label: 하단 문구 (최대 3줄)
     type: string
     list: true
+- name: lead
+  label: 문의 접수 설정
+  type: file
+  path: data/lead.json
+  fields:
+  - name: endpoint
+    label: 문의 접수 주소 (Apps Script 웹앱)
+    type: string
+    description: 이메일 입력·견적 문의를 받는 주소(https://script.google.com/macros/s/…/exec). 비워 두면 이메일 입력 단계가 꺼지고 카카오톡/복사 문의로 동작합니다. 바꾼 뒤에는 저장만 하면 됩니다.
 - name: editorial
   label: 에디토리얼 (글)
   type: collection
