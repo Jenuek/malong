@@ -1,26 +1,22 @@
 {
   "eyebrow": "Malong Company",
-  "title": "더 큰 감동을 선사하기 위해,\n작품 그 이상의 가치를 꿈꾸다",
+  "title": "조형물 업계 1위 ",
   "sub": "공공미술, 건축미술, 전시기획. 기획부터 제작, 설치까지 마롱컴퍼니가 함께합니다.",
   "hero": [
     {
-      "work": "401",
-      "image": ""
+      "work": "401"
     },
     {
-      "work": "421",
-      "image": ""
+      "work": "421"
     },
     {
-      "work": "431",
-      "image": ""
+      "work": "431"
     },
     {
-      "work": "441",
-      "image": ""
+      "work": "441"
     }
   ],
-  "interval_sec": 6.0,
+  "interval_sec": 6,
   "latest_count": 12,
   "end": "어떤 소재가 어울릴지 고민이라면",
   "biz": [
