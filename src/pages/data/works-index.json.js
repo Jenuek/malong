@@ -8,9 +8,11 @@ export async function GET() {
     mats: MATS.map((m) => ({ id: m.id, no: m.no, en: m.en, kr: m.kr, c: m.layers[0][2] })),
     works: PORT.map((w) => {
       const r = { p: w.pid, n: w.name, m: w.mats, o: w.order };
-      if (w.cat) r.c = w.cat;
+      if (w.types.length) r.u = w.types;
+      if (w.purposes.length) r.c = w.purposes;
+      if (w.regions.length) r.r = w.regions;
+      if (w.keywords.length) r.k = w.keywords;
       if (w.year) r.y = w.year;
-      if (w.region) r.r = w.region;
       if (w.client) r.cl = w.client;
       if (w.tags.length) r.t = w.tags;
       if (w.img) { r.i = w.img; r.s = w.srcset; r.w = w.w; r.h = w.h; }
