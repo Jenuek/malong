@@ -16,37 +16,39 @@ const prev = PORT[(i - 1 + PORT.length) % PORT.length];
 const next = PORT[(i + 1) % PORT.length];
 const hasNav = PORT.length > 1;
 
-/* 관련 작품: 같은 소재·태그·분류·지역이 겹칠수록 위로 */
-const score = (x) => (x.mats.filter((m) => w0.mats.includes(m)).length * 3) + (x.tags.filter((t) => w0.tags.includes(t)).length * 2) + (x.cat && x.cat === w0.cat ? 2 : 0) + (x.region && x.region === w0.region ? 1 : 0);
+/* 관련 작품: 같은 유형·키워드·태그·목적·지역이 겹칠수록 위로 */
+const both = (a, b) => a.filter((v) => b.includes(v)).length;
+const score = (x) => both(x.types, w0.types) * 3 + both(x.mats, w0.mats) + both(x.keywords, w0.keywords) * 2 + both(x.tags, w0.tags) * 2 + both(x.purposes, w0.purposes) * 2 + both(x.regions, w0.regions);
 const related = PORT.filter((x) => x.pid !== w0.pid).map((x) => [score(x), x]).filter((a) => a[0] > 0)
   .sort((a, b) => b[0] - a[0] || a[1].order - b[1].order).slice(0, 4).map((a) => a[1]);
 
 const { work: w, og } = await detailOf(w0);
 const matEn = w.mats.map((id) => E.byId(id).en);
 const matNames = w.mats.map((id) => E.byId(id).en + '(' + E.byId(id).kr + ')');
-const title = w.seoTitle || `${w.name} — ${matEn.join(' · ')} 작품`;
-const autoDesc = `${w.name}${w.cat ? ' · ' + w.cat : ''}${w.year ? ' · ' + w.year : ''}${w.region ? ' · ' + w.region : ''}. ${matNames.join(', ')}로 제작한 마롱컴퍼니 작품입니다. 프로젝트 ID ${w.pid}.`;
+const typeText = w.types.length ? w.types.join(' · ') : matEn.join(' · ');
+const title = w.seoTitle || `${w.name} — ${typeText ? typeText + ' ' : ''}작품`;
+const autoDesc = `${w.name}${w.purposes.length ? ' · ' + w.purposes.join(', ') : ''}${w.year ? ' · ' + w.year : ''}${w.regions.length ? ' · ' + w.regions.join(', ') : ''}. ${typeText ? typeText + '(으)로 ' : ''}제작한 마롱컴퍼니 작품입니다. 프로젝트 ID ${w.pid}.`;
 const desc = (w.seoDesc || (w.desc ? w.desc.slice(0, 150) : autoDesc));
-const m0 = E.byId(w.mats[0]);
+const m0 = E.byId(w.mats[0]) || null;
 const pagePath = 'work/' + w.pid + '/';
 const imgAbs = og || '';
 const ld = [
   { '@context': 'https://schema.org', '@type': 'CreativeWork', '@id': abs(pagePath) + '#work', name: w.name, url: abs(pagePath), description: desc, inLanguage: 'ko-KR',
     ...(imgAbs ? { image: imgAbs } : {}), identifier: w.pid, ...(w.year ? { dateCreated: w.year } : {}),
-    creator: { '@id': abs('') + '#org' }, material: matEn.join(', '), genre: w.cat || undefined,
-    keywords: w.tags.join(', ') || undefined, ...(w.region ? { locationCreated: { '@type': 'Place', name: w.region } } : {}),
+    creator: { '@id': abs('') + '#org' }, material: typeText || undefined, genre: w.purposes.join(', ') || undefined,
+    keywords: [...w.keywords, ...w.tags].join(', ') || undefined, ...(w.regions.length ? { locationCreated: w.regions.map((r) => ({ '@type': 'Place', name: r })) } : {}),
     ...(w.client ? { contributor: { '@type': 'Organization', name: w.client } } : {}) },
   { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: '홈', item: abs('') },
     { '@type': 'ListItem', position: 2, name: 'Work', item: abs('work/') },
-    { '@type': 'ListItem', position: 3, name: m0.en, item: abs('materials/' + m0.id + '/') },
-    { '@type': 'ListItem', position: 4, name: w.name, item: abs(pagePath) },
+    ...(m0 ? [{ '@type': 'ListItem', position: 3, name: m0.en, item: abs('materials/' + m0.id + '/') }] : []),
+    { '@type': 'ListItem', position: m0 ? 4 : 3, name: w.name, item: abs(pagePath) },
   ] },
 ];
 E.setState('work', 'all');
 const html = E.workDetailHTML(w, { prev: hasNav ? prev : null, next: hasNav ? next : null, related });
 ---
-<Base title={title} description={desc} path={pagePath} nav="work" side="work" f={m0.id} image={imgAbs} imageAlt={w.alt || w.name} type="article" jsonLd={ld}>
-  <nav class="crumbs" aria-label="현재 위치"><a href={E.U('')}>홈</a><span>/</span><a href={E.U('work/')}>Work</a><span>/</span><a href={E.U('materials/' + m0.id + '/')}>{m0.en}</a><span>/</span><b aria-current="page">{w.name}</b></nav>
+<Base title={title} description={desc} path={pagePath} nav="work" side="work" f={m0 ? m0.id : 'all'} image={imgAbs} imageAlt={w.alt || w.name} type="article" jsonLd={ld}>
+  <nav class="crumbs" aria-label="현재 위치"><a href={E.U('')}>홈</a><span>/</span><a href={E.U('work/')}>Work</a><span>/</span>{m0 && <><a href={E.U('materials/' + m0.id + '/')}>{m0.en}</a><span>/</span></>}<b aria-current="page">{w.name}</b></nav>
   <Fragment set:html={html} />
 </Base>
