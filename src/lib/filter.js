@@ -1,9 +1,12 @@
 /* 작품 필터 · 검색 · 정렬 — 빌드(Astro)와 브라우저에서 같은 코드를 씁니다. */
+import { TYPES, PURPOSES, REGIONS, KEYWORDS } from './normalize.js';
 
-export var GROUPS = ['c', 'y', 'r', 't'];   // 분류 · 연도 · 지역 · 태그
+var ORDER = { u: TYPES, c: PURPOSES, r: REGIONS, k: KEYWORDS };   // 유형 · 목적 · 지역 · 키워드는 템플릿에 적힌 순서대로 보여 줍니다
+
+export var GROUPS = ['u', 'c', 'r', 'k', 'y', 't'];   // 유형 · 목적 · 지역 · 키워드 · 연도 · 태그
 export var PAGE = 24;
 
-export function emptyState() { return { c: [], y: [], r: [], t: [], q: '', sort: 'rec' }; }
+export function emptyState() { return { u: [], c: [], r: [], k: [], y: [], t: [], q: '', sort: 'rec' }; }
 
 export function norm(s) { return String(s == null ? '' : s).toLowerCase().replace(/\s+/g, ' ').trim(); }
 
@@ -34,10 +37,14 @@ export function matches(w, st, skip) {
     var toks = norm(st.q).split(' ');
     for (var i = 0; i < toks.length; i++) if (toks[i] && h.indexOf(toks[i]) < 0) return false;
   }
-  if (skip !== 'c' && st.c.length && st.c.indexOf(w.c) < 0) return false;
   if (skip !== 'y' && st.y.length && st.y.indexOf(String(w.y)) < 0) return false;
-  if (skip !== 'r' && st.r.length && st.r.indexOf(w.r) < 0) return false;
-  if (skip !== 't' && st.t.length && !(w.t || []).some(function (t) { return st.t.indexOf(t) > -1; })) return false;
+  /* 유형 · 목적 · 지역 · 키워드 · 태그는 한 작품이 여러 값을 가질 수 있어, 하나라도 겹치면 통과 */
+  var MULTI = ['u', 'c', 'r', 'k', 't'];
+  for (var g = 0; g < MULTI.length; g++) {
+    var key = MULTI[g];
+    if (skip === key || !st[key].length) continue;
+    if (!(w[key] || []).some(function (v) { return st[key].indexOf(v) > -1; })) return false;
+  }
   return true;
 }
 
@@ -60,13 +67,14 @@ export function facetsOf(base, st) {
     var cnt = {}, order = [];
     base.forEach(function (w) {
       if (!matches(w, st, g)) return;
-      var vals = g === 't' ? (w.t || []) : [g === 'c' ? w.c : g === 'y' ? String(w.y || '') : w.r];
+      var vals = g === 'y' ? [String(w.y || '')] : (w[g] || []);
       vals.forEach(function (v) { if (!v) return; if (!(v in cnt)) { cnt[v] = 0; order.push(v); } cnt[v]++; });
     });
     /* 선택된 값은 개수가 0이어도 남겨 둡니다 */
     st[g].forEach(function (v) { if (!(v in cnt)) { cnt[v] = 0; order.push(v); } });
     var items = order.map(function (v) { return { v: v, l: v, n: cnt[v] }; });
     if (g === 'y') items.sort(function (a, b) { return (parseInt(b.v, 10) || 0) - (parseInt(a.v, 10) || 0); });
+    else if (ORDER[g]) items.sort(function (a, b) { var x = ORDER[g].indexOf(a.v), y = ORDER[g].indexOf(b.v); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y); });
     else if (g === 't') items.sort(function (a, b) { return b.n - a.n || a.v.localeCompare(b.v, 'ko'); });
     else items.sort(function (a, b) { return b.n - a.n || a.v.localeCompare(b.v, 'ko'); });
     out[g] = items;
@@ -76,5 +84,5 @@ export function facetsOf(base, st) {
 
 /* 검색용 문자열 (빌드 때 한 번 만들어 인덱스에 넣습니다) */
 export function haystack(w, matNames) {
-  return norm([w.name, w.pid, w.cat, w.year, w.region, w.client, (w.tags || []).join(' '), matNames.join(' ')].join(' '));
+  return norm([w.name, w.pid, (w.purposes || []).join(' '), w.year, (w.regions || []).join(' '), w.client, (w.tags || []).join(' '), (w.keywords || []).join(' '), (w.types || []).join(' '), matNames.join(' ')].join(' '));
 }

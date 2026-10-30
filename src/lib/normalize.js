@@ -105,18 +105,40 @@ export function normSettings(j) {
   };
 }
 
+/* ---- 작품 분류 항목 (마케팅 아카이빙 템플릿 기준) ----
+   관리 화면(.pages.yml)의 체크 항목과 글자가 똑같아야 합니다. 바꿀 때는 두 곳을 함께 고치세요. */
+export var TYPES = ['그림', '금속', 'FRP', '스티로폼', 'EPS', '벽화', '미디어아트', '기타'];
+export var REGIONS = ['서울', '경기, 인천', '부산', '강원', '경상, 대구', '전라, 광주', '충청, 대전, 세종', '제주'];
+export var PURPOSES = ['주거단지', '공공 시설물', '기업·브랜드홍보', '호텔·레저·업무시설', '행사·전시·이벤트'];
+export var KEYWORDS = ['건축미술', '포토존', '캐릭터', '글자'];
+/* 유형 → 사이트의 6가지 소재(소재 페이지·소재 찾기) 연결. 연결이 없는 유형은 소재 페이지에 나오지 않습니다. */
+var TYPE_MAT = { 'FRP': 'frp', '금속': 'metal', '스티로폼': 'eps', 'EPS': 'eps' };
+
+function uniq(a) { return a.filter(function (x, i) { return x && a.indexOf(x) === i; }); }
+function pick(v, allowed) { return uniq(L(v).map(S)).filter(function (x) { return allowed.indexOf(x) > -1; }); }
+
+/* 사진 설명(alt) 자동 규칙: 프로젝트명-목적-키워드-01 (목적·키워드는 첫 번째로 고른 값, 비어 있으면 생략) */
+export function altOf(name, purposes, keywords, n) {
+  return [name, purposes[0], keywords[0], pad2(String(n))].filter(Boolean).join('-');
+}
+
 /* 작품 한 건 (data/works/<id>.json) → 엔진용 객체. 사진 처리는 img(경로, 용도) 가 맡습니다. */
 export function normWork(r, matIds) {
   if (!r || !isOn(r.show === undefined ? true : r.show)) return null;
   var pid = S(r.id), name = S(r.name);
-  var mats = L(r.materials).map(function (x) { return S(x).toLowerCase(); }).filter(function (x, i, a) { return matIds.indexOf(x) > -1 && a.indexOf(x) === i; });
-  if (!pid || !name || !mats.length) return null;
-  var tags = L(r.tags).map(S).filter(Boolean).filter(function (x, i, a) { return a.indexOf(x) === i; });
+  if (!pid || !name) return null;
+  var types = pick(r.types, TYPES), purposes = pick(r.purposes, PURPOSES), regions = pick(r.regions, REGIONS), keywords = pick(r.keywords, KEYWORDS);
+  /* 소재 = 유형에서 이어진 소재 + (예전 데이터에 남아 있는) materials */
+  var mats = uniq(types.map(function (t) { return TYPE_MAT[t]; }).concat(L(r.materials).map(function (x) { return S(x).toLowerCase(); }))).filter(function (x) { return matIds.indexOf(x) > -1; });
+  var tags = uniq(L(r.tags).map(S));
   var yr = S(r.year);
+  var gallery = L(r.gallery).map(function (g) { return { image: S(g && g.image), alt: S(g && g.alt) }; }).filter(function (g) { return g.image; }).slice(0, 4);
   return {
-    pid: pid, name: name, mats: mats, cat: S(r.category), catLabel: S(r.category), year: /^\d{4}$/.test(yr) ? yr : '',
-    region: S(r.region), client: S(r.client), tags: tags, desc: S(r.desc), alt: S(r.alt),
+    pid: pid, name: name, mats: mats, types: types, purposes: purposes, regions: regions, keywords: keywords,
+    year: /^\d{4}$/.test(yr) ? yr : '', client: S(r.client), tags: tags, desc: S(r.desc),
+    alt: S(r.alt) || altOf(name, purposes, keywords, 1),
     seoTitle: S(r.seo_title), seoDesc: S(r.seo_description),
-    _image: S(r.image), _gallery: L(r.gallery).map(function (g) { return { image: S(g && g.image), alt: S(g && g.alt) }; }).filter(function (g) { return g.image; })
+    _image: S(r.image),
+    _gallery: gallery.map(function (g, k) { return { image: g.image, alt: g.alt || altOf(name, purposes, keywords, k + 2) }; })
   };
 }

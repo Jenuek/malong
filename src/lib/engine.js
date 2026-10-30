@@ -194,7 +194,7 @@ export function createEngine(ctx) {
   function bz(id, key, dflt) { var v = BD && BD[id] && S(BD[id][key]); return v || dflt; }
   function artP(w, secColor, seed) {
     var bgs = [shade(secColor, 0.8), shade(secColor, 0.55), shade(secColor, 0.3), '#F3F2F5'];
-    var bg = bgs[seed % bgs.length], mat = w.mats[0];
+    var bg = bgs[seed % bgs.length], mat = w.mats[0] || 'frp';
     var x = [-6, 6, 0, 8, -4][seed % 5], sc = [1.0, 0.9, 1.08, 0.96][seed % 4], flip = (seed % 3 === 1) ? -1 : 1;
     return '<svg viewBox="0 0 200 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="200" height="250" fill="' + bg + '"/>' +
       '<g transform="translate(' + (100 + x) + ' 132) scale(' + (sc * flip) + ' ' + sc + ') translate(-100 -104)">' + OBJ[mat] + '</g></svg>';
@@ -206,10 +206,15 @@ export function createEngine(ctx) {
   }
 
   function byId(id) { return MATS.filter(function (m) { return m.id === id; })[0]; }
+  /* 소재와 이어지지 않는 유형(그림·벽화 등)의 작품은 회색 기본색을 씁니다 */
+  var NOMAT = { id: '', no: '', en: '', kr: '', layers: [['', '', '#8E97A5']] };
+  function m0of(w) { return byId(w.mats[0]) || NOMAT; }
+  function typeLabel(w) { return (w.types && w.types.length) ? w.types.join(' · ') : w.mats.map(function (id) { return byId(id).en; }).join(' · '); }
+  function layDots(w) { return (w.mats.length ? w.mats.map(function (id) { return col(byId(id)); }) : [col(NOMAT)]).map(function (c) { return '<i style="background:' + c + '"></i>'; }).join(''); }
   function workBy(pid) { return PORT.filter(function (w) { return w.pid === pid; })[0]; }
   function col(m) { return m.layers[0][2]; }
   function worksOf(id) { return id === 'all' ? PORT : PORT.filter(function (w) { return w.mats.indexOf(id) > -1; }); }
-  function ctxColor(w) { var m = state.view === 'work' ? byId(state.f) : null; return col(m || byId(w.mats[0])); }
+  function ctxColor(w) { var m = state.view === 'work' ? byId(state.f) : null; return col(m || m0of(w)); }
   function seedOf(w) { return (parseInt(w.pid, 10) || 0) + (w.seed != null ? w.seed : PORT.indexOf(w)); }
   function pic(w, c, o) {
     o = o || {};
@@ -240,9 +245,9 @@ export function createEngine(ctx) {
   }
 
   function tileHTML(w, i, o) {
-    var lay = w.mats.map(function (id) { return '<i style="background:' + col(byId(id)) + '"></i>'; }).join('');
+    var lay = layDots(w);
     return '<a class="wk" href="' + U('work/' + esc(w.pid) + '/') + '"><span class="im">' + pic(w, ctxColor(w), o) + '<span class="lay">' + lay + '</span></span>' +
-      '<span class="fc"><span class="nm">' + esc(w.name) + '</span><span class="pid">ID ' + esc(w.pid) + '</span><span class="mt">' + esc(w.mats.map(function (id) { return byId(id).en; }).join(' · ')) + '</span></span></a>';
+      '<span class="fc"><span class="nm">' + esc(w.name) + '</span><span class="pid">ID ' + esc(w.pid) + '</span><span class="mt">' + esc(typeLabel(w)) + '</span></span></a>';
   }
   function ctaTile(m) {
     return '<div class="wk cta"><a href="' + GUIDE_URL + '" style="--c:' + (m ? col(m) : '#1B1A22') + ';--t:' + (m ? txt(col(m)) : '#FFFFFF') + '">' + (m ? esc(m.en) + '로<br>견적 내보기' : '내 프로젝트<br>견적 내보기') + '<span>→</span></a></div>';
@@ -252,7 +257,7 @@ export function createEngine(ctx) {
   }
 
   /* ---------- 작품 찾기 도구(필터 · 검색 · 정렬) ---------- */
-  var FACETS = [['c', '분류'], ['y', '연도'], ['r', '지역'], ['t', '태그']];
+  var FACETS = [['u', '유형'], ['c', '목적'], ['r', '지역'], ['k', '키워드'], ['y', '연도'], ['t', '태그']];
   function toolbarHTML(F, st) {
     st = st || {};
     function grp(key, label) {
@@ -264,7 +269,7 @@ export function createEngine(ctx) {
       }).join('') + (hidden ? '<button type="button" class="fmore" data-fmore aria-expanded="false">+ 더보기</button>' : '') + '</div></div>';
     }
     return '<form class="tb" role="search" aria-label="작품 검색 · 필터" onsubmit="return false">' +
-      '<div class="tb-top"><label class="tb-q"><span class="cap">Search</span><input type="search" name="q" value="' + esc(st.q || '') + '" placeholder="작품명 · 태그 · 지역으로 검색" autocomplete="off" enterkeyhint="search"></label>' +
+      '<div class="tb-top"><label class="tb-q"><span class="cap">Search</span><input type="search" name="q" value="' + esc(st.q || '') + '" placeholder="작품명 · 키워드 · 지역으로 검색" autocomplete="off" enterkeyhint="search"></label>' +
       '<label class="tb-s"><span class="cap">Sort</span><select name="sort"><option value="rec"' + (st.sort === 'rec' || !st.sort ? ' selected' : '') + '>추천순</option><option value="new"' + (st.sort === 'new' ? ' selected' : '') + '>최신순</option><option value="name"' + (st.sort === 'name' ? ' selected' : '') + '>이름순</option></select></label></div>' +
       '<div class="tb-f">' + FACETS.map(function (f) { return grp(f[0], f[1]); }).join('') + '</div>' +
       '<div class="tb-r"><span class="res" aria-live="polite"></span><button type="button" class="reset" data-reset hidden>필터 초기화</button></div></form>';
@@ -273,10 +278,10 @@ export function createEngine(ctx) {
   function homeHTML() {
     var hs = (HOME.hero || []).filter(function (h) { return workBy(h.pid); });
     if (!hs.length && PORT.length) hs = [{ pid: PORT[0].pid, img: '' }];
-    function cap(w) { return 'ID ' + w.pid + ' · ' + w.mats.map(function (id) { return byId(id).en; }).join(' · '); }
+    function cap(w) { return 'ID ' + w.pid + (typeLabel(w) ? ' · ' + typeLabel(w) : ''); }
     function heroPic(h, w) {
       if (h.img) return '<img src="' + esc(h.img) + '" alt="' + esc(w.name) + '" decoding="async">';
-      var svg = artP(w, col(byId(w.mats[0])), 1), bg = (svg.match(/<rect[^>]*fill="(#[0-9A-Fa-f]{6})"/) || [])[1] || '#F3F2F7';
+      var svg = artP(w, col(m0of(w)), 1), bg = (svg.match(/<rect[^>]*fill="(#[0-9A-Fa-f]{6})"/) || [])[1] || '#F3F2F7';
       return '<span style="position:absolute;inset:0;background:' + bg + '"></span>' + svg.replace('xMidYMid slice', 'xMidYMid meet');
     }
     var slides = hs.map(function (h, k) { var w = workBy(h.pid); return '<div class="hs' + (k === 0 ? ' on' : '') + '" aria-hidden="true" data-href="' + U('work/' + esc(w.pid) + '/') + '" data-name="' + esc(w.name) + '" data-cap="' + esc(cap(w)) + '">' + heroPic(h, w) + '</div>'; }).join('');
@@ -310,18 +315,20 @@ export function createEngine(ctx) {
 
   /* 작품 상세 페이지 */
   function workDetailHTML(w, o) {
-    o = o || {}; var m0 = byId(w.mats[0]);
+    o = o || {}; var m0 = m0of(w);
     var imgs = [w].concat((w.gallery || []).map(function (g, k) { return { name: w.name, pid: w.pid, mats: w.mats, img: g.img, srcset: g.srcset, alt: g.alt || (w.name + ' ' + (k + 2)), w: g.w, h: g.h, seed: 3 + k }; }));
     var figs = imgs.map(function (g, k) {
       var big = Object.assign({}, g, { alt: k === 0 ? (w.alt || w.name) : g.alt });
-      return '<figure class="pic' + (k ? ' sub' : '') + '">' + pic(big, col(m0), { eager: k === 0, sizes: '(min-width: 900px) 60vw, 100vw' }) + (k === 0 ? '<span class="lay2">' + w.mats.map(function (id) { return '<i style="background:' + col(byId(id)) + '"></i>'; }).join('') + '</span>' : '') + '</figure>';
+      return '<figure class="pic' + (k ? ' sub' : '') + '">' + pic(big, col(m0), { eager: k === 0, sizes: '(min-width: 900px) 60vw, 100vw' }) + (k === 0 ? '<span class="lay2">' + layDots(w) + '</span>' : '') + '</figure>';
     }).join('');
+    function links(g, arr) { return (arr || []).map(function (v) { return '<a href="' + U('work/?' + g + '=' + encodeURIComponent(v)) + '">' + esc(v) + '</a>'; }).join(''); }
     function row(k, v) { return v ? '<div><dt>' + k + '</dt><dd>' + v + '</dd></div>' : ''; }
     var dl = '<dl>' +
-      row('소재', w.mats.map(function (id) { return '<a href="' + U('materials/' + id + '/') + '">' + esc(byId(id).en) + '</a>'; }).join('')) +
-      row('분류', w.catLabel ? '<a href="' + U('work/?c=' + encodeURIComponent(w.cat)) + '">' + esc(w.catLabel) + '</a>' : '') +
+      row('유형', links('u', w.types)) +
+      row('목적', links('c', w.purposes)) +
+      row('지역', links('r', w.regions)) +
+      row('키워드', links('k', w.keywords)) +
       row('연도', w.year ? '<a href="' + U('work/?y=' + w.year) + '">' + esc(w.year) + '</a>' : '') +
-      row('지역', w.region ? '<a href="' + U('work/?r=' + encodeURIComponent(w.region)) + '">' + esc(w.region) + '</a>' : '') +
       row('발주', w.client ? esc(w.client) : '') +
       row('태그', (w.tags || []).map(function (t) { return '<a href="' + U('work/?t=' + encodeURIComponent(t)) + '">#' + esc(t) + '</a>'; }).join('')) + '</dl>';
     var nav = '<div class="acts">' + (o.prev ? '<a href="' + U('work/' + esc(o.prev.pid) + '/') + '" rel="prev">← Prev</a>' : '') + (o.next ? '<a href="' + U('work/' + esc(o.next.pid) + '/') + '" rel="next">Next →</a>' : '') + '<a class="x" href="' + U('work/') + '">All works</a></div>';
@@ -329,7 +336,7 @@ export function createEngine(ctx) {
     return '<article class="wpage"><div class="ovl-bar"><span class="cap">Project ID ' + esc(w.pid) + '</span>' + nav + '</div>' +
       '<div class="wv"><div class="figs">' + figs + '</div><div class="info"><div><h1>' + esc(w.name) + '</h1><p class="pidl cap">Project ID ' + esc(w.pid) + '</p></div>' + dl +
       '<p class="ds">' + (w.desc ? esc(w.desc) : '작품 설명이 들어가는 자리입니다. 프로젝트 배경과 제작 포인트를 두세 줄로 적어 주세요.') + '</p>' +
-      '<div class="go"><a href="' + U('materials/' + w.mats[0] + '/') + '">' + esc(byId(w.mats[0]).en) + ' 작품 모아보기<span>→</span></a><a href="' + GUIDE_URL + '">비슷한 작품 견적 내보기<span>→</span></a></div></div></div>' + rel + '</article>';
+      '<div class="go">' + (w.mats.length ? '<a href="' + U('materials/' + w.mats[0] + '/') + '">' + esc(byId(w.mats[0]).en) + ' 작품 모아보기<span>→</span></a>' : '<a href="' + U('work/') + '">전체 작품 보기<span>→</span></a>') + '<a href="' + GUIDE_URL + '">비슷한 작품 견적 내보기<span>→</span></a></div></div></div>' + rel + '</article>';
   }
 
   return {

@@ -121,7 +121,7 @@ export async function detailOf(w) {
   return { work: d, og: og ? abs(og.src.replace(BASE, '')) : '' };
 }
 
-/* 에디토리얼 사진 (표지 · 목록 · 공유용) */
+/* 블로그 사진 (표지 · 목록 · 공유용) */
 export async function coverOf(path) {
   if (!S(path)) return null;
   const v = await variants(path, [480, 960, 1600], {});
@@ -131,5 +131,5 @@ export async function coverOf(path) {
 
 /* 필터/검색에 쓰는 가벼운 형태 */
 export function compact(w) {
-  return { p: w.pid, n: w.name, m: w.mats, c: w.cat, y: w.year, r: w.region, t: w.tags, q: w.q, o: w.order };
+  return { p: w.pid, n: w.name, m: w.mats, u: w.types, c: w.purposes, r: w.regions, k: w.keywords, y: w.year, t: w.tags, q: w.q, o: w.order };
 }
