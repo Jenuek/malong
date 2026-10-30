@@ -2,21 +2,29 @@
   "show": true,
   "id": "442",
   "name": "소형 조각상",
-  "materials": [
-    "brass"
+  "types": [
+    "금속"
   ],
-  "category": "전시·갤러리",
+  "purposes": [
+    "행사·전시·이벤트"
+  ],
+  "regions": [
+    "부산"
+  ],
+  "keywords": [],
   "year": 2020,
-  "region": "부산",
   "client": "",
   "tags": [
     "주물",
     "기념"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "brass"
+  ]
 }

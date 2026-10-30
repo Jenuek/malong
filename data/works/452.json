@@ -2,24 +2,34 @@
   "show": true,
   "id": "452",
   "name": "시안·원형 제작",
-  "materials": [
-    "print",
-    "frp"
+  "types": [
+    "기타",
+    "FRP"
   ],
-  "category": "상업·브랜드",
+  "purposes": [
+    "기업·브랜드홍보"
+  ],
+  "regions": [
+    "서울"
+  ],
+  "keywords": [
+    "캐릭터"
+  ],
   "year": 2021,
-  "region": "서울",
   "client": "",
   "tags": [
     "3D출력",
     "정밀",
-    "곡면",
-    "캐릭터"
+    "곡면"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "print",
+    "frp"
+  ]
 }

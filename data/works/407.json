@@ -2,21 +2,30 @@
   "show": true,
   "id": "407",
   "name": "캐릭터 시리즈",
-  "materials": [
-    "frp"
+  "types": [
+    "FRP"
   ],
-  "category": "상업·브랜드",
-  "year": 2021,
-  "region": "제주",
-  "client": "",
-  "tags": [
-    "곡면",
+  "purposes": [
+    "기업·브랜드홍보"
+  ],
+  "regions": [
+    "제주"
+  ],
+  "keywords": [
     "캐릭터"
   ],
+  "year": 2021,
+  "client": "",
+  "tags": [
+    "곡면"
+  ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "frp"
+  ]
 }

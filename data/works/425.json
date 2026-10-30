@@ -2,21 +2,29 @@
   "show": true,
   "id": "425",
   "name": "로비 아트 월",
-  "materials": [
-    "metal"
+  "types": [
+    "금속"
   ],
-  "category": "건축미술",
+  "purposes": [],
+  "regions": [
+    "부산"
+  ],
+  "keywords": [
+    "건축미술"
+  ],
   "year": 2023,
-  "region": "부산",
   "client": "",
   "tags": [
     "사인",
     "로비"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "metal"
+  ]
 }

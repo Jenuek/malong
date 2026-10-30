@@ -2,21 +2,29 @@
   "show": true,
   "id": "434",
   "name": "미디어 월 조형",
-  "materials": [
-    "acrylic"
+  "types": [
+    "기타"
   ],
-  "category": "건축미술",
-  "year": 2020,
-  "region": "서울",
-  "client": "",
-  "tags": [
-    "LED",
+  "purposes": [],
+  "regions": [
+    "서울"
+  ],
+  "keywords": [
+    "건축미술",
     "포토존"
   ],
+  "year": 2020,
+  "client": "",
+  "tags": [
+    "LED"
+  ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "acrylic"
+  ]
 }

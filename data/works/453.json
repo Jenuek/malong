@@ -2,21 +2,29 @@
   "show": true,
   "id": "453",
   "name": "소형 디오라마",
-  "materials": [
-    "print"
+  "types": [
+    "기타"
   ],
-  "category": "전시·갤러리",
+  "purposes": [
+    "행사·전시·이벤트"
+  ],
+  "regions": [
+    "충청, 대전, 세종"
+  ],
+  "keywords": [],
   "year": 2022,
-  "region": "대전",
   "client": "",
   "tags": [
     "3D출력",
     "정밀"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "print"
+  ]
 }

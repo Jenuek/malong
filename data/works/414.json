@@ -2,24 +2,34 @@
   "show": true,
   "id": "414",
   "name": "전시 연출 오브제",
-  "materials": [
-    "eps",
-    "frp"
+  "types": [
+    "스티로폼",
+    "FRP"
   ],
-  "category": "전시·갤러리",
+  "purposes": [
+    "행사·전시·이벤트"
+  ],
+  "regions": [
+    "경기, 인천"
+  ],
+  "keywords": [
+    "캐릭터"
+  ],
   "year": 2020,
-  "region": "경기",
   "client": "",
   "tags": [
     "대형",
     "단기",
-    "곡면",
-    "캐릭터"
+    "곡면"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "eps",
+    "frp"
+  ]
 }

@@ -2,24 +2,34 @@
   "show": true,
   "id": "424",
   "name": "기업 로고 조형",
-  "materials": [
-    "metal",
-    "acrylic"
+  "types": [
+    "금속",
+    "기타"
   ],
-  "category": "상업·브랜드",
+  "purposes": [
+    "기업·브랜드홍보"
+  ],
+  "regions": [
+    "경기, 인천"
+  ],
+  "keywords": [
+    "포토존"
+  ],
   "year": 2023,
-  "region": "인천",
   "client": "",
   "tags": [
     "사인",
     "로비",
-    "LED",
-    "포토존"
+    "LED"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "metal",
+    "acrylic"
+  ]
 }

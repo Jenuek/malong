@@ -2,21 +2,30 @@
   "show": true,
   "id": "431",
   "name": "LED 포토존",
-  "materials": [
-    "acrylic"
+  "types": [
+    "기타"
   ],
-  "category": "상업·브랜드",
-  "year": 2020,
-  "region": "대전",
-  "client": "",
-  "tags": [
-    "LED",
+  "purposes": [
+    "기업·브랜드홍보"
+  ],
+  "regions": [
+    "충청, 대전, 세종"
+  ],
+  "keywords": [
     "포토존"
   ],
+  "year": 2020,
+  "client": "",
+  "tags": [
+    "LED"
+  ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "acrylic"
+  ]
 }

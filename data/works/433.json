@@ -2,24 +2,34 @@
   "show": true,
   "id": "433",
   "name": "야간 경관 조형",
-  "materials": [
-    "acrylic",
-    "metal"
+  "types": [
+    "기타",
+    "금속"
   ],
-  "category": "공공미술",
+  "purposes": [
+    "공공 시설물"
+  ],
+  "regions": [
+    "제주"
+  ],
+  "keywords": [
+    "포토존"
+  ],
   "year": 2022,
-  "region": "제주",
   "client": "",
   "tags": [
     "LED",
-    "포토존",
     "사인",
     "로비"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "acrylic",
+    "metal"
+  ]
 }

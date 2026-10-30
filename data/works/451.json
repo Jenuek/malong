@@ -2,21 +2,29 @@
   "show": true,
   "id": "451",
   "name": "정밀 캐릭터 피규어",
-  "materials": [
-    "print"
+  "types": [
+    "기타"
   ],
-  "category": "전시·갤러리",
+  "purposes": [
+    "행사·전시·이벤트"
+  ],
+  "regions": [
+    "부산"
+  ],
+  "keywords": [],
   "year": 2021,
-  "region": "부산",
   "client": "",
   "tags": [
     "3D출력",
     "정밀"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "print"
+  ]
 }

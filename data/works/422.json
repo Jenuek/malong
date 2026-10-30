@@ -2,21 +2,29 @@
   "show": true,
   "id": "422",
   "name": "스테인리스 사인",
-  "materials": [
-    "metal"
+  "types": [
+    "금속"
   ],
-  "category": "건축미술",
+  "purposes": [],
+  "regions": [
+    "경기, 인천"
+  ],
+  "keywords": [
+    "건축미술"
+  ],
   "year": 2020,
-  "region": "인천",
   "client": "",
   "tags": [
     "사인",
     "로비"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "metal"
+  ]
 }

@@ -2,24 +2,34 @@
   "show": true,
   "id": "406",
   "name": "키즈 놀이 조형",
-  "materials": [
-    "frp",
-    "eps"
+  "types": [
+    "FRP",
+    "스티로폼"
   ],
-  "category": "공공미술",
+  "purposes": [
+    "공공 시설물"
+  ],
+  "regions": [
+    "충청, 대전, 세종"
+  ],
+  "keywords": [
+    "캐릭터"
+  ],
   "year": 2023,
-  "region": "대전",
   "client": "",
   "tags": [
     "곡면",
-    "캐릭터",
     "대형",
     "단기"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "frp",
+    "eps"
+  ]
 }

@@ -2,24 +2,34 @@
   "show": true,
   "id": "404",
   "name": "시리즈 볼라드",
-  "materials": [
-    "frp",
-    "metal"
+  "types": [
+    "FRP",
+    "금속"
   ],
-  "category": "공공미술",
+  "purposes": [
+    "공공 시설물"
+  ],
+  "regions": [
+    "충청, 대전, 세종"
+  ],
+  "keywords": [
+    "캐릭터"
+  ],
   "year": 2024,
-  "region": "대전",
   "client": "",
   "tags": [
     "곡면",
-    "캐릭터",
     "사인",
     "로비"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "frp",
+    "metal"
+  ]
 }

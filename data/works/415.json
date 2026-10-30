@@ -2,13 +2,18 @@
   "show": true,
   "id": "415",
   "name": "대형 조형 사인",
-  "materials": [
-    "eps",
-    "metal"
+  "types": [
+    "스티로폼",
+    "금속"
   ],
-  "category": "상업·브랜드",
+  "purposes": [
+    "기업·브랜드홍보"
+  ],
+  "regions": [
+    "경기, 인천"
+  ],
+  "keywords": [],
   "year": 2024,
-  "region": "경기",
   "client": "",
   "tags": [
     "대형",
@@ -17,9 +22,13 @@
     "로비"
   ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "eps",
+    "metal"
+  ]
 }

@@ -2,21 +2,30 @@
   "show": true,
   "id": "403",
   "name": "벤치형 조형물",
-  "materials": [
-    "frp"
+  "types": [
+    "FRP"
   ],
-  "category": "공공미술",
-  "year": 2024,
-  "region": "제주",
-  "client": "",
-  "tags": [
-    "곡면",
+  "purposes": [
+    "공공 시설물"
+  ],
+  "regions": [
+    "제주"
+  ],
+  "keywords": [
     "캐릭터"
   ],
+  "year": 2024,
+  "client": "",
+  "tags": [
+    "곡면"
+  ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "frp"
+  ]
 }

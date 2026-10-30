@@ -2,21 +2,30 @@
   "show": true,
   "id": "402",
   "name": "캐릭터 마스코트",
-  "materials": [
-    "frp"
+  "types": [
+    "FRP"
   ],
-  "category": "상업·브랜드",
-  "year": 2023,
-  "region": "경기",
-  "client": "",
-  "tags": [
-    "곡면",
+  "purposes": [
+    "기업·브랜드홍보"
+  ],
+  "regions": [
+    "경기, 인천"
+  ],
+  "keywords": [
     "캐릭터"
   ],
+  "year": 2023,
+  "client": "",
+  "tags": [
+    "곡면"
+  ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "frp"
+  ]
 }

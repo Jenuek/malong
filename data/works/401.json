@@ -2,21 +2,30 @@
   "show": true,
   "id": "401",
   "name": "곡면 포토존",
-  "materials": [
-    "frp"
+  "types": [
+    "FRP"
   ],
-  "category": "상업·브랜드",
-  "year": 2024,
-  "region": "서울",
-  "client": "",
-  "tags": [
-    "곡면",
+  "purposes": [
+    "기업·브랜드홍보"
+  ],
+  "regions": [
+    "서울"
+  ],
+  "keywords": [
     "캐릭터"
   ],
+  "year": 2024,
+  "client": "",
+  "tags": [
+    "곡면"
+  ],
   "image": "",
-  "gallery": [],
   "alt": "",
+  "gallery": [],
   "desc": "",
   "seo_title": "",
-  "seo_description": ""
+  "seo_description": "",
+  "materials": [
+    "frp"
+  ]
 }
