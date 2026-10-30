@@ -18,7 +18,7 @@ interface Props {
   type?: 'website' | 'article';
   jsonLd?: object[];
   article?: { published?: Date; modified?: Date; tags?: string[]; author?: string };
-  nav?: 'home' | 'work' | 'about' | 'biz' | 'editorial' | 'find' | 'quote' | '';
+  nav?: 'home' | 'work' | 'about' | 'biz' | 'blog' | 'find' | 'quote' | '';
   side?: 'work' | 'about' | 'home' | 'none';
   f?: string;                // 소재 페이지일 때 소재 id
   count?: number;            // 사이드 Layers 옆 숫자
@@ -80,7 +80,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
 <link rel="icon" href={U('favicon.svg')} type="image/svg+xml">
 {prevHref && <link rel="prev" href={abs(prevHref)}>}
 {nextHref && <link rel="next" href={abs(nextHref)}>}
-{hasEditorial && <link rel="alternate" type="application/rss+xml" title={S.siteName + ' Editorial'} href={U('editorial/rss.xml')}>}
+{hasEditorial && <link rel="alternate" type="application/rss+xml" title={S.siteName + ' 블로그'} href={U('blog/rss.xml')}>}
 <meta property="og:site_name" content={S.siteName}>
 <meta property="og:locale" content="ko_KR">
 <meta property="og:type" content={type}>
@@ -112,7 +112,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
     <a href={U('business/arch/')} aria-current={cur('biz')}>Business</a>
     <a href={U('work/')} aria-current={cur('work')}>Work</a>
     <a href={U('about/')} aria-current={cur('about')}>About</a>
-    {hasEditorial && <a href={U('editorial/')} aria-current={cur('editorial')}>Editorial</a>}
+    {hasEditorial && <a href={U('blog/')} aria-current={cur('blog')}>Blog</a>}
     <a href={U('find/')} aria-current={cur('find')}>소재 찾기 · 가견적</a>
     <a href={U('quote/')} aria-current={cur('quote')}>견적 문의</a>
     <a href={U('track.html')}>프로젝트 진행 확인</a>
@@ -135,7 +135,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
       <a class="g" href={U('business/arch/')} aria-current={cur('biz')}>Business</a>
       <a class="g" href={U('work/')} aria-current={cur('work')}>Work</a>
       <a class="g" href={U('about/')} aria-current={cur('about')}>About</a>
-      {hasEditorial && <a class="g" href={U('editorial/')} aria-current={cur('editorial')}>Editorial</a>}
+      {hasEditorial && <a class="g" href={U('blog/')} aria-current={cur('blog')}>Blog</a>}
       <a class="g" href={U('find/')} aria-current={cur('find')}>소재 찾기</a>
       <a class="g" href={U('quote/')} aria-current={cur('quote')}>견적 문의</a>
       <a class="g" href={U('track.html')}>진행 확인</a>
@@ -147,7 +147,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
 <main id="main">
   <slot />
   <footer class="foot">
-    <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('editorial/')}>Editorial</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('find/')}>소재 찾기</a><a href={U('quote/')}>견적 문의</a><a href={U('track.html')}>진행 확인</a><a href={U('privacy/')}>개인정보처리방침</a></nav>
+    <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('blog/')}>Blog</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('find/')}>소재 찾기</a><a href={U('quote/')}>견적 문의</a><a href={U('track.html')}>진행 확인</a><a href={U('privacy/')}>개인정보처리방침</a></nav>
     <span set:html={foot.map((t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))).join('<br>')}></span>
     <span class="famf"><a href={site.STANDS_URL !== '#' ? site.STANDS_URL : 'https://jenuek.github.io/stands-website/'} target="_blank" rel="noopener"><img src={U('stands-logo.svg')} alt="STANDS" width="140" height="35"><i>↗</i></a><small class="fcap">아트 큐레이션 · 건축미술 · 전시</small><span class="cap">© Malongcompany Co.Ltd.</span></span>
   </footer>
