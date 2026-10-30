@@ -1,12 +1,14 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-/* 에디토리얼 글: data/editorial/*.md  (Pages CMS 에서 작성) */
+/* 블로그 글: data/editorial/*.md  (Pages CMS 에서 작성. 폴더 이름은 처음 만들 때 그대로 두었습니다) */
 const editorial = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './data/editorial' }),
   schema: z.object({
     title: z.string(),
     slug: z.string().optional(),
+    subtitle: z.string().optional().default(''),
+    summary: z.string().optional().default(''),
     description: z.string().default(''),
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
