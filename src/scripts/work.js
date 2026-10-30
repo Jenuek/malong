@@ -33,14 +33,14 @@ import { PAGE, GROUPS, emptyState, parseQuery, toQuery, isFiltered, applyFilters
 
   /* ---- 목록 데이터 ---- */
   function expand(r) {
-    return { pid: r.p, name: r.n, mats: r.m, img: r.i || '', srcset: r.s || '', w: r.w || 0, h: r.h || 0, alt: r.a || '', cat: r.c, year: r.y, region: r.r, client: r.cl || '', tags: r.t || [] };
+    return { pid: r.p, name: r.n, mats: r.m, img: r.i || '', srcset: r.s || '', w: r.w || 0, h: r.h || 0, alt: r.a || '', types: r.u || [], purposes: r.c || [], regions: r.r || [], keywords: r.k || [], year: r.y, client: r.cl || '', tags: r.t || [] };
   }
   function boot(j) {
     var mats = j.mats.map(function (m) { return { id: m.id, no: m.no, en: m.en, kr: m.kr, layers: [['', '', m.c]], specs: [], pts: [], steps: [] }; });
     var names = {}; mats.forEach(function (m) { names[m.id] = m.en + ' ' + m.kr; });
     W = j.works.map(function (r) {
-      var w = { p: r.p, n: r.n, m: r.m, c: r.c || '', y: r.y || '', r: r.r || '', t: r.t || [], o: r.o };
-      w.q = haystack({ name: r.n, pid: r.p, cat: r.c, year: r.y, region: r.r, client: r.cl, tags: r.t }, r.m.map(function (id) { return names[id] || id; }));
+      var w = { p: r.p, n: r.n, m: r.m, u: r.u || [], c: r.c || [], r: r.r || [], k: r.k || [], y: r.y || '', t: r.t || [], o: r.o };
+      w.q = haystack({ name: r.n, pid: r.p, types: r.u, purposes: r.c, year: r.y, regions: r.r, keywords: r.k, client: r.cl, tags: r.t }, r.m.map(function (id) { return names[id] || id; }));
       X[r.p] = expand(r); return w;
     });
     E = createEngine({ MATS: mats, PORT: [], base: BASE });
