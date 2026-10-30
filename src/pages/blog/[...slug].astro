@@ -1,0 +1,131 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import { getSite, coverOf, abs } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+
+const SIZE = 12;
+const fmt = (d) => d.toISOString().slice(0, 10).replace(/-/g, '.');
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+async function loadAll() {
+  return (await getCollection('editorial')).filter((e) => !e.data.draft)
+    .map((e) => ({ e, slug: e.data.slug || e.id, d: e.data }))
+    .sort((a, b) => b.d.date - a.d.date);
+}
+
+export async function getStaticPaths() {
+  const SIZE = 12;
+  const all = (await getCollection('editorial')).filter((e) => !e.data.draft)
+    .map((e) => ({ e, slug: e.data.slug || e.id, d: e.data }))
+    .sort((a, b) => b.d.date - a.d.date);
+  if (!all.length) return [];
+  const out = [];
+  const pages = Math.ceil(all.length / SIZE);
+  out.push({ params: { slug: undefined }, props: { kind: 'list', page: 1, pages } });
+  for (let p = 2; p <= pages; p++) out.push({ params: { slug: 'page/' + p }, props: { kind: 'list', page: p, pages } });
+  const tags = [...new Set(all.flatMap((a) => a.d.tags))];
+  for (const t of tags) out.push({ params: { slug: 'tag/' + t }, props: { kind: 'tag', tag: t } });
+  all.forEach((a, i) => out.push({ params: { slug: a.slug }, props: { kind: 'post', idx: i } }));
+  return out;
+}
+
+const { kind, page = 1, pages = 1, tag = '', idx = 0 } = Astro.props;
+const site = await getSite();
+const E = createEngine(site.ctx);
+const U = E.U;
+const all = await loadAll();
+const covers = {};
+for (const a of all) covers[a.slug] = await coverOf(a.d.cover);
+const tagHref = (t) => U('blog/tag/' + encodeURIComponent(t) + '/');
+const allTags = [...new Set(all.flatMap((a) => a.d.tags))];
+
+const card = (a) => {
+  const c = covers[a.slug];
+  return `<a class="ed-card" href="${U('blog/' + a.slug + '/')}">` +
+    `<span class="ed-im">${c ? `<img src="${esc(c.src)}" srcset="${esc(c.srcset)}" sizes="(min-width: 900px) 30vw, 100vw" width="${c.w}" height="${c.h}" alt="${esc(a.d.cover_alt || a.d.title)}" loading="lazy" decoding="async">` : '<span class="ed-ph" aria-hidden="true"></span>'}</span>` +
+    `<span class="ed-tx"><span class="cap">${esc([a.d.category, fmt(a.d.date)].filter(Boolean).join(' · '))}</span><b>${esc(a.d.title)}</b><span class="ds">${esc(a.d.description)}</span></span></a>`;
+};
+
+let meta = { title: 'Blog', description: '', path: 'blog/', noindex: false, type: 'website', image: '', jsonLd: [], prevHref: '', nextHref: '' };
+let list = [], post = null, Content = null, rel = [], prev = null, next = null, cover = null;
+const crumbs = (items) => ({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items.map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: x[0], item: abs(x[1]) })) });
+
+if (kind === 'post') {
+  post = all[idx]; cover = covers[post.slug];
+  ({ Content } = await render(post.e));
+  const dl = [...(post.d.seo_description || post.d.description || '')].length;
+  if (dl < 120 || dl > 150) console.warn(`[blog] '${post.slug}' 메타 디스크립션이 ${dl}자예요. 검색 결과에는 120~150자가 좋아요.`);
+  if (post.d.summary && [...post.d.summary].length > 170) console.warn(`[blog] '${post.slug}' 핵심 요약이 ${[...post.d.summary].length}자예요. 150자 안팎이 좋아요.`);
+  rel = post.d.related.map((pid) => site.PORT.find((w) => w.pid === pid)).filter(Boolean);
+  prev = all[idx + 1] || null; next = all[idx - 1] || null;
+  const path = 'blog/' + post.slug + '/';
+  meta = {
+    title: post.d.seo_title || post.d.title, description: post.d.seo_description || post.d.description, path, noindex: post.d.noindex, type: 'article',
+    image: cover ? cover.og : '', prevHref: '', nextHref: '',
+    jsonLd: [
+      { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: post.d.title, ...(post.d.subtitle ? { alternativeHeadline: post.d.subtitle } : {}), description: post.d.seo_description || post.d.description, inLanguage: 'ko-KR',
+        mainEntityOfPage: abs(path), datePublished: post.d.date.toISOString(), dateModified: (post.d.updated || post.d.date).toISOString(),
+        author: { '@type': 'Organization', name: post.d.author }, publisher: { '@id': abs('') + '#org' }, isPartOf: { '@type': 'Blog', name: '마롱컴퍼니 블로그', url: abs('blog/') },
+        ...(cover ? { image: [cover.og] } : {}), keywords: post.d.tags.join(', ') || undefined, articleSection: post.d.category || undefined },
+      crumbs([['홈', ''], ['Blog', 'blog/'], [post.d.title, path]]),
+    ],
+  };
+} else if (kind === 'tag') {
+  list = all.filter((a) => a.d.tags.includes(tag));
+  const path = 'blog/tag/' + tag + '/';
+  meta = { title: `#${tag} · Blog`, description: `‘${tag}’ 태그가 붙은 마롱컴퍼니 블로그 글 ${list.length}편.`, path, noindex: true, type: 'website', image: '', prevHref: '', nextHref: '',
+    jsonLd: [crumbs([['홈', ''], ['Blog', 'blog/'], ['#' + tag, path]])] };
+} else {
+  list = all.slice((page - 1) * SIZE, page * SIZE);
+  const path = (n) => (n <= 1 ? 'blog/' : 'blog/page/' + n + '/');
+  meta = {
+    title: 'Blog' + (page > 1 ? ` (${page}쪽)` : ''), path: path(page), noindex: false, type: 'website', image: '',
+    description: '조형물과 공공미술, 건축미술, 전시 프로젝트의 제작 이야기와 소재 노트. 마롱컴퍼니 블로그.',
+    prevHref: page > 1 ? path(page - 1) : '', nextHref: page < pages ? path(page + 1) : '',
+    jsonLd: [
+      { '@context': 'https://schema.org', '@type': 'CollectionPage', name: '마롱컴퍼니 블로그', url: abs(path(page)), inLanguage: 'ko-KR' },
+      { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: list.map((a, i) => ({ '@type': 'ListItem', position: (page - 1) * SIZE + i + 1, url: abs('blog/' + a.slug + '/'), name: a.d.title })) },
+      crumbs([['홈', ''], ['Blog', 'blog/']]),
+    ],
+  };
+}
+const pageHref = (n) => U(n <= 1 ? 'blog/' : 'blog/page/' + n + '/');
+---
+<Base title={meta.title} description={meta.description} path={meta.path} nav="blog" side="none" noindex={meta.noindex}
+  type={meta.type} image={meta.image} imageAlt={post ? (post.d.cover_alt || post.d.title) : ''} jsonLd={meta.jsonLd}
+  prevHref={meta.prevHref} nextHref={meta.nextHref}
+  article={post ? { published: post.d.date, modified: post.d.updated || post.d.date, tags: post.d.tags, author: post.d.author } : undefined}>
+  {post ? (
+    <article class="ed-post">
+      <nav class="crumbs in" aria-label="현재 위치"><a href={U('')}>홈</a><span>/</span><a href={U('blog/')}>Blog</a><span>/</span><b aria-current="page">{post.d.title}</b></nav>
+      <header class="ed-head in">
+        <p class="cap">{[post.d.category, fmt(post.d.date)].filter(Boolean).join(' · ')}</p>
+        <h1>{post.d.title}</h1>
+        {post.d.subtitle && <h2 class="sub">{post.d.subtitle}</h2>}
+      </header>
+      {cover && <figure class="ed-cover in"><img src={cover.src} srcset={cover.srcset} sizes="(min-width: 1200px) 1100px, 100vw" width={cover.w} height={cover.h} alt={post.d.cover_alt || post.d.title} fetchpriority="high" decoding="async">{post.d.cover_alt && <figcaption>{post.d.cover_alt}</figcaption>}</figure>}
+      <div class="prose in">{post.d.summary && <aside class="ed-sum" aria-label="핵심 요약"><b>핵심 요약</b><p>{post.d.summary}</p></aside>}<Content /></div>
+      {post.d.tags.length > 0 && <div class="ed-tags in" aria-label="태그">{post.d.tags.map((t) => <a href={tagHref(t)} rel="tag">#{t}</a>)}</div>}
+      {rel.length > 0 && <section class="rel in" aria-label="관련 작품"><div class="sub-h">Related works</div><div class="works" set:html={rel.map((w, i) => E.tileHTML(w, i)).join('')}></div></section>}
+      <nav class="ed-pn in" aria-label="다른 글">
+        {prev ? <a href={U('blog/' + prev.slug + '/')} rel="prev"><span class="cap">← Previous</span><b>{prev.d.title}</b></a> : <span></span>}
+        {next ? <a href={U('blog/' + next.slug + '/')} rel="next"><span class="cap">Next →</span><b>{next.d.title}</b></a> : <span></span>}
+      </nav>
+    </article>
+  ) : (
+    <div class="ed-list">
+      <div class="page-h"><h1>{kind === 'tag' ? '#' + tag : 'Blog'}</h1><span class="cap">{String(list.length).padStart(2, '0')}</span></div>
+      {allTags.length > 0 && <nav class="ed-tags in" aria-label="태그">{allTags.map((t) => <a href={tagHref(t)} aria-current={kind === 'tag' && t === tag ? 'page' : undefined}>#{t}</a>)}</nav>}
+      <div class="listwrap"><div class="ed-grid" set:html={list.map(card).join('')}></div>
+        {kind === 'list' && pages > 1 && (
+          <nav class="pager" aria-label="쪽 이동">
+            {page > 1 ? <a href={pageHref(page - 1)} rel="prev">← 이전</a> : <span class="off">← 이전</span>}
+            <ol>{Array.from({ length: pages }, (_, i) => i + 1).map((n) => <li><a href={pageHref(n)} aria-current={n === page ? 'page' : undefined}>{n}</a></li>)}</ol>
+            {page < pages ? <a href={pageHref(page + 1)} rel="next">다음 →</a> : <span class="off">다음 →</span>}
+          </nav>
+        )}
+      </div>
+    </div>
+  )}
+</Base>
