@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import '../../styles/track.css';
+import { BASE } from '../../lib/data.js';
+/* 프로젝트 진행 확인 — 사이트 공통 레이아웃(사이드바·푸터) 안에서 열립니다.
+   접수코드는 주소 뒤 #코드 로 받습니다 (예: /track/#DEMO). 화면 그리기는 public/assets/track.js 가 맡습니다. */
+---
+<Base title="프로젝트 진행 확인" description="접수코드로 의뢰하신 프로젝트의 진행 단계, 3D 시안, 제작 과정 사진을 확인하세요." path="track/" noindex={true} nav="" side="none" bodyClass="trk-page">
+  <div class="trk">
+    <div id="app"></div>
+    <div class="trk-toast" id="toast" role="status" aria-live="polite"></div>
+    <noscript><p style="padding:24px">이 페이지는 자바스크립트가 필요해요. 문의는 1644-4762 또는 admin@malong.co.kr 로 주세요.</p></noscript>
+  </div>
+  <Fragment slot="scripts">
+    <script is:inline src={BASE + 'assets/track.js'}></script>
+  </Fragment>
+</Base>

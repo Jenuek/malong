@@ -119,7 +119,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
     <a href={U('about/')} aria-current={cur('about')}>About</a>
     {hasEditorial && <a href={U('blog/')} aria-current={cur('blog')}>Blog</a>}
     <a href={U('find/')} aria-current={cur('find')}>1분 가견적</a>
-    <a href={U('track.html')}>프로젝트 진행 확인</a>
+    <a href={U('track/')}>프로젝트 진행 확인</a>
   </nav>
   <a class="side-quote" href={U('quote/')} aria-current={cur('quote')}><span class="cap">Contact us</span><b>견적 문의</b><i aria-hidden="true">→</i></a>
   {side === 'work' && (
@@ -143,7 +143,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
       {hasEditorial && <a class="g" href={U('blog/')} aria-current={cur('blog')}>Blog</a>}
       <a class="g" href={U('find/')} aria-current={cur('find')}>1분 가견적</a>
       <a class="g" href={U('quote/')} aria-current={cur('quote')}>견적 문의</a>
-      <a class="g" href={U('track.html')}>진행 확인</a>
+      <a class="g" href={U('track/')}>진행 확인</a>
     </div>
   </div>
   {side === 'work' && <div class="mchips" id="mchipsM" role="group" aria-label="소재 분류" set:html={E.chipsHTML(act || 'all')}></div>}
@@ -152,7 +152,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
 <main id="main">
   <slot />
   <footer class="foot">
-    <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('blog/')}>Blog</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('find/')}>1분 가견적</a><a href={U('quote/')}>견적 문의</a>{S.kakaoChannel && <a href={S.kakaoChannel} target="_blank" rel="noopener noreferrer">카카오톡 문의</a>}<a href={U('track.html')}>진행 확인</a><a href={U('privacy/')}>개인정보처리방침</a></nav>
+    <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('blog/')}>Blog</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('find/')}>1분 가견적</a><a href={U('quote/')}>견적 문의</a>{S.kakaoChannel && <a href={S.kakaoChannel} target="_blank" rel="noopener noreferrer">카카오톡 문의</a>}<a href={U('track/')}>진행 확인</a><a href={U('privacy/')}>개인정보처리방침</a></nav>
     <span set:html={foot.map((t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))).join('<br>')}></span>
     <span class="famf"><a href={site.STANDS_URL !== '#' ? site.STANDS_URL : 'https://jenuek.github.io/stands-website/'} target="_blank" rel="noopener"><img src={U('stands-logo.svg')} alt="STANDS" width="140" height="35"><i>↗</i></a><small class="fcap">아트 큐레이션 · 건축미술 · 전시</small><span class="cap">© Malongcompany Co.Ltd.</span></span>
   </footer>

@@ -313,7 +313,7 @@ export function createEngine(ctx) {
       '<div class="hm-hb"><a href="' + (w0 ? U('work/' + esc(w0.pid) + '/') : U('work/')) + '">' + (w0 ? '<b>' + esc(w0.name) + '</b><span class="cap">' + esc(cap(w0)) + '</span>' : '') + '</a>' + dots + '</div></div></section>' +
       '<div class="hm-bar" aria-hidden="true">' + MATS.map(function (m) { return '<i style="background:' + col(m) + '"></i>'; }).join('') + '</div>' +
       biz + num + '<div class="hm-h"><span class="cap">Latest works</span><a href="' + U('work/') + '">전체 보기 ' + two(PORT.length) + ' →</a></div><div class="hm-rail" id="rail" data-n="' + items.length + '">' + rail + '</div>' +
-      cl + '<div class="hm-end"><p>' + esc(HOME.end || '') + '</p><div class="acts"><a href="' + GUIDE_URL + '">1분 가견적 →</a><a class="qt" href="' + QUOTE_URL + '">견적 문의 →</a><a href="' + U('track.html') + '">진행 확인 →</a><i class="vb" aria-hidden="true"></i><a class="st" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><span>아트 프로젝트 문의 ↗</span><img src="' + STANDS_IMG + '" alt="STANDS"></a></div></div>';
+      cl + '<div class="hm-end"><p>' + esc(HOME.end || '') + '</p><div class="acts"><a href="' + GUIDE_URL + '">1분 가견적 →</a><a class="qt" href="' + QUOTE_URL + '">견적 문의 →</a><a href="' + U('track/') + '">진행 확인 →</a><i class="vb" aria-hidden="true"></i><a class="st" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><span>아트 프로젝트 문의 ↗</span><img src="' + STANDS_IMG + '" alt="STANDS"></a></div></div>';
   }
 
   function aboutHTML() { return stackAnchors2(sections()); }
