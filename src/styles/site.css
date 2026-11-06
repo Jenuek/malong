@@ -131,18 +131,12 @@ h1, h2, h3, p, ol, ul, dl, dd, figure { margin: 0; padding: 0; }
 .famnav .fns i { font-style: normal; display: inline-block; margin-left: 6px; color: var(--muted); transition: transform .25s, color .25s; }
 .famnav:hover .fns i { transform: translateX(4px); color: var(--ink); }
 .famnav:hover .fns { color: var(--ink); }
-.famnav .fnm { font-size: 11px; font-weight: 700; color: var(--ink); width: fit-content; border-bottom: 1.5px solid var(--ink); padding-bottom: 1px; }
-.famnav .fnm i { font-style: normal; }
-.famnav:hover .fnm { color: var(--deep); border-color: var(--deep); }
 @media (prefers-reduced-motion: reduce) { .famnav .fns span { transition: none; } }
 .famnav .fnq { gap: 6px; align-items: flex-end; }
 .famnav .fnq em { font-family: var(--en); font-stretch: 100%; font-weight: 300; font-size: 15.5px; letter-spacing: -0.01em; text-transform: none; color: var(--sub); line-height: 1; padding-bottom: 1px; }
 .famnav .fnq img { width: 68px; }
 .famnav .fnq b { font-size: 15.5px; font-weight: 300; color: #7D7889; line-height: 1; padding-bottom: 1px; margin-left: -3px; }
-.nav a.famnav-old { display: grid; gap: 4px; padding: 14px 0 0; margin-top: 4px; border-top: 1px solid var(--hair); width: auto; }
-.famnav .fnr { display: flex; align-items: center; gap: 7px; }
 .famnav small { font-size: 11px; line-height: 1.55; color: var(--muted); font-weight: 400; }
-.nav a.famnav-old { display: flex; align-items: center; gap: 6px; padding: 5px 0 1px; }
 .famnav img { width: 64px; height: auto; display: block; }
 .famnav i { font-style: normal; }
 .nav a:hover { color: var(--deep); }

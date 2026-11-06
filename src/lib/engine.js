@@ -92,7 +92,6 @@ export function createEngine(ctx) {
   ];
   function mc(m) { return m.layers[0][2]; }
   var AMAT = ['frp', 'eps', 'metal', 'acrylic', 'brass', 'print'], AMAIN = ['#B5543A', '#C79A35', '#5A7FA6', '#4F6B4A', '#7B5836', '#4E3F7A'];
-  var AMAT = ['frp', 'eps', 'metal', 'acrylic', 'brass', 'print'], AMAIN = ['#B5543A', '#C79A35', '#5A7FA6', '#4F6B4A', '#7B5836', '#4E3F7A'];
   function acol(i) { return AMAIN[i]; }
   function lacc(i) { return i === 2 ? atone(5, 0) : acol(i === 0 ? 0 : 4); }
   function atone(i, k) { return tone({ id: AMAT[i] }, k); }

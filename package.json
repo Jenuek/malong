@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "node tools/webp-uploads.mjs && astro build && node tools/prune-dist.mjs",
+    "build": "node tools/check-config.mjs && node tools/webp-uploads.mjs && astro build && node tools/prune-dist.mjs && node tools/check-links.mjs",
+    "check": "node tools/check-config.mjs",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -13,5 +14,8 @@
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^5.18.2",
     "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "yaml": "^2.9.1"
   }
 }

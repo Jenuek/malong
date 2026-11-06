@@ -78,9 +78,12 @@ export function normAbout(j, img) {
   return A;
 }
 
+/* STANDS(아트 큐레이션 사이트) 기본 주소 — 바꿀 때는 이 값 하나만 고치거나, 관리 화면 '사업분야'의 STANDS 주소를 바꾸세요 */
+export var STANDS_DEFAULT = 'https://jenuek.github.io/stands-website/';
+
 /* 사업분야 · 전시 이력 */
 export function normBiz(j) {
-  var out = { BD: j || null, STANDS_URL: '#', EXH: { areas: [], hist: [] } };
+  var out = { BD: j || null, STANDS_URL: STANDS_DEFAULT, EXH: { areas: [], hist: [] } };
   if (!j) return out;
   var u = S(j.stands_url); if (okLink(u)) out.STANDS_URL = u;
   var ex = j.exhibit || {};

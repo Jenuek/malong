@@ -47,7 +47,7 @@ const KEYWORDS = 'FRP 조형물, 금속 조형물, 스티로폼 조형물, 원�
 const canonical = abs(path);
 const ogImage = image || (S.ogImage ? abs(S.ogImage.replace(/^\/+/, '')) : abs('og-default.png'));
 
-const SOCIAL = ['https://jenuek.github.io/stands-website/'];
+const SOCIAL = [site.STANDS_URL];
 const org = {
   '@context': 'https://schema.org', '@type': 'Organization', '@id': ORIGIN + '/#org', name: S.siteName,
   alternateName: 'Malong Company', description: REP, slogan: '원스톱 조형물 제작 전문 업체', knowsAbout: ['FRP 조형물', '금속 조형물', '스티로폼 조형물', '공공미술', '건축미술', '포토존'], url: ORIGIN + '/', logo: abs('favicon.svg'),
@@ -63,7 +63,7 @@ let stackM = E.stackHTML();
 if (act) stackM = stackM.replace('class="slab" data-slab="' + act + '"', 'class="slab on" data-slab="' + act + '"');
 let stackA = E.stackAboutHTML();
 stackA = stackA.replace('class="slab" data-a="s1"', 'class="slab on" data-a="s1"');
-const famnav = famnavRaw.replace('{STANDS}', U('stands-logo.svg')).replace(/https:\/\/jenuek\.github\.io\/stands-website\//, site.STANDS_URL !== '#' ? site.STANDS_URL : 'https://jenuek.github.io/stands-website/');
+const famnav = famnavRaw.replace('{STANDS}', U('stands-logo.svg')).replace('{STANDS_URL}', site.STANDS_URL);
 const foot = [...(S.footer.length ? S.footer : [
   '(주)마롱컴퍼니 · 대표 이어진 · 사업자등록번호 472-81-00053',
   '(06015) 서울특별시 강남구 압구정로80길 14 · Tel 1644-4762 · admin@malong.co.kr',
@@ -154,7 +154,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
   <footer class="foot">
     <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('blog/')}>Blog</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('find/')}>1분 가견적</a><a href={U('quote/')}>견적 문의</a>{S.kakaoChannel && <a href={S.kakaoChannel} target="_blank" rel="noopener noreferrer">카카오톡 문의</a>}<a href={U('track/')}>진행 확인</a><a href={U('privacy/')}>개인정보처리방침</a></nav>
     <span set:html={foot.map((t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))).join('<br>')}></span>
-    <span class="famf"><a href={site.STANDS_URL !== '#' ? site.STANDS_URL : 'https://jenuek.github.io/stands-website/'} target="_blank" rel="noopener"><img src={U('stands-logo.svg')} alt="STANDS" width="140" height="35"><i>↗</i></a><small class="fcap">아트 큐레이션 · 건축미술 · 전시</small><span class="cap">© Malongcompany Co.Ltd.</span></span>
+    <span class="famf"><a href={site.STANDS_URL} target="_blank" rel="noopener"><img src={U('stands-logo.svg')} alt="STANDS" width="140" height="35"><i>↗</i></a><small class="fcap">아트 큐레이션 · 건축미술 · 전시</small><span class="cap">© Malongcompany Co.Ltd.</span></span>
   </footer>
 </main>
 <div class="fab" id="fab" role="navigation" aria-label="빠른 메뉴">
