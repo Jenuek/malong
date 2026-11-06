@@ -26,7 +26,9 @@
     var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) setOn(en.target.id); }); }, { rootMargin: '-30% 0px -65% 0px' });
     $$('#v-about section').forEach(function (s) { io.observe(s); });
   }
-  var m = /^#(s[1-6])$/.exec(location.hash || '');
+  /* 예전 주소 호환: 연혁(#s5)·연락(#s6)은 #s2·#s3 으로 옮겨졌습니다 */
+  var old = { '#s5': '#s2', '#s6': '#s3' };
+  var m = /^#(s[1-3])$/.exec(old[location.hash] || location.hash || '');
   setOn(m ? m[1] : 's1');
   if (m) window.scrollTo({ top: secTop(m[1]), behavior: 'auto' });
 })();

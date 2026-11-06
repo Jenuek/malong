@@ -8,7 +8,7 @@
     if (location.hash.indexOf('#/') === 0 && h.length) {
       if (h[0] === 'w' && h[1]) to = 'work/' + encodeURIComponent(h[1]) + '/';
       else if (h[0] === 'work') to = h[1] ? 'materials/' + encodeURIComponent(h[1]) + '/' : 'work/';
-      else if (h[0] === 'about') to = 'about/' + (/^s[1-6]$/.test(h[1] || '') ? '#' + h[1] : '');
+      else if (h[0] === 'about') to = 'about/' + (/^s[1-3]$/.test(h[1] || '') ? '#' + h[1] : '');
       else if (h[0] === 'biz') to = 'business/' + (/^(arch|public|exhibit)$/.test(h[1] || '') ? h[1] : 'arch') + '/';
       if (to) location.replace(base + to);
     }

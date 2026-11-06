@@ -5,7 +5,7 @@ import { STANDS_IMG } from './assets.js';
 export function createEngine(ctx) {
   'use strict';
   var MATS = ctx.MATS || [], PORT = ctx.PORT || [], ABOUT = ctx.ABOUT || { areas: [], record: [], promise: [], contents: [], flow: [], how: [], history: [], contact: [], who: { text: [], values: [] } },
-      HOME = ctx.HOME || {}, EXH = ctx.EXH || { areas: [], hist: [] }, BD = ctx.BD || null, STANDS_URL = ctx.STANDS_URL || '#';
+      HOME = ctx.HOME || {}, SET = ctx.settings || {}, EXH = ctx.EXH || { areas: [], hist: [] }, BD = ctx.BD || null, STANDS_URL = ctx.STANDS_URL || '#';
   var BASE = ctx.base || '/';
   function U(p) { return BASE + p; }
   var GUIDE_URL = U('find/'), QUOTE_URL = U('quote/');
@@ -84,11 +84,9 @@ export function createEngine(ctx) {
       '<div class="det" id="det" hidden><div class="in"><div class="fig">' + layerSVG(m) + '<div class="figcap cap"><span>Fig. ' + m.no + '</span><span>' + esc(m.en) + ' — Layer structure</span></div><ol class="legend">' + legend + '</ol></div>' +
       '<div class="col"><div class="blk"><h3>Process</h3><ol class="steps">' + m.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol></div><div class="blk"><h3>Point</h3><ul class="pts">' + m.pts.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul></div></div></div></div>';
   }
+  /* 회사 소개는 3개 층: 사업 내용(What we do · How we work · Materials)은 Business 페이지로 합쳤습니다 */
   var LAYERS = [
     ['who', 'Who we are', '우리는 누구인가요?', '#1B1A22'],
-    ['what', 'What we do', '무엇을 하나요?', '#3B3A46'],
-    ['how', 'How we work', '어떻게 만드나요?', '#6C6B7B'],
-    ['mat', 'Materials', '무엇으로 만드나요?', '#C9C7D6'],
     ['rec', 'Record', '어떤 일을 해왔나요?', '#E2E0EC'],
     ['ct', 'Contact', '어떻게 만날 수 있나요?', '#4E3F7A']
   ];
@@ -96,13 +94,14 @@ export function createEngine(ctx) {
   var AMAT = ['frp', 'eps', 'metal', 'acrylic', 'brass', 'print'], AMAIN = ['#B5543A', '#C79A35', '#5A7FA6', '#4F6B4A', '#7B5836', '#4E3F7A'];
   var AMAT = ['frp', 'eps', 'metal', 'acrylic', 'brass', 'print'], AMAIN = ['#B5543A', '#C79A35', '#5A7FA6', '#4F6B4A', '#7B5836', '#4E3F7A'];
   function acol(i) { return AMAIN[i]; }
+  function lacc(i) { return i === 2 ? atone(5, 0) : acol(i === 0 ? 0 : 4); }
   function atone(i, k) { return tone({ id: AMAT[i] }, k); }
   function stackSVGA() {
-    var n = 6, a = 96, b = 36, t = 12, gap = 18, cx = 108, y0 = 14, H = y0 + (n - 1) * (t + gap) + 2 * b + t + 22;
+    var n = LAYERS.length, a = 96, b = 36, t = 12, gap = 18, cx = 108, y0 = 14, H = y0 + (n - 1) * (t + gap) + 2 * b + t + 22;
     var out = '<svg viewBox="0 0 250 ' + H + '" role="group" aria-label="소개 층 목차">';
     out += '<ellipse cx="' + cx + '" cy="' + (H - 12) + '" rx="' + (a * 0.9) + '" ry="7" fill="#000" opacity=".06"/>';
     for (var i = n - 1; i >= 0; i--) {
-      var c = LAYERS[i][3], e = (i === 5 ? atone(5, 0) : acol(i)), y = y0 + i * (t + gap), T = [[cx, y], [cx + a, y + b], [cx, y + 2 * b], [cx - a, y + b]], ly = y + b + t / 2 + 3.5;
+      var c = LAYERS[i][3], e = (lacc(i)), y = y0 + i * (t + gap), T = [[cx, y], [cx + a, y + b], [cx, y + 2 * b], [cx - a, y + b]], ly = y + b + t / 2 + 3.5;
       out += '<g class="slab" data-a="s' + (i + 1) + '" tabindex="0" role="button" aria-label="' + esc(LAYERS[i][1]) + '로 이동">' +
         '<path class="ed ed1" d="M' + T[3][0] + ' ' + T[3][1] + ' L' + T[2][0] + ' ' + T[2][1] + ' L' + T[2][0] + ' ' + (T[2][1] + t) + ' L' + T[3][0] + ' ' + (T[3][1] + t) + 'Z" fill="' + e + '" style="--f:' + e + ';--n:' + mix(c, '#E2E0EC', 0.35) + '"/>' +
         '<path class="ed ed2" d="M' + T[2][0] + ' ' + T[2][1] + ' L' + T[1][0] + ' ' + T[1][1] + ' L' + T[1][0] + ' ' + (T[1][1] + t) + ' L' + T[2][0] + ' ' + (T[2][1] + t) + 'Z" fill="' + shade(e, -0.16) + '" style="--f:' + shade(e, -0.16) + ';--n:' + mix(c, '#E2E0EC', 0.15) + '"/>' +
@@ -113,26 +112,38 @@ export function createEngine(ctx) {
     return out + '</svg>';
   }
   function miniSlabA(c, e) { return '<svg viewBox="0 0 22 14" aria-hidden="true"><path d="M1 6 L11 11 L11 14 L1 9Z" fill="' + e + '"/><path d="M11 11 L21 6 L21 9 L11 14Z" fill="' + shade(e, -0.16) + '"/><path d="M11 1 L21 6 L11 11 L1 6Z" fill="' + c + '" stroke="rgba(27,26,34,.15)" stroke-width=".6"/></svg>'; }
-  function aband(i) { var L = LAYERS[i]; return '<div class="abnd" style="--a:' + (i === 5 ? atone(5, 0) : acol(i)) + ';--c:' + L[3] + ';--t:' + txt(L[3]) + '"><div class="abi"><div class="abn" aria-hidden="true">' + two(i + 1) + '</div><div class="abq"><h2>' + esc(L[1]) + '</h2><p>' + esc(L[2]) + '</p></div></div></div>'; }
+  function aband(i) { var L = LAYERS[i]; return '<div class="abnd" style="--a:' + (lacc(i)) + ';--c:' + L[3] + ';--t:' + txt(L[3]) + '"><div class="abi"><div class="abn" aria-hidden="true">' + two(i + 1) + '</div><div class="abq"><h2>' + esc(L[1]) + '</h2><p>' + esc(L[2]) + '</p></div></div></div>'; }
   function pp(t) { return t.map(function (x) { return '<p class="txt">' + esc(x) + '</p>'; }).join(''); }
   function svc(list, cls, withLink) {
     return '<ul class="svc ' + cls + '" style="padding:0;margin:0">' + list.map(function (w, k) {
       return '<li><em>' + two(k + 1) + '</em><b>' + esc(w[0]) + '</b><span>' + esc(w[1]) + '</span>' + (withLink && BIZMAP[w[0]] ? '<a href="' + U('business/' + BIZMAP[w[0]] + '/') + '">자세히 →</a>' : '') + '</li>';
     }).join('') + '</ul>';
   }
+  function certsHTML() {
+    var items = HOME.certItems || [];
+    if (!items.length) return HOME.certs ? '<p class="certs-txt">' + esc(HOME.certs) + '</p>' : '';
+    var IC = {
+      sme: '<path d="M3 21V11l6 4v-4l6 4V5h6v16z"/><path d="M7 21v-3M12 21v-3M17 21v-3"/>',
+      women: '<circle cx="12" cy="9" r="5"/><path d="M12 14v8M9 18h6"/>',
+      venture: '<path d="M12 3c3 2 5 6 5 10l-2 3H9l-2-3c0-4 2-8 5-10z"/><circle cx="12" cy="10" r="1.6"/><path d="M9 16l-3 3M15 16l3 3M12 17v4"/>',
+      design: '<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',
+      direct: '<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/>'
+    };
+    return '<ul class="certs">' + items.map(function (c) {
+      return '<li><span class="ci"><svg viewBox="0 0 24 24" aria-hidden="true">' + (IC[c.icon] || IC.direct) + '</svg></span><b>' + esc(c.name) + '</b>' + (c.desc ? '<span>' + esc(c.desc) + '</span>' : '') + '</li>';
+    }).join('') + '</ul>';
+  }
+  function kakaoBtn() { return SET.kakaoChannel ? '<a class="kkb" href="' + esc(SET.kakaoChannel) + '" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.3 4.6 6.7l-1 3.6c-.1.3.2.5.5.4l4.2-2.8c.6.1 1.1.1 1.7.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg>카카오톡 문의</a>' : ''; }
   function sections() {
     var A = ABOUT, h = '';
+    var bizLinks = '<div class="sub-h">Business</div><div class="abgo">' + BIZ_IDS.map(function (k) { return '<a href="' + U('business/' + k + '/') + '">' + esc(BIZ[k].title) + '<span>→</span></a>'; }).join('') + '</div>';
     h += '<section id="s1" data-i="0">' + aband(0) + '<div class="abbody"><div class="two"><div class="stack"><p class="lead">' + esc(A.who.lead).replace('\n', '<br>') + '</p>' + pp(A.who.text) + '</div>' + '<div>' + ph(0, 'frp', A.who.img, 'PHOTO · 대표 작품') + '</div></div>' +
-      '<div class="sub-h">Values</div>' + svc(A.who.values, 'k3') + '</div></section>';
-    h += '<section id="s2" data-i="1">' + aband(1) + '<div class="abbody">' + svc(A.areas, 'k2', true) + '<div class="sub-h">공공미술 콘텐츠</div>' + svc(A.contents, 'k4') + '<div class="sub-h">건축미술팀의 약속</div>' + svc(A.promise, 'k4') + '</div></section>';
-    var mats = ['print', 'eps', 'frp', 'metal', 'acrylic'];
-    h += '<section id="s3" data-i="2">' + aband(2) + '<div class="abbody"><p class="txt" style="max-width:68ch;margin-bottom:26px">' + esc(A.howLead) + '</p><div class="sub-h" style="padding-top:0">공공미술 · 5 Steps</div><div class="abst k5" style="margin-top:18px">' + A.how.map(function (w, k) { return '<div class="stp">' + ph(k, mats[k % 5], w[2], 'PHOTO · ' + two(k + 1)) + '<div class="h"><em>' + two(k + 1) + '</em><b>' + esc(w[0]) + '</b></div><p>' + esc(w[1]) + '</p></div>'; }).join('') + '</div>' +
-      '<div class="sub-h">건축미술 · 심의 5 Steps</div><ol class="flow">' + A.flow.map(function (f, k) { return '<li><em>' + two(k + 1) + '</em><b>' + esc(f[0]) + '</b><span>' + esc(f[1]) + '</span></li>'; }).join('') + '</ol></div></section>';
-    h += '<section id="s4" data-i="3">' + aband(3) + '<div class="abbody"><div class="two"><div class="stack"><p class="lead">소재마다 만드는 방식과 어울리는 곳이 다릅니다.</p><p class="txt">' + esc(A.matText) + '</p></div><ol class="mrows">' +
-      MATS.map(function (m) { return '<li><a href="' + U('materials/' + m.id + '/') + '">' + miniSlab(mc(m)) + '<em>' + m.no + '</em><span class="nm"><b>' + esc(m.en) + '</b><span>' + esc(m.kr) + '</span></span><span class="ar">작품 보기 →</span></a></li>'; }).join('') + '</ol></div></div></section>';
-    h += '<section id="s5" data-i="4">' + aband(4) + '<div class="abbody"><div class="stats">' + A.record.map(function (r) { return '<div class="stat"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>'; }).join('') + '</div><p class="note">' + esc(A.recordNote) + '</p><div class="sub-h">History</div><ol class="hist">' +
+      '<div class="sub-h">Values</div>' + svc(A.who.values, 'k3') + bizLinks + '</div></section>';
+    h += '<section id="s2" data-i="1">' + aband(1) + '<div class="abbody"><div class="stats">' + A.record.map(function (r) { return '<div class="stat"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>'; }).join('') + '</div><p class="note">' + esc(A.recordNote) + '</p>' +
+      (certsHTML() ? '<div class="sub-h">인증 현황</div>' + certsHTML() : '') +
+      '<div class="sub-h">History</div><ol class="hist">' +
       A.history.slice().reverse().map(function (y) { return '<li><span class="y">' + y[0] + '</span><ul>' + y[1].map(function (e) { return '<li><em>' + e[0] + '</em><span>' + esc(e[1]) + '</span></li>'; }).join('') + '</ul></li>'; }).join('') + '</ol></div></section>';
-    h += '<section id="s6" data-i="5">' + aband(5) + '<div class="abbody"><div class="two"><div class="stack"><p class="cbig">Let’s<br>build it.</p><div class="abgo"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적<span>→</span></a><a href="' + QUOTE_URL + '">견적 문의<span>→</span></a></div></div>' +
+    h += '<section id="s3" data-i="2">' + aband(2) + '<div class="abbody"><div class="two"><div class="stack"><p class="cbig">Let’s<br>build it.</p><div class="abgo"><a href="' + GUIDE_URL + '">1분 가견적<span>→</span></a><a href="' + QUOTE_URL + '">견적 문의<span>→</span></a></div>' + kakaoBtn() + ((SET.hours || []).length ? '<p class="hrs">' + SET.hours.map(esc).join('<br>') + '</p>' : '') + '</div>' +
       '<dl class="cl">' + A.contact.map(function (c) { return '<div><dt>' + esc(c[0]) + '</dt><dd>' + esc(c[1]) + '</dd><button type="button" data-copy="' + esc(c[1]) + '">Copy</button></div>'; }).join('') + '</dl></div></div></section>';
     return h;
   }
@@ -144,7 +155,7 @@ export function createEngine(ctx) {
       '<a class="go" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><img src="' + STANDS_IMG + '" alt="STANDS"><span>아트 프로젝트 문의 ↗</span></a></aside>';
   }
   function guideRow() {   // 소재 찾기·가견적(find/) → 견적 문의(quote/)로 이어집니다
-    return '<div class="sub-h">문의</div><div class="abgo"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적<span>→</span></a><a href="' + QUOTE_URL + '">견적 문의<span>→</span></a></div>';
+    return '<div class="sub-h">문의</div><div class="abgo"><a href="' + GUIDE_URL + '">1분 가견적<span>→</span></a><a href="' + QUOTE_URL + '">견적 문의<span>→</span></a></div>' + kakaoBtn();
   }
   function statsOf(list) { return '<div class="stats">' + list.map(function (r) { return '<div class="stat"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>'; }).join('') + '</div>'; }
   function flowOf(list) { return '<ol class="flow">' + list.map(function (f, k) { return '<li><em>' + two(k + 1) + '</em><b>' + esc(f[0]) + '</b><span>' + esc(f[1]) + '</span></li>'; }).join('') + '</ol>'; }
@@ -161,7 +172,7 @@ export function createEngine(ctx) {
         return '<div class="two"><div class="stack"><p class="lead">' + esc(bz('arch', 'intro_title', '건축주는 건축 개요만 전달해 주세요.')) + '</p><p class="txt">' + esc(bz('arch', 'intro_text', '심의 서류 준비와 접수는 전담 팀이 맡습니다. 작품 제작과 설치, 준공에 필요한 미술작품 설치확인서를 받을 때까지 이어서 진행합니다.')) + '</p></div>' +
           '<div>' + statsOf(A.record.slice(2)) + '<p class="note">' + esc(A.recordNote) + '</p></div></div>' +
           '<div class="sub-h">건축미술팀의 약속</div>' + svc(A.promise, 'k4') +
-          '<div class="sub-h">심의 5 Steps</div>' + flowOf(A.flow) +
+          '<div class="sub-h" id="process">심의 ' + A.flow.length + ' Steps</div>' + flowOf(A.flow) +
           stBlock(bz('arch', 'stands_title', '건물에 놓을 작품이 필요하다면'), bz('arch', 'stands_text', '작품이 설 자리를 찾고, 세우고, 그 이후까지 돌보는 아트 컴퍼니.'));
       }
     },
@@ -173,8 +184,8 @@ export function createEngine(ctx) {
         return '<div class="two"><div class="stack"><p class="lead">' + esc(bz('public', 'intro_title', '컨설팅, 기획, 제작, 운송, 설치.')) + '</p><p class="txt">' + esc(bz('public', 'intro_text', '프로젝트마다 전담 매니저가 배정되어 기한과 품질, 안전한 운송과 설치, 유지보수까지 챙깁니다.')) + '</p></div>' +
           '<div>' + statsOf(A.record.slice(0, 2)) + '<p class="note">' + esc(A.recordNote) + '</p></div></div>' +
           '<div class="sub-h">공공미술 콘텐츠</div>' + svc(A.contents, 'k4') +
-          '<div class="sub-h">5 Steps</div>' + flowOf(A.how.map(function (w) { return [w[0], w[1]]; })) +
-          '<div class="sub-h">소재별 작품</div><ol class="mrows">' + MATS.map(function (m) { return '<li><a href="' + U('materials/' + m.id + '/') + '">' + miniSlab(mc(m)) + '<em>' + m.no + '</em><span class="nm"><b>' + esc(m.en) + '</b><span>' + esc(m.kr) + '</span></span><span class="ar">작품 보기 →</span></a></li>'; }).join('') + '</ol>' +
+          '<div class="sub-h" id="process">제작 프로세스 · ' + A.how.length + ' Steps</div>' + (A.howLead ? '<p class="txt" style="max-width:68ch;margin:16px 0 6px">' + esc(A.howLead) + '</p>' : '') + flowOf(A.how.map(function (w) { return [w[0], w[1]]; })) +
+          '<div class="sub-h">소재별 작품</div>' + (A.matText ? '<p class="txt" style="max-width:68ch;margin:16px 0 18px">' + esc(A.matText) + '</p>' : '') + '<ol class="mrows">' + MATS.map(function (m) { return '<li><a href="' + U('materials/' + m.id + '/') + '">' + miniSlab(mc(m)) + '<em>' + m.no + '</em><span class="nm"><b>' + esc(m.en) + '</b><span>' + esc(m.kr) + '</span></span><span class="ar">작품 보기 →</span></a></li>'; }).join('') + '</ol>' +
           guideRow();
       }
     },
@@ -294,14 +305,15 @@ export function createEngine(ctx) {
       '<div class="hm-biz">' + (HOME.biz || []).map(function (b, k) {
         return '<a href="' + U('business/' + b[2] + '/') + '" style="--c:' + cs[k % 3] + '"><span class="no">' + two(k + 1) + '</span><b>' + esc(b[0]) + '</b><i aria-hidden="true">→</i><span class="ds">' + esc(b[1]) + '</span></a>';
       }).join('') + '</div>';
-    var num = '<div class="hm-h"><span class="cap">Track record</span><a href="' + U('about/#s5') + '">연혁 · 인증 →</a></div>' +
+    var num = '<div class="hm-h"><span class="cap">Track record</span><a href="' + U('about/#s2') + '">연혁 · 인증 →</a></div>' +
       '<div class="hm-num"><div class="stats">' + ABOUT.record.map(function (r) { return '<div class="stat"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>'; }).join('') + '</div><p class="note">' + esc(ABOUT.recordNote || '') + '</p></div>';
-    var cl = '<div class="hm-cl"><span class="cap">Clients</span><ul>' + (HOME.clients || []).map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul><p>' + esc(HOME.certs || '') + '</p></div>';
+    var cl = '<div class="hm-cl"><span class="cap">Clients</span><ul>' + (HOME.clients || []).map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul></div>' +
+      (certsHTML() ? '<div class="hm-cl hm-ct"><span class="cap">Certified</span>' + certsHTML() + '</div>' : '');
     return '<section class="hm-hero" aria-label="대표 작품">' + slides + '<div class="hm-hv"><div><p class="cap">' + esc(HOME.eyebrow || '') + '</p><h1>' + HOME.title + '</h1><p class="sub">' + esc(HOME.sub || '') + '</p><div class="go2"><a href="' + U('work/') + '">작품 보기 →</a><a href="' + U('about/') + '">회사 소개</a></div></div>' +
       '<div class="hm-hb"><a href="' + (w0 ? U('work/' + esc(w0.pid) + '/') : U('work/')) + '">' + (w0 ? '<b>' + esc(w0.name) + '</b><span class="cap">' + esc(cap(w0)) + '</span>' : '') + '</a>' + dots + '</div></div></section>' +
       '<div class="hm-bar" aria-hidden="true">' + MATS.map(function (m) { return '<i style="background:' + col(m) + '"></i>'; }).join('') + '</div>' +
       biz + num + '<div class="hm-h"><span class="cap">Latest works</span><a href="' + U('work/') + '">전체 보기 ' + two(PORT.length) + ' →</a></div><div class="hm-rail" id="rail" data-n="' + items.length + '">' + rail + '</div>' +
-      cl + '<div class="hm-end"><p>' + esc(HOME.end || '') + '</p><div class="acts"><a href="' + GUIDE_URL + '">소재 찾기 · 가견적 →</a><a href="' + QUOTE_URL + '">견적 문의 →</a><a href="' + U('track.html') + '">진행 확인 →</a><i class="vb" aria-hidden="true"></i><a class="st" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><span>아트 프로젝트 문의 ↗</span><img src="' + STANDS_IMG + '" alt="STANDS"></a></div></div>';
+      cl + '<div class="hm-end"><p>' + esc(HOME.end || '') + '</p><div class="acts"><a href="' + GUIDE_URL + '">1분 가견적 →</a><a class="qt" href="' + QUOTE_URL + '">견적 문의 →</a><a href="' + U('track.html') + '">진행 확인 →</a><i class="vb" aria-hidden="true"></i><a class="st" href="' + STANDS_URL + '" target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><span>아트 프로젝트 문의 ↗</span><img src="' + STANDS_IMG + '" alt="STANDS"></a></div></div>';
   }
 
   function aboutHTML() { return stackAnchors2(sections()); }
@@ -343,8 +355,8 @@ export function createEngine(ctx) {
     U: U, esc: esc, two: two, col: col, byId: byId, workBy: workBy, worksOf: worksOf, state: state,
     tileHTML: tileHTML, ctaTile: ctaTile, pageHeadHTML: pageHeadHTML, bandHTML: bandHTML, filtersHTML: filtersHTML, chipsHTML: chipsHTML,
     stackHTML: function () { return stackLinks(stackSVG()); }, stackAboutHTML: function () { return stackAnchors(stackSVGA()); },
-    aboutFilterHTML: function () { return LAYERS.map(function (L, i) { return '<a href="#s' + (i + 1) + '" data-a="s' + (i + 1) + '"><i style="background:' + L[3] + ';box-shadow:inset 0 -3px 0 ' + (i === 5 ? atone(5, 0) : acol(i)) + '"></i><em>' + two(i + 1) + '</em><span>' + esc(L[1]) + '</span></a>'; }).join(''); },
-    aboutChipsHTML: function () { return LAYERS.map(function (L, i) { return '<a href="#s' + (i + 1) + '" data-a="s' + (i + 1) + '" aria-label="' + esc(L[1]) + '">' + miniSlabA(L[3], i === 5 ? atone(5, 0) : acol(i)) + two(i + 1) + '</a>'; }).join(''); },
+    aboutFilterHTML: function () { return LAYERS.map(function (L, i) { return '<a href="#s' + (i + 1) + '" data-a="s' + (i + 1) + '"><i style="background:' + L[3] + ';box-shadow:inset 0 -3px 0 ' + (lacc(i)) + '"></i><em>' + two(i + 1) + '</em><span>' + esc(L[1]) + '</span></a>'; }).join(''); },
+    aboutChipsHTML: function () { return LAYERS.map(function (L, i) { return '<a href="#s' + (i + 1) + '" data-a="s' + (i + 1) + '" aria-label="' + esc(L[1]) + '">' + miniSlabA(L[3], lacc(i)) + two(i + 1) + '</a>'; }).join(''); },
     toolbarHTML: toolbarHTML, homeHTML: homeHTML, aboutHTML: aboutHTML, bizPageHTML: bizPageHTML, workDetailHTML: workDetailHTML,
     setState: function (v, f) { state.view = v; state.f = f; }, BIZ: BIZ, BIZ_IDS: BIZ_IDS, LAYERS: LAYERS
   };

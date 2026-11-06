@@ -38,15 +38,19 @@ const U = E.U;
 const posts = (await getCollection('editorial')).filter((e) => !e.data.draft);
 const hasEditorial = posts.length > 0;
 
-const pageTitle = fullTitle || (title ? title + ' | ' + S.siteName : S.siteName + ' | 조형물 · 건축미술 제작');
-const desc = (description || S.siteDescription).replace(/\s+/g, ' ').trim();
+const pageTitle = fullTitle || (title ? title + ' | ' + S.siteName : S.siteName + ' | FRP · 금속 · 스티로폼 조형물 제작 전문 업체');
+/* 검색 노출(SEO): 모든 페이지 설명에 대표 문구(FRP·금속·스티로폼 · 원스톱 조형물 제작)가 들어가도록 합니다. 블로그 글은 글 자체 설명을 그대로 씁니다. */
+const REP = S.siteDescription.replace(/\s+/g, ' ').trim();
+const own = (description || '').replace(/\s+/g, ' ').trim();
+const desc = !own ? REP : (type === 'article' || own.includes(REP) ? own : own.replace(/[.\s]+$/, '') + '. ' + REP);
+const KEYWORDS = 'FRP 조형물, 금속 조형물, 스티로폼 조형물, 원스톱 조형물 제작, 조형물 제작 업체, 조형물 제작 전문, 공공미술, 건축미술, 포토존, 마롱컴퍼니';
 const canonical = abs(path);
 const ogImage = image || (S.ogImage ? abs(S.ogImage.replace(/^\/+/, '')) : abs('og-default.png'));
 
 const SOCIAL = ['https://jenuek.github.io/stands-website/'];
 const org = {
   '@context': 'https://schema.org', '@type': 'Organization', '@id': ORIGIN + '/#org', name: S.siteName,
-  alternateName: 'Malong Company', url: ORIGIN + '/', logo: abs('favicon.svg'),
+  alternateName: 'Malong Company', description: REP, slogan: '원스톱 조형물 제작 전문 업체', knowsAbout: ['FRP 조형물', '금속 조형물', '스티로폼 조형물', '공공미술', '건축미술', '포토존'], url: ORIGIN + '/', logo: abs('favicon.svg'),
   telephone: '+82-1644-4762', email: 'admin@malong.co.kr',
   address: { '@type': 'PostalAddress', streetAddress: '압구정로80길 14', addressLocality: '강남구', addressRegion: '서울특별시', postalCode: '06015', addressCountry: 'KR' },
   sameAs: SOCIAL,
@@ -60,10 +64,10 @@ if (act) stackM = stackM.replace('class="slab" data-slab="' + act + '"', 'class=
 let stackA = E.stackAboutHTML();
 stackA = stackA.replace('class="slab" data-a="s1"', 'class="slab on" data-a="s1"');
 const famnav = famnavRaw.replace('{STANDS}', U('stands-logo.svg')).replace(/https:\/\/jenuek\.github\.io\/stands-website\//, site.STANDS_URL !== '#' ? site.STANDS_URL : 'https://jenuek.github.io/stands-website/');
-const foot = (S.footer.length ? S.footer : [
+const foot = [...(S.footer.length ? S.footer : [
   '(주)마롱컴퍼니 · 대표 이어진 · 사업자등록번호 472-81-00053',
   '(06015) 서울특별시 강남구 압구정로80길 14 · Tel 1644-4762 · admin@malong.co.kr',
-]);
+]), ...(S.hours.length ? [S.hours.join(' · ') ] : [])];
 const cur = (k) => (nav === k ? 'page' : undefined);
 const recruitExt = /^https?:/i.test(S.recruit);
 ---
@@ -74,6 +78,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{pageTitle}</title>
 <meta name="description" content={desc}>
+<meta name="keywords" content={KEYWORDS}>
 <link rel="canonical" href={canonical}>
 {noindex ? <meta name="robots" content="noindex,nofollow"> : <meta name="robots" content="index,follow,max-image-preview:large">}
 <meta name="theme-color" content="#ffffff">
@@ -113,19 +118,19 @@ const recruitExt = /^https?:/i.test(S.recruit);
     <a href={U('work/')} aria-current={cur('work')}>Work</a>
     <a href={U('about/')} aria-current={cur('about')}>About</a>
     {hasEditorial && <a href={U('blog/')} aria-current={cur('blog')}>Blog</a>}
-    <a href={U('find/')} aria-current={cur('find')}>소재 찾기 · 가견적</a>
-    <a href={U('quote/')} aria-current={cur('quote')}>견적 문의</a>
+    <a href={U('find/')} aria-current={cur('find')}>1분 가견적</a>
     <a href={U('track.html')}>프로젝트 진행 확인</a>
-    <Fragment set:html={famnav} />
   </nav>
+  <a class="side-quote" href={U('quote/')} aria-current={cur('quote')}><span class="cap">Contact us</span><b>견적 문의</b><i aria-hidden="true">→</i></a>
   {side === 'work' && (
     <div class="pane" id="sp-m"><div><div class="lh"><span class="cap">Layers</span><span class="cap n" id="lcount">{String(count ?? site.PORT.length).padStart(2, '0')}</span></div><div class={'stk' + (act ? ' has-f' : '')} id="stkM" set:html={stackM}></div></div><div class="flt" id="fltM" role="group" aria-label="소재 분류" set:html={E.filtersHTML(act || 'all')}></div></div>
   )}
   {side === 'about' && (
-    <div class="pane" id="sp-a"><div><div class="lh"><span class="cap">Layers</span><span class="cap n">06</span></div><div class="stk has-f" id="stkA" set:html={stackA}></div></div><div class="flt" id="fltA" role="navigation" aria-label="소개 목차" set:html={E.aboutFilterHTML()}></div></div>
+    <div class="pane" id="sp-a"><div><div class="lh"><span class="cap">Layers</span><span class="cap n">03</span></div><div class="stk has-f" id="stkA" set:html={stackA}></div></div><div class="flt" id="fltA" role="navigation" aria-label="소개 목차" set:html={E.aboutFilterHTML()}></div></div>
   )}
+  <Fragment set:html={famnav} />
   {side === 'home' && (
-    <div class="side-ct" id="sideCt"><span class="cap">Contact</span><a href="tel:16444762">1644-4762</a><a href="mailto:admin@malong.co.kr">admin@malong.co.kr</a><small>서울특별시 강남구 압구정로80길 14</small></div>
+    <div class="side-ct" id="sideCt"><span class="cap">Contact</span><a href="tel:16444762">1644-4762</a><a href="mailto:admin@malong.co.kr">admin@malong.co.kr</a>{S.kakaoChannel && <a class="kk" href={S.kakaoChannel} target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.3 4.6 6.7l-1 3.6c-.1.3.2.5.5.4l4.2-2.8c.6.1 1.1.1 1.7.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg>카카오톡 문의</a>}{S.hours.length > 0 && <small class="hrs">{S.hours.map((t) => <span>{t}</span>)}</small>}<small>서울특별시 강남구 압구정로80길 14</small></div>
   )}
   <div class="side-foot">© Malong Company</div>
 </aside>
@@ -136,7 +141,7 @@ const recruitExt = /^https?:/i.test(S.recruit);
       <a class="g" href={U('work/')} aria-current={cur('work')}>Work</a>
       <a class="g" href={U('about/')} aria-current={cur('about')}>About</a>
       {hasEditorial && <a class="g" href={U('blog/')} aria-current={cur('blog')}>Blog</a>}
-      <a class="g" href={U('find/')} aria-current={cur('find')}>소재 찾기</a>
+      <a class="g" href={U('find/')} aria-current={cur('find')}>1분 가견적</a>
       <a class="g" href={U('quote/')} aria-current={cur('quote')}>견적 문의</a>
       <a class="g" href={U('track.html')}>진행 확인</a>
     </div>
@@ -147,13 +152,13 @@ const recruitExt = /^https?:/i.test(S.recruit);
 <main id="main">
   <slot />
   <footer class="foot">
-    <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('blog/')}>Blog</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('find/')}>소재 찾기</a><a href={U('quote/')}>견적 문의</a><a href={U('track.html')}>진행 확인</a><a href={U('privacy/')}>개인정보처리방침</a></nav>
+    <nav class="fnav" aria-label="하단 메뉴"><a href={U('business/arch/')}>사업분야</a>{hasEditorial && <a href={U('blog/')}>Blog</a>}<a href={S.recruit} target={recruitExt ? '_blank' : undefined} rel={recruitExt ? 'noopener' : undefined}>채용</a><a href={U('find/')}>1분 가견적</a><a href={U('quote/')}>견적 문의</a>{S.kakaoChannel && <a href={S.kakaoChannel} target="_blank" rel="noopener noreferrer">카카오톡 문의</a>}<a href={U('track.html')}>진행 확인</a><a href={U('privacy/')}>개인정보처리방침</a></nav>
     <span set:html={foot.map((t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))).join('<br>')}></span>
     <span class="famf"><a href={site.STANDS_URL !== '#' ? site.STANDS_URL : 'https://jenuek.github.io/stands-website/'} target="_blank" rel="noopener"><img src={U('stands-logo.svg')} alt="STANDS" width="140" height="35"><i>↗</i></a><small class="fcap">아트 큐레이션 · 건축미술 · 전시</small><span class="cap">© Malongcompany Co.Ltd.</span></span>
   </footer>
 </main>
 <div class="fab" id="fab" role="navigation" aria-label="빠른 메뉴">
-  <a class="fab-b" href={U('find/')}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><span>소재 찾기</span></a>
+  <a class="fab-b" href={U('find/')}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><span>1분 가견적</span></a>
   <a class="fab-b pri" href={U('quote/')}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v11H9l-4 3.5v-3.5H4z"/><path d="M8 10h8M8 13h5"/></svg><span>견적 문의</span></a>
 </div>
 <script>import '../scripts/chrome.js';</script>

@@ -620,7 +620,7 @@
     sm.hidden = !pk;
     sm.innerHTML = pk ? summaryItems().map(function (a) { return '<div class="sum-r' + (a[2] ? ' ' + a[2] : '') + '"><span>' + esc(a[0]) + '</span><b>' + esc(a[1]) + '</b></div>'; }).join('') : '';
     var pre = $('#q-pre');
-    if (pre) pre.innerHTML = pk ? '' : '<div class="notice"><b>' + esc(T('qf.pre.t', '소재 찾기를 먼저 해 보셨나요?')) + '</b><span>' + esc(T('qf.pre.p', '몇 가지만 고르면 추천 소재와 가견적이 문의 내용에 자동으로 담겨요. 바로 문의하셔도 괜찮아요.')) + '</span><a class="btn ln" href="' + FIND_URL + '">' + esc(T('qf.pre.b', '소재 찾기 시작하기')) + ' →</a></div>';
+    if (pre) pre.innerHTML = pk ? '' : '<div class="notice"><b>' + esc(T('qf.pre.t', '1분 가견적을 먼저 해 보셨나요?')) + '</b><span>' + esc(T('qf.pre.p', '몇 가지만 고르면 추천 소재와 가견적이 문의 내용에 자동으로 담겨요. 바로 문의하셔도 괜찮아요.')) + '</span><a class="btn ln" href="' + FIND_URL + '">' + esc(T('qf.pre.b', '1분 가견적 시작하기')) + ' →</a></div>';
     if (!S.c.email && LEAD) S.c.email = LEAD.email;
     FL.forEach(function (f) { var el = document.getElementById('f-' + f[0]); if (el && el.value !== S.f[f[0]]) el.value = S.f[f[0]]; });
     ['name', 'company', 'email', 'phone'].forEach(function (k) { var el = document.getElementById('q-' + k); if (el && el.value !== S.c[k]) el.value = S.c[k]; });
@@ -645,7 +645,7 @@
   var STEPS = [['st.0', '소재 알아보기'], ['st.1', '소재별 더 알아보기'], ['st.2', '비교하고 가견적'], ['st.3', '견적 문의']];
   function shell() {
     var q = MODE === 'quote', idx = q ? [3] : [0, 1, 2], fns = [page0, page1, page2, page3];
-    return '<div class="gbar"><div class="toolbar"><span class="tool">' + (q ? x('bar.tool.q', '견적 문의', 'span') : x('bar.tool.f', '소재 찾기 · 가견적', 'span')) + '</span><span class="stepno" id="stepno"></span></div>' +
+    return '<div class="gbar"><div class="toolbar"><span class="tool">' + (q ? x('bar.tool.q', '견적 문의', 'span') : x('bar.tool.f', '1분 가견적', 'span')) + '</span><span class="stepno" id="stepno"></span></div>' +
       (q ? '' : '<ol class="prog" id="prog">' + STEPS.slice(0, 3).map(function (s, i) { return '<li><button type="button" data-step="' + i + '" aria-label="' + (i + 1) + '단계 ' + esc(T(s[0], s[1])) + '"></button></li>'; }).join('') + '</ol><div class="mybar" id="mybar" hidden></div>') + '</div>' +
       '<div class="stage" id="stage">' + idx.map(function (i) { return '<section class="page" id="pg' + i + '" aria-label="' + (i + 1) + '단계 ' + esc(T(STEPS[i][0], STEPS[i][1])) + '">' + fns[i]() + '</section>'; }).join('') + '</div>' +
       '<div class="dock"><div class="dock-in" id="dock"></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div>';
@@ -666,7 +666,7 @@
     if (st === 0) sum = ready() ? (locked() ? '<span>' + esc(T('gate.dock', '추천 결과가 준비됐어요')) + '</span>' : '<span>' + esc(T('dock.rec', '추천 1순위')) + '</span><b>' + esc(mname(rank()[0].m)) + '</b>') : '<span>' + esc(T('dock.pick', '설치 장소·기간·조형 종류를 골라 주세요')) + '</span>';
     if (st === 2 && calcOn()) { var r = calc(eff()); sum = '<span>' + esc(T('dock.est', '가견적')) + '</span><b>' + esc(r ? range(r) : T('sm.consult', '상담 후 안내')) + '</b>'; }
     if (MODE === 'quote') {
-      b += '<a class="btn gh" href="' + FIND_URL + (qs() ? qs() + '&s=3' : '?s=3') + '">' + esc(T('dock.tofind', '소재 찾기')) + '</a>';
+      b += '<a class="btn gh" href="' + FIND_URL + (qs() ? qs() + '&s=3' : '?s=3') + '">' + esc(T('dock.tofind', '1분 가견적')) + '</a>';
       if (leadOn()) b += '<button type="button" class="btn pri" data-act="submit"' + ($('#q-wrap') && $('#q-wrap').hidden ? ' hidden' : '') + '>' + esc(T('qf.go', '견적 문의 보내기')) + '</button>';
       else b += k ? '<a class="btn pri" data-act="kakao" href="' + esc(k) + '" target="_blank" rel="noopener noreferrer">' + esc(T('s4.kakao', '카카오톡 문의하기')) + '</a>' : '<button type="button" class="btn pri" data-act="copy">' + esc(T('s4.copy', '내용 복사하기')) + '</button>';
     } else {

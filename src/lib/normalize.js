@@ -32,7 +32,7 @@ export function normMats(j, img) {
 
 /* 홈 */
 export function normHome(j, validPid, img) {
-  var H = { eyebrow: '', title: '', sub: '', hero: [], heroMs: 6000, n: 12, end: '', biz: [], clients: [], certs: '' };
+  var H = { eyebrow: '', title: '', sub: '', hero: [], heroMs: 6000, n: 12, end: '', biz: [], clients: [], certs: '', certItems: [] };
   if (!j) return H;
   H.eyebrow = S(j.eyebrow);
   H.title = esc(S(j.title)).replace(/\n/g, '<br>');
@@ -47,6 +47,7 @@ export function normHome(j, validPid, img) {
   H.biz = L(j.biz).filter(function (b) { return b && S(b.title); }).map(function (b) { return [S(b.title), S(b.desc), S(b.page)]; });
   H.clients = L(j.clients).map(function (c) { return S(c && c.name != null ? c.name : c); }).filter(Boolean);
   H.certs = S(j.certs);
+  H.certItems = L(j.cert_items).filter(function (c) { return c && S(c.name); }).map(function (c) { return { name: S(c.name), desc: S(c.desc), icon: S(c.icon) }; });
   return H;
 }
 
@@ -96,23 +97,25 @@ export function normSettings(j) {
   var rl = S(j.recruit_link);
   return {
     kakao: okLink(S(j.kakao_url)),
+    kakaoChannel: okLink(S(j.kakao_channel_url)),
+    hours: L(j.office_hours).map(S).filter(Boolean),
     portfolio: okLink(S(j.portfolio_link)) || 'https://www.malongcompany.co.kr/sub/portfolio/portfolio.php',
     recruit: okLink(rl) || /^mailto:[^\s"'<>]+$/i.test(rl) ? rl : 'mailto:admin@malong.co.kr',
     footer: L(j.footer).map(S).filter(Boolean),
     siteName: S(j.site_name) || '마롱컴퍼니',
-    siteDescription: S(j.site_description) || '공공미술 · 건축미술 · 전시기획 · 조형물 제작. 기획부터 제작, 설치까지 마롱컴퍼니가 함께합니다.',
+    siteDescription: S(j.site_description) || 'FRP, 금속, 스티로폼 조형물 기획부터 제작, 설치까지 원스톱 조형물 제작 업체 마롱컴퍼니가 함께합니다.',
     ogImage: S(j.og_image)
   };
 }
 
 /* ---- 작품 분류 항목 (마케팅 아카이빙 템플릿 기준) ----
    관리 화면(.pages.yml)의 체크 항목과 글자가 똑같아야 합니다. 바꿀 때는 두 곳을 함께 고치세요. */
-export var TYPES = ['그림', '금속', 'FRP', '스티로폼', 'EPS', '벽화', '미디어아트', '기타'];
+export var TYPES = ['금속', 'FRP', '스티로폼', 'EPS 우레아', '3D프린팅', '포토존', '에어', '그림', '벽화', '미디어아트', '기타'];
 export var REGIONS = ['서울', '경기, 인천', '부산', '강원', '경상, 대구', '전라, 광주', '충청, 대전, 세종', '제주'];
 export var PURPOSES = ['주거단지', '공공 시설물', '기업·브랜드홍보', '호텔·레저·업무시설', '행사·전시·이벤트'];
 export var KEYWORDS = ['건축미술', '포토존', '캐릭터', '글자'];
 /* 유형 → 사이트의 6가지 소재(소재 페이지·소재 찾기) 연결. 연결이 없는 유형은 소재 페이지에 나오지 않습니다. */
-var TYPE_MAT = { 'FRP': 'frp', '금속': 'metal', '스티로폼': 'eps', 'EPS': 'eps' };
+var TYPE_MAT = { 'FRP': 'frp', '금속': 'metal', '스티로폼': 'eps', 'EPS 우레아': 'eps', '3D프린팅': 'print' };
 
 function uniq(a) { return a.filter(function (x, i) { return x && a.indexOf(x) === i; }); }
 function pick(v, allowed) { return uniq(L(v).map(S)).filter(function (x) { return allowed.indexOf(x) > -1; }); }

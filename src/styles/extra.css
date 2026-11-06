@@ -160,3 +160,56 @@ body.lock .fab { display: none; }
 .ed-sum p { font-size: 15.5px; line-height: 1.8; font-weight: 600; }
 .prose .ed-fig { margin: 1.6em 0; }
 .prose .ed-fig img { width: 100%; height: auto; }
+
+/* 사이드바: 견적 문의 배너 · STANDS(하단) · Contact(카카오톡·운영시간) */
+.side-quote { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 2px 10px; padding: 16px 16px 15px; background: var(--ink); color: #fff; text-decoration: none; transition: background .2s, transform .2s; }
+.side-quote .cap { grid-column: 1 / -1; color: rgba(255,255,255,.62); }
+.side-quote b { font-size: 20px; font-weight: 800; letter-spacing: -.03em; line-height: 1.2; }
+.side-quote i { font-style: normal; font-family: var(--en); font-size: 20px; line-height: 1.1; transition: transform .25s; }
+.side-quote:hover { background: var(--deep); }
+.side-quote:hover i { transform: translateX(5px); }
+.side-quote[aria-current] { outline: 2px solid var(--deep); outline-offset: 2px; }
+.side-quote:focus-visible { outline: 3px solid var(--soft); outline-offset: 2px; }
+.side > a.famnav { display: grid; gap: 6px; margin-top: auto; padding: 14px 0 0; border-top: 1px solid var(--hair); text-decoration: none; }
+.side > a.famnav + .side-ct, .side > a.famnav + .side-foot { margin-top: 0; }
+.side > a.famnav + .side-ct { margin-top: 4px; }
+.side-ct a.kk { display: inline-flex; align-items: center; gap: 7px; width: fit-content; margin-top: 6px; padding: 7px 12px 7px 10px; background: #FEE500; color: #191600; font-size: 12.5px; font-weight: 800; letter-spacing: -.01em; border-radius: 4px; }
+.side-ct a.kk:hover { color: #191600; filter: brightness(.95); }
+.side-ct a.kk svg { width: 15px; height: 15px; fill: currentColor; flex: none; }
+.side-ct small.hrs { display: grid; gap: 1px; }
+
+/* 홈 하단: 견적 문의를 가장 크게 */
+.hm-end .acts a.qt { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font-size: 15px; background: var(--ink); color: #fff; border: 0; border-radius: 999px; }
+.hm-end .acts a.qt:hover { background: var(--deep); color: #fff; }
+.hm-end .acts { align-items: center; }
+@media (max-width: 520px) { .hm-end .acts a.qt { flex-basis: 100%; justify-content: center; } }
+
+/* 인증 현황: 아이콘 카드 */
+.certs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (min-width: 640px) { .certs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1180px) { .certs { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.certs li { display: grid; grid-template-columns: 40px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 12px; align-items: center; padding: 14px 14px 13px; border: 1px solid var(--hair); background: var(--paper, #fff); }
+.certs .ci { grid-row: 1 / span 2; width: 40px; height: 40px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; color: var(--ink); }
+.certs .ci svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.certs li b { font-size: 14px; font-weight: 800; letter-spacing: -.03em; line-height: 1.3; align-self: end; }
+.certs li > span:not(.ci) { font-size: 11.5px; line-height: 1.45; color: var(--sub); align-self: start; margin-top: 2px; }
+.hm-cl.hm-ct { margin-top: 26px; align-items: start; }
+.hm-cl.hm-ct .cap { padding-top: 4px; }
+@media (min-width: 900px) { .hm-cl.hm-ct .certs { grid-column: 2; } }
+.certs-txt { font-size: 11.5px; color: var(--muted); }
+
+/* 회사 소개 Contact: 카카오톡 · 운영시간 */
+a.kkb { display: inline-flex; align-items: center; gap: 8px; width: fit-content; margin-top: 14px; padding: 11px 18px 11px 14px; background: #FEE500; color: #191600; font-size: 14px; font-weight: 800; letter-spacing: -.01em; text-decoration: none; border-radius: 4px; }
+a.kkb:hover { filter: brightness(.95); }
+a.kkb svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
+.stack p.hrs { margin-top: 12px; font-size: 13px; line-height: 1.7; color: var(--sub); }
+
+/* 홈 Clients 목록 스타일이 인증 카드에 섞이지 않도록 */
+.hm-cl .certs { display: grid; flex-wrap: initial; gap: 10px; }
+.hm-cl .certs li { display: grid; padding: 14px 14px 13px; margin: 0; border: 1px solid var(--hair); font-size: 14px; letter-spacing: normal; color: var(--ink); }
+@media (min-width: 900px) { .hm-cl .certs li { padding: 14px 14px 13px; margin: 0; border: 1px solid var(--hair); } .hm-cl .certs li:last-child { border: 1px solid var(--hair); } }
+@media (min-width: 900px) and (max-width: 1399px) { .hm-cl .certs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1400px) { .hm-cl .certs { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+/* 모바일 상단 메뉴: 항목이 길어져도 화면 밖으로 넘치지 않게 줄바꿈 */
+@media (max-width: 560px) { .top-in > div { flex-wrap: wrap; justify-content: flex-end; gap: 4px 12px !important; min-width: 0; } }

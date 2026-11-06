@@ -103,7 +103,7 @@ async function build() {
   return {
     settings, MATS, PORT: works, HOME, ABOUT, EXH: BIZ.EXH, BD: BIZ.BD, STANDS_URL: BIZ.STANDS_URL,
     guide: J('guide'),
-    ctx: { MATS, PORT: works, ABOUT, HOME, EXH: BIZ.EXH, BD: BIZ.BD, STANDS_URL: BIZ.STANDS_URL, base: BASE },
+    ctx: { settings, MATS, PORT: works, ABOUT, HOME, EXH: BIZ.EXH, BD: BIZ.BD, STANDS_URL: BIZ.STANDS_URL, base: BASE },
   };
 }
 
