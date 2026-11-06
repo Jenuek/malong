@@ -91,7 +91,7 @@ export default defineConfig({
         else if (/\/work\/[^/]+\/$/.test(item.url)) item.priority = 0.7;
         return item;
       },
-      filter: (page) => !/\/(404|redirect)/.test(page) && !/\/track\/$/.test(page),
+      filter: (page) => !/\/(404|redirect)/.test(page) && !/\/(track|confirm)\/$/.test(page),
     }),
   ],
 });

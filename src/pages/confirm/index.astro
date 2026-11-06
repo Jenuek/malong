@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import '../../styles/confirm.css';
+import { BASE } from '../../lib/data.js';
+/* 디자인 시안 확인 — 사이트 공통 레이아웃(사이드바·푸터) 안에서 열립니다. 접수코드/시안 코드는 입력창 또는 주소 뒤 #코드 로 받습니다.
+   화면 그리기는 public/assets/confirm.js 가 맡고, 프로젝트 자료는 projects/<코드 해시>.json 을 읽습니다. */
+---
+<Base title="디자인 시안 확인" description="의뢰 고객님께 전달드린 디자인 시안과 3D 화면, 제안서를 확인하세요." path="confirm/" noindex={true} nav="" side="none" bodyClass="cfm-page">
+  <div class="cfm">
+    <div id="app"></div>
+    <div class="cfm-toast" id="toast" role="status" aria-live="polite"></div>
+    <noscript><p style="padding:24px">이 페이지는 자바스크립트가 필요해요. 문의는 1644-4762 또는 admin@malong.co.kr 로 주세요.</p></noscript>
+  </div>
+  <Fragment slot="scripts">
+    <script is:inline src={BASE + 'assets/confirm.js'}></script>
+  </Fragment>
+</Base>
