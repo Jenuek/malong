@@ -1,0 +1,30 @@
+---
+/* 작품 상세 본문: 큰 사진 + 정보(유형·목적·지역·키워드·연도·발주·태그) + 이전/다음 + 관련 작품
+   props: w(작품), prev, next, related */
+import { getSite } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+
+const { w, prev = null, next = null, related = [] } = Astro.props;
+const site = await getSite();
+const E = createEngine(site.ctx);
+const { U, byId } = E;
+E.setState('work', 'all');
+const m0 = E.m0of(w);
+/* 대표 사진 + 갤러리 사진 */
+const imgs = [w].concat((w.gallery || []).map((g, k) => ({ name: w.name, pid: w.pid, mats: w.mats, img: g.img, srcset: g.srcset, alt: g.alt || (w.name + ' ' + (k + 2)), w: g.w, h: g.h, seed: 3 + k })));
+const figs = imgs.map((g, k) => {
+  const big = Object.assign({}, g, { alt: k === 0 ? (w.alt || w.name) : g.alt });
+  return E.pic(big, E.col(m0), { eager: k === 0, sizes: '(min-width: 900px) 60vw, 100vw' });
+});
+const filterLink = (g, v) => U('work/?' + g + '=' + encodeURIComponent(v));
+const rows = [
+  ['유형', 'u', w.types], ['목적', 'c', w.purposes], ['지역', 'r', w.regions], ['키워드', 'k', w.keywords],
+].filter((r) => (r[2] || []).length);
+---
+<article class="wpage"><div class="ovl-bar"><span class="cap">Project ID {w.pid}</span><div class="acts">{prev && <a href={U('work/' + prev.pid + '/')} rel="prev">← Prev</a>}{next && <a href={U('work/' + next.pid + '/')} rel="next">Next →</a>}<a class="x" href={U('work/')}>All works</a></div></div>
+<div class="wv"><div class="figs">{figs.map((f, k) => (<figure class={'pic' + (k ? ' sub' : '')}><Fragment set:html={f} />{k === 0 && <span class="lay2"><Fragment set:html={E.layDots(w)} /></span>}</figure>))}</div>
+<div class="info"><div><h1>{w.name}</h1><p class="pidl cap">Project ID {w.pid}</p></div>
+<dl>{rows.map((r) => (<div><dt>{r[0]}</dt><dd>{r[2].map((v) => (<a href={filterLink(r[1], v)}>{v}</a>))}</dd></div>))}{w.year && <div><dt>연도</dt><dd><a href={U('work/?y=' + w.year)}>{w.year}</a></dd></div>}{w.client && <div><dt>발주</dt><dd>{w.client}</dd></div>}{(w.tags || []).length > 0 && <div><dt>태그</dt><dd>{w.tags.map((t) => (<a href={U('work/?t=' + encodeURIComponent(t))}>#{t}</a>))}</dd></div>}</dl>
+<p class="ds">{w.desc ? w.desc : '작품 설명이 들어가는 자리입니다. 프로젝트 배경과 제작 포인트를 두세 줄로 적어 주세요.'}</p>
+<div class="go">{w.mats.length ? <a href={U('materials/' + w.mats[0] + '/')}>{byId(w.mats[0]).en} 작품 모아보기<span>→</span></a> : <a href={U('work/')}>전체 작품 보기<span>→</span></a>}<a href={U('find/')}>비슷한 작품 견적 내보기<span>→</span></a></div></div></div>
+{related.length > 0 && <section class="rel" aria-label="관련 작품"><div class="sub-h">Related works</div><div class="works"><Fragment set:html={related.map((r, i) => E.tileHTML(r, i)).join('')} /></div></section>}</article>

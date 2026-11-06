@@ -1,14 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getSite, abs } from '../lib/data.js';
-import { createEngine } from '../lib/engine.js';
+import Home from '../components/home/Home.astro';
+import { getSite } from '../lib/data.js';
 const site = await getSite();
-const E = createEngine(site.ctx);
-const html = E.homeHTML();
 const H = site.HOME;
-const first = site.PORT[0];
 ---
 <Base path="" nav="home" side="home">
-  <div class="hm" id="v-home" data-ms={H.heroMs} set:html={html}></div>
+  <div class="hm" id="v-home" data-ms={H.heroMs}><Home /></div>
   <script>import '../scripts/home.js';</script>
 </Base>

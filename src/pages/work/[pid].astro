@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { getSite, detailOf, abs } from '../../lib/data.js';
 import { createEngine } from '../../lib/engine.js';
+import WorkDetail from '../../components/work/WorkDetail.astro';
 
 export async function getStaticPaths() {
   const { PORT } = await getSite();
@@ -45,10 +46,8 @@ const ld = [
     { '@type': 'ListItem', position: m0 ? 4 : 3, name: w.name, item: abs(pagePath) },
   ] },
 ];
-E.setState('work', 'all');
-const html = E.workDetailHTML(w, { prev: hasNav ? prev : null, next: hasNav ? next : null, related });
 ---
 <Base title={title} description={desc} path={pagePath} nav="work" side="work" f={m0 ? m0.id : 'all'} image={imgAbs} imageAlt={w.alt || w.name} type="article" jsonLd={ld}>
   <nav class="crumbs" aria-label="현재 위치"><a href={E.U('')}>홈</a><span>/</span><a href={E.U('work/')}>Work</a><span>/</span>{m0 && <><a href={E.U('materials/' + m0.id + '/')}>{m0.en}</a><span>/</span></>}<b aria-current="page">{w.name}</b></nav>
-  <Fragment set:html={html} />
+  <WorkDetail w={w} prev={hasNav ? prev : null} next={hasNav ? next : null} related={related} />
 </Base>

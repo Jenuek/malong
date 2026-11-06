@@ -1,0 +1,27 @@
+---
+/* 회사 소개 본문 (3개 층): 01 Who we are · 02 Record(실적·인증·연혁) · 03 Contact
+   사업 내용(What we do · How we work · Materials)은 Business 페이지에 있습니다. 내용은 data/about.json 에서 옵니다. */
+import { getSite } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+import AboutBand from '../ui/AboutBand.astro';
+import Svc from '../ui/Svc.astro';
+import Stats from '../ui/Stats.astro';
+import CertCards from '../ui/CertCards.astro';
+import KakaoBtn from '../ui/KakaoBtn.astro';
+
+const site = await getSite();
+const E = createEngine(site.ctx);
+const A = site.ABOUT, HOME = site.HOME, hours = site.settings.hours || [];
+const hasCerts = (HOME.certItems || []).length > 0 || !!HOME.certs;
+const leadHTML = E.esc(A.who.lead).replace('\n', '<br>');
+---
+<section id="s1" data-i="0"><AboutBand i={0} /><div class="abbody"><div class="two"><div class="stack"><p class="lead" set:html={leadHTML}></p>{A.who.text.map((t) => (<p class="txt">{t}</p>))}</div><div><Fragment set:html={E.ph(0, 'frp', A.who.img, 'PHOTO · 대표 작품')} /></div></div>
+<div class="sub-h">Values</div><Svc list={A.who.values} cls="k3" />
+<div class="sub-h">Business</div><div class="abgo">{E.BIZ_IDS.map((k) => (<a href={E.U('business/' + k + '/')}>{E.BIZ[k].title}<span>→</span></a>))}</div></div></section>
+
+<section id="s2" data-i="1"><AboutBand i={1} /><div class="abbody"><Stats list={A.record} /><p class="note">{A.recordNote}</p>
+{hasCerts && <><div class="sub-h">인증 현황</div><CertCards /></>}
+<div class="sub-h">History</div><ol class="hist">{A.history.slice().reverse().map((y) => (<li><span class="y">{y[0]}</span><ul>{y[1].map((e) => (<li><em>{e[0]}</em><span>{e[1]}</span></li>))}</ul></li>))}</ol></div></section>
+
+<section id="s3" data-i="2"><AboutBand i={2} /><div class="abbody"><div class="two"><div class="stack"><p class="cbig">Let’s<br />build it.</p><div class="abgo"><a href={E.U('find/')}>1분 가견적<span>→</span></a><a href={E.U('quote/')}>견적 문의<span>→</span></a></div><KakaoBtn />{hours.length > 0 && <p class="hrs" set:html={hours.map(E.esc).join('<br>')}></p>}</div>
+<dl class="cl">{A.contact.map((c) => (<div><dt>{c[0]}</dt><dd>{c[1]}</dd><button type="button" data-copy={c[1]}>Copy</button></div>))}</dl></div></div></section>

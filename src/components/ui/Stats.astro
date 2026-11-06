@@ -1,0 +1,5 @@
+---
+/* 숫자 + 설명 통계 칸. list = [[값, 설명], …] */
+const { list } = Astro.props;
+---
+<div class="stats">{list.map((r) => (<div class="stat"><b>{r[0]}</b><span>{r[1]}</span></div>))}</div>

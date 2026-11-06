@@ -1,0 +1,8 @@
+---
+/* 번호가 붙은 단계 목록 (제작 프로세스, 심의 단계). list = [[이름, 설명], …] */
+import { getSite } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+const { list } = Astro.props;
+const E = createEngine((await getSite()).ctx);
+---
+<ol class="flow">{list.map((f, k) => (<li><em>{E.two(k + 1)}</em><b>{f[0]}</b><span>{f[1]}</span></li>))}</ol>

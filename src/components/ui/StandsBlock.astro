@@ -1,0 +1,8 @@
+---
+/* Business 페이지 아래쪽 STANDS 안내 */
+import { getSite } from '../../lib/data.js';
+import { STANDS_IMG } from '../../lib/assets.js';
+const { head, line } = Astro.props;
+const site = await getSite();
+---
+<aside class="bzst" aria-label="STANDS"><div><p class="cap">Where art STANDS?</p><h3>{head}</h3><p>{line}</p></div><a class="go" href={site.STANDS_URL} target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><img src={STANDS_IMG} alt="STANDS"><span>아트 프로젝트 문의 ↗</span></a></aside>

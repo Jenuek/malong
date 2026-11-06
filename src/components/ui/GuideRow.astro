@@ -1,0 +1,8 @@
+---
+/* 문의 링크 묶음: 1분 가견적 · 견적 문의 · 카카오톡 */
+import { getSite } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+import KakaoBtn from './KakaoBtn.astro';
+const E = createEngine((await getSite()).ctx);
+---
+<div class="sub-h">문의</div><div class="abgo"><a href={E.U('find/')}>1분 가견적<span>→</span></a><a href={E.U('quote/')}>견적 문의<span>→</span></a></div><KakaoBtn />

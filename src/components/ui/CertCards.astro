@@ -1,0 +1,16 @@
+---
+/* 인증 현황 아이콘 카드 (data/home.json 의 cert_items). 항목이 없으면 예전 문구(certs)를 보여 줍니다 */
+import { getSite } from '../../lib/data.js';
+const HOME = (await getSite()).HOME;
+const items = HOME.certItems || [];
+const IC = {
+  sme: '<path d="M3 21V11l6 4v-4l6 4V5h6v16z"/><path d="M7 21v-3M12 21v-3M17 21v-3"/>',
+  women: '<circle cx="12" cy="9" r="5"/><path d="M12 14v8M9 18h6"/>',
+  venture: '<path d="M12 3c3 2 5 6 5 10l-2 3H9l-2-3c0-4 2-8 5-10z"/><circle cx="12" cy="10" r="1.6"/><path d="M9 16l-3 3M15 16l3 3M12 17v4"/>',
+  design: '<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',
+  direct: '<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
+};
+---
+{items.length > 0
+  ? <ul class="certs">{items.map((c) => (<li><span class="ci"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={IC[c.icon] || IC.direct}></svg></span><b>{c.name}</b>{c.desc && <span>{c.desc}</span>}</li>))}</ul>
+  : (HOME.certs ? <p class="certs-txt">{HOME.certs}</p> : null)}

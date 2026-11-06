@@ -1,0 +1,9 @@
+---
+/* 번호 · 제목 · 설명 목록 (회사 소개 가치, 공공미술 콘텐츠, 건축미술 약속 등). withLink 이면 사업분야 이름에 '자세히 →' 를 붙입니다 */
+import { getSite } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+const { list, cls, withLink = false } = Astro.props;
+const E = createEngine((await getSite()).ctx);
+const BIZMAP = { '공공미술': 'public', '건축미술': 'arch', '전시기획': 'exhibit', '갤러리': 'exhibit' };
+---
+<ul class={'svc ' + cls} style="padding:0;margin:0">{list.map((w, k) => (<li><em>{E.two(k + 1)}</em><b>{w[0]}</b><span>{w[1]}</span>{withLink && BIZMAP[w[0]] && <a href={E.U('business/' + BIZMAP[w[0]] + '/')}>자세히 →</a>}</li>))}</ul>

@@ -1,0 +1,46 @@
+---
+/* 사업분야 페이지 본문 (건축미술 · 공공미술 · 전시·갤러리). 문구는 data/business.json, 공통 내용은 data/about.json 에서 옵니다.
+   id = 'arch' | 'public' | 'exhibit' */
+import { getSite } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+import Svc from '../ui/Svc.astro';
+import Stats from '../ui/Stats.astro';
+import Flow from '../ui/Flow.astro';
+import StandsBlock from '../ui/StandsBlock.astro';
+import GuideRow from '../ui/GuideRow.astro';
+
+const { id } = Astro.props;
+const site = await getSite();
+const E = createEngine(site.ctx);
+const { U, two, bz } = E;
+const A = site.ABOUT, EXH = site.EXH, MATS = site.MATS;
+const B = E.BIZ[id];
+const acc = (E.byId(B.mat) ? E.col(E.byId(B.mat)) : '#1B1A22');
+const exStats = (() => {
+  const l = site.BD && site.BD.exhibit && (site.BD.exhibit.stats || []).map((x) => [String((x && x.value) || '').trim(), String((x && x.label) || '').trim()]).filter((x) => x[0]);
+  return l && l.length ? l : [['36명', '협업작가'], ['56명', '전시작가']];
+})();
+---
+<section class="bzh" style={`--a:${acc}`}><div class="bzi"><p class="cap">Business · {B.en}</p><h1>{B.title}</h1><p class="bzl">{B.lead}</p><nav class="bztabs" aria-label="사업분야">{E.BIZ_IDS.map((k) => (<a href={U('business/' + k + '/')} aria-current={k === id ? 'page' : undefined}>{E.BIZ[k].title}</a>))}</nav></div></section>
+<div class="abbody bzb">
+{id === 'arch' && <>
+<div class="two"><div class="stack"><p class="lead">{bz('arch', 'intro_title', '건축주는 건축 개요만 전달해 주세요.')}</p><p class="txt">{bz('arch', 'intro_text', '심의 서류 준비와 접수는 전담 팀이 맡습니다. 작품 제작과 설치, 준공에 필요한 미술작품 설치확인서를 받을 때까지 이어서 진행합니다.')}</p></div><div><Stats list={A.record.slice(2)} /><p class="note">{A.recordNote}</p></div></div>
+<div class="sub-h">건축미술팀의 약속</div><Svc list={A.promise} cls="k4" />
+<div class="sub-h" id="process">심의 {A.flow.length} Steps</div><Flow list={A.flow} />
+<StandsBlock head={bz('arch', 'stands_title', '건물에 놓을 작품이 필요하다면')} line={bz('arch', 'stands_text', '작품이 설 자리를 찾고, 세우고, 그 이후까지 돌보는 아트 컴퍼니.')} />
+</>}
+{id === 'public' && <>
+<div class="two"><div class="stack"><p class="lead">{bz('public', 'intro_title', '컨설팅, 기획, 제작, 운송, 설치.')}</p><p class="txt">{bz('public', 'intro_text', '프로젝트마다 전담 매니저가 배정되어 기한과 품질, 안전한 운송과 설치, 유지보수까지 챙깁니다.')}</p></div><div><Stats list={A.record.slice(0, 2)} /><p class="note">{A.recordNote}</p></div></div>
+<div class="sub-h">공공미술 콘텐츠</div><Svc list={A.contents} cls="k4" />
+<div class="sub-h" id="process">제작 프로세스 · {A.how.length} Steps</div>{A.howLead && <p class="txt" style="max-width:68ch;margin:16px 0 6px">{A.howLead}</p>}<Flow list={A.how.map((w) => [w[0], w[1]])} />
+<div class="sub-h">소재별 작품</div>{A.matText && <p class="txt" style="max-width:68ch;margin:16px 0 18px">{A.matText}</p>}<ol class="mrows">{MATS.map((m) => (<li><a href={U('materials/' + m.id + '/')}><Fragment set:html={E.miniSlab(E.mc(m))} /><em>{m.no}</em><span class="nm"><b>{m.en}</b><span>{m.kr}</span></span><span class="ar">작품 보기 →</span></a></li>))}</ol>
+<GuideRow />
+</>}
+{id === 'exhibit' && <>
+<div class="two"><div class="stack"><p class="lead">{bz('exhibit', 'intro_title', '기업·기관 전시부터 해외 전시까지.')}</p><p class="txt">{bz('exhibit', 'intro_text', '한국을 넘어 유럽까지, 대중과 예술을 잇는 전시를 기획해 왔습니다. 복합문화공간 셀렉티드마롱에서는 작가를 소개하는 전시를 엽니다.')}</p></div><div><Stats list={exStats} /></div></div>
+<div class="sub-h">전시기획</div><ul class="svc k4" style="padding:0;margin:0">{EXH.areas.map((t, k) => (<li><em>{two(k + 1)}</em><b>{t}</b></li>))}</ul>
+<div class="sub-h">전시 이력</div><ol class="bzhist">{EXH.hist.map((y) => (<li><span class="y">{y[0]}</span><ul>{y[1].map((e) => (<li><em>{e[0]}</em><span>{e[1]}</span></li>))}</ul></li>))}</ol>
+<div class="sub-h">갤러리</div><div class="two"><div class="stack"><p class="lead" style="font-size:clamp(18px,2.4vw,26px)">{bz('exhibit', 'gallery_title', '셀렉티드마롱 SLTD MALONG')}</p></div><p class="txt">{E.areaText('갤러리')}</p></div>
+<StandsBlock head={bz('exhibit', 'stands_title', '새 아트 프로젝트가 필요하다면')} line={bz('exhibit', 'stands_text', '작품이 설 자리를 찾고, 세우고, 그 이후까지 돌보는 아트 컴퍼니.')} />
+</>}
+</div>

@@ -1,0 +1,9 @@
+---
+/* 회사 소개 각 층의 머리띠 (01 WHO WE ARE …) */
+import { getSite } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+const { i } = Astro.props;
+const E = createEngine((await getSite()).ctx);
+const L = E.LAYERS[i];
+---
+<div class="abnd" style={`--a:${E.lacc(i)};--c:${L[3]};--t:${E.txt(L[3])}`}><div class="abi"><div class="abn" aria-hidden="true">{E.two(i + 1)}</div><div class="abq"><h2>{L[1]}</h2><p>{L[2]}</p></div></div></div>

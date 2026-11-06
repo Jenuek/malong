@@ -1,0 +1,52 @@
+---
+/* 홈 화면 본문: 대표 작품 슬라이드 → 사업분야 → 실적 → 최신 작품 → 고객사·인증 → 하단 문의 버튼
+   내용은 data/home.json · data/about.json(실적) · 작품 데이터에서 옵니다. */
+import { getSite } from '../../lib/data.js';
+import { createEngine } from '../../lib/engine.js';
+import { STANDS_IMG } from '../../lib/assets.js';
+import CertCards from '../ui/CertCards.astro';
+import Stats from '../ui/Stats.astro';
+
+const site = await getSite();
+const E = createEngine(site.ctx);
+const { U, two, col, esc, byId, workBy } = E;
+const HOME = site.HOME, ABOUT = site.ABOUT, PORT = site.PORT, MATS = site.MATS;
+
+/* 대표 작품(없으면 첫 작품) */
+let hs = (HOME.hero || []).filter((h) => workBy(h.pid));
+if (!hs.length && PORT.length) hs = [{ pid: PORT[0].pid, img: '' }];
+const w0 = hs.length ? workBy(hs[0].pid) : null;
+const cap = (w) => 'ID ' + w.pid + (E.typeLabel(w) ? ' · ' + E.typeLabel(w) : '');
+/* 사진이 없으면 소재 그림으로 대신합니다 */
+function heroPic(h, w) {
+  if (h.img) return { img: h.img };
+  const svg = E.artP(w, col(E.m0of(w)), 1);
+  const bg = (svg.match(/<rect[^>]*fill="(#[0-9A-Fa-f]{6})"/) || [])[1] || '#F3F2F7';
+  return { bg, svg: svg.replace('xMidYMid slice', 'xMidYMid meet') };
+}
+const slides = hs.map((h, k) => ({ k, w: workBy(h.pid), pic: heroPic(h, workBy(h.pid)) }));
+
+/* 최신 작품 가로 레일: 끊김 없이 돌도록 같은 줄을 반복해 붙입니다 */
+const items = PORT.slice(0, HOME.n || 12).map((w, i) => E.tileHTML(w, i));
+const reps = Math.max(2, Math.ceil(2600 / (Math.max(items.length, 1) * 230)) + 1);
+let rail = '';
+for (let r = 0; r < reps; r++) rail += r ? items.map((t) => t.replace('<a class="wk', '<a tabindex="-1" aria-hidden="true" class="wk')).join('') : items.join('');
+
+const bizColors = ['metal', 'frp', 'print'].map((id) => { const m = byId(id); return m ? col(m) : '#1B1A22'; });
+---
+<section class="hm-hero" aria-label="대표 작품">{slides.map((s) => (<div class={'hs' + (s.k === 0 ? ' on' : '')} aria-hidden="true" data-href={U('work/' + s.w.pid + '/')} data-name={s.w.name} data-cap={cap(s.w)}>{s.pic.img ? <img src={s.pic.img} alt={s.w.name} decoding="async" /> : <><span style={`position:absolute;inset:0;background:${s.pic.bg}`}></span><Fragment set:html={s.pic.svg} /></>}</div>))}<div class="hm-hv"><div><p class="cap">{HOME.eyebrow || ''}</p><h1 set:html={HOME.title}></h1><p class="sub">{HOME.sub || ''}</p><div class="go2"><a href={U('work/')}>작품 보기 →</a><a href={U('about/')}>회사 소개</a></div></div><div class="hm-hb"><a href={w0 ? U('work/' + w0.pid + '/') : U('work/')}>{w0 && <><b>{w0.name}</b><span class="cap">{cap(w0)}</span></>}</a>{hs.length > 1 && <div class="hm-dots" role="group" aria-label="대표 작품">{hs.map((h, k) => (<button type="button" data-hs={k} aria-label={(k + 1) + '번째 작품'} aria-current={k === 0 ? 'true' : undefined}></button>))}</div>}</div></div></section>
+<div class="hm-bar" aria-hidden="true">{MATS.map((m) => (<i style={`background:${col(m)}`}></i>))}</div>
+
+<div class="hm-h"><span class="cap">What we do</span><a href={U('business/arch/')}>사업분야 보기 →</a></div>
+<div class="hm-biz">{(HOME.biz || []).map((b, k) => (<a href={U('business/' + b[2] + '/')} style={`--c:${bizColors[k % 3]}`}><span class="no">{two(k + 1)}</span><b>{b[0]}</b><i aria-hidden="true">→</i><span class="ds">{b[1]}</span></a>))}</div>
+
+<div class="hm-h"><span class="cap">Track record</span><a href={U('about/#s2')}>연혁 · 인증 →</a></div>
+<div class="hm-num"><Stats list={ABOUT.record} /><p class="note">{ABOUT.recordNote || ''}</p></div>
+
+<div class="hm-h"><span class="cap">Latest works</span><a href={U('work/')}>전체 보기 {two(PORT.length)} →</a></div>
+<div class="hm-rail" id="rail" data-n={items.length}><Fragment set:html={rail} /></div>
+
+<div class="hm-cl"><span class="cap">Clients</span><ul>{(HOME.clients || []).map((c) => (<li>{c}</li>))}</ul></div>
+{(HOME.certItems || []).length > 0 || HOME.certs ? <div class="hm-cl hm-ct"><span class="cap">Certified</span><CertCards /></div> : null}
+
+<div class="hm-end"><p>{HOME.end || ''}</p><div class="acts"><a href={U('find/')}>1분 가견적 →</a><a class="qt" href={U('quote/')}>견적 문의 →</a><a href={U('track/')}>진행 확인 →</a><i class="vb" aria-hidden="true"></i><a class="st" href={site.STANDS_URL} target="_blank" rel="noopener noreferrer" aria-label="STANDS 아트 프로젝트 문의"><span>아트 프로젝트 문의 ↗</span><img src={STANDS_IMG} alt="STANDS" /></a></div></div>

@@ -1,9 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getSite, abs } from '../../lib/data.js';
-import { createEngine } from '../../lib/engine.js';
+import AboutBody from '../../components/about/AboutBody.astro';
 const site = await getSite();
-const E = createEngine(site.ctx);
 const A = site.ABOUT;
 const desc = [A.who.short, (A.who.text[0] || '').slice(0, 120)].filter(Boolean).join(' ');
 const ld = [
@@ -12,6 +11,6 @@ const ld = [
 ];
 ---
 <Base title="About · 회사 소개" description={desc} path="about/" nav="about" side="about" jsonLd={ld}>
-  <div id="v-about" set:html={E.aboutHTML()}></div>
+  <div id="v-about"><AboutBody /></div>
   <script>import '../../scripts/about.js';</script>
 </Base>

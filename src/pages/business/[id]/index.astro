@@ -2,6 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import { getSite, abs } from '../../../lib/data.js';
 import { createEngine } from '../../../lib/engine.js';
+import BizPage from '../../../components/business/BizPage.astro';
 export function getStaticPaths() { return ['arch', 'public', 'exhibit'].map((id) => ({ params: { id } })); }
 const { id } = Astro.params;
 const site = await getSite();
@@ -16,5 +17,5 @@ const ld = [
 ];
 ---
 <Base title={`${B.title} · ${B.en}`} description={desc} path={path} nav="biz" side="none" jsonLd={ld}>
-  <div id="v-biz" set:html={E.bizPageHTML(id)}></div>
+  <div id="v-biz"><BizPage id={id} /></div>
 </Base>
